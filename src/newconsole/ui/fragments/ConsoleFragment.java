@@ -26,8 +26,6 @@ public class ConsoleFragment {
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
 	
-	public float margin = 50f;
-	//public boolean shown = false;
 	public FloatingWidget floatingWidget;
 	public TextArea area;
 	public BaseDialog dialog;
@@ -48,18 +46,22 @@ public class ConsoleFragment {
 			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
-				horizontal.label(() -> logBuffer).grow();
+				horizontal.label(() -> logBuffer).marginRight(50f).grow();
 				
 				horizontal.table(script -> {
+					script.defaults().growX();
+					
 					area = script.area("", text -> {
 						history.set(0, text);
 						historyIndex = 0;
-					}).marginLeft(margin).marginRight(margin).grow().get();
+					}).get();
 					area.removeInputDialog();
 					area.setMessageText("insert your js script here");
 					
 					script.row();
 					script.table(buttons -> {
+						buttons.defaults().fill();
+						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							area.setText(historyPrev());
 						});
@@ -78,8 +80,12 @@ public class ConsoleFragment {
 							addLog("\u0019[blue]JS $ [grey]" + code + "\n");
 							String log = Vars.mods.getScripts().runConsole(code);
 							addLog("\u0019[yellow]> [white]" + log + "\n");
-						}).growX();
-					}).growX();
+						}).growX().row();
+						
+						buttons.button("@newconsole.clear", Styles.nodet, () -> {
+							logBuffer.setLength(0);
+						});
+					});
 				});
 			});
 		}).row();
@@ -93,11 +99,11 @@ public class ConsoleFragment {
 		logger = (level, message) -> {
 			if (!message.startsWith("\u0019")) {
 				logBuffer.append((switch (level) {
-					case debug -> "[white][[[yellow]D[]][]";
-					case info -> "[white][[[blue]I[]][]";
-					case warn -> "[white][[[orange]W[]][]";
-					case err -> "[white][[[red]E[]][]";
-					default -> "[white][[?][]";
+					case debug -> "[grey][[[yellow]D[]][]";
+					case info -> "[grey][[[blue]I[]][]";
+					case warn -> "[grey][[[orange]W[]][]";
+					case err -> "[grey][[[red]E[]][]";
+					default -> "[grey][[?][]";
 				}) + " " + message + "\n");
 			}
 			
