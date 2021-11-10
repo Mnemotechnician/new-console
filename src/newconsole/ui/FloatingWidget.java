@@ -65,7 +65,7 @@ public class FloatingWidget extends Table {
 	public void positionParent(float x, float y) {
 		if (parent == null) return;
 		
-		Vec2 pos = dragger.localToParentCoordinates(parent, Tmp.v1.set(x, y));
+		Vec2 pos = dragger.localToParentCoordinates(Tmp.v1.set(x, y));
 		setPosition(
 			Mathf.clamp(pos.x, getWidth(), parent.getWidth() - getWidth()),
 			Mathf.clamp(pos.y, getHeight(), parent.getHeight() - getHeight())

@@ -91,7 +91,7 @@ public class ConsoleFragment {
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
-			if (!message.startsWith('\u0019')) {
+			if (!message.startsWith("\u0019")) {
 				logBuffer.append((switch (level) {
 					case debug -> "[white][[[yellow]D[]][]";
 					case info -> "[white][[[blue]I[]][]";
