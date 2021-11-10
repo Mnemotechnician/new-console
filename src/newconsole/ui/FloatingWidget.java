@@ -19,7 +19,7 @@ import mindustry.ui.fragments.*;
 /** Table that can be dragged across a WidgetGroup. */
 public class FloatingWidget extends Table {
 	
-	public static float draggedAlpha = 0.6;
+	public static float draggedAlpha = 0.6f;
 	
 	public ImageButton dragger;
 	public boolean isDragging = false;
