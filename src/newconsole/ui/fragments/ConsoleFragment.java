@@ -15,6 +15,8 @@ import mindustry.ui.dialogs.*;
 
 import newconsole.ui.*;
 
+import static arc.util.Log.*;
+
 public class ConsoleFragment {
 	
 	/** Input & output log */
@@ -43,18 +45,18 @@ public class ConsoleFragment {
 		root.table(main -> {
 			main.center().top();
 			
-			main.add("@newconsole.console-header");
+			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
-				horizontal.label(() -> logBuffer).width(200).height(300);
+				horizontal.label(() -> logBuffer).grow();
 				
 				horizontal.table(script -> {
 					area = script.area("", text -> {
 						history.set(0, text);
 						historyIndex = 0;
-					}).marginLeft(margin).marginRight(margin).width(200).height(300f).get();
+					}).marginLeft(margin).marginRight(margin).grow().get();
 					area.removeInputDialog();
-					area.setMessageText("input your js script here");
+					area.setMessageText("insert your js script here");
 					
 					script.row();
 					script.table(buttons -> {
@@ -84,19 +86,37 @@ public class ConsoleFragment {
 		root.button("@newconsole.close", Styles.nodet, () -> {
 			dialog.hide();
 		}).growX();
+		
+		//register a new log handler that retranslates any log to the custom console
+		var defaultLogger = logger;
+		logger = (level, message) -> {
+			logBuffer.append((switch (level) {
+				case debug -> "[white][[[yellow]D[]][]";
+				case info -> "[white][[[blue]I[]][]";
+				case warn -> "[white][[[orange]W[]][]";
+				case err -> "[white][[[red]E[]][]";
+			}) + message + "\n");
+			
+			if (defaultLogger != null) defaultLogger.log(level, message);
+		};
 	}
 	
 	public void addLog(String newlog) {
-		Log.info(newlog);
+		info(newlog);
 		logBuffer.append(newlog);
 	}
 	
 	public void addHistory(String command) {
-		if (history.size >= 10) {
-			history.remove(history.size - 1);
-		} else if (history.size < 1) {
+		String check = command.replaceAll("\\s");
+		if (history.size < 1) {
 			history.add("");
 		}
+		if (check.equals(history.get(1))) {
+			
+		}
+		if (history.size >= 50) {
+			history.remove(history.size - 1);
+		} 
 		history.insert(1, command);
 	}
 	

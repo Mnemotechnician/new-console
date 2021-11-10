@@ -56,8 +56,8 @@ public class FloatingWidget extends Table {
 			
 			if (parent == null) return;
 			setPosition(
-				Mathf.clamp(x, 0, parent.getWidth() - getWidth()),
-				Mathf.clamp(y, 0, parent.getHeight() - getHeight())
+				Mathf.clamp(x, getWidth(), parent.getWidth() - getWidth() * 2),
+				Mathf.clamp(y, getHeight(), parent.getHeight() - getHeight() * 2)
 			);
 		});
 	}
@@ -65,10 +65,10 @@ public class FloatingWidget extends Table {
 	public void positionParent(float x, float y) {
 		if (parent == null) return;
 		
-		Vec2 pos = dragger.localToAscendantCoordinates(this, Tmp.v1.set(x, y));
+		Vec2 pos = dragger.localToAscendantCoordinates(parent, Tmp.v1.set(x, y));
 		setPosition(
-			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
-			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
+			Mathf.clamp(pos.x, getWidth(), parent.getWidth() - getWidth() * 2),
+			Mathf.clamp(pos.y, getHeight(), parent.getHeight() - getHeight() * 2)
 		);
 	}
 	
