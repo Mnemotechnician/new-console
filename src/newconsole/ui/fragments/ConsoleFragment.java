@@ -32,7 +32,7 @@ public class ConsoleFragment {
 	public TextArea area;
 	public BaseDialog dialog;
 	
-	public void build(Group parent) {
+	public ConsoleFragment(Group parent) {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
@@ -74,11 +74,12 @@ public class ConsoleFragment {
 							historyIndex = 0;
 							addHistory(code);
 							
-							addLog("[blue]JS $ [grey]" + code + "\n");
+							//messages starting with \u0019 aren't re-sent
+							addLog("\u0019[blue]JS $ [grey]" + code + "\n");
 							String log = Vars.mods.getScripts().runConsole(code);
-							addLog("[yellow]> [white]" + log + "\n");
+							addLog("\u0019[yellow]> [white]" + log + "\n");
 						}).growX();
-					});
+					}).growX();
 				});
 			});
 		}).row();
@@ -87,16 +88,18 @@ public class ConsoleFragment {
 			dialog.hide();
 		}).growX();
 		
-		//register a new log handler that retranslates any log to the custom console
+		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
-			logBuffer.append((switch (level) {
-				case debug -> "[white][[[yellow]D[]][]";
-				case info -> "[white][[[blue]I[]][]";
-				case warn -> "[white][[[orange]W[]][]";
-				case err -> "[white][[[red]E[]][]";
-				default -> "[white][[?][]";
-			}) + " " + message + "\n");
+			if (!message.startsWith('\u0019')) {
+				logBuffer.append((switch (level) {
+					case debug -> "[white][[[yellow]D[]][]";
+					case info -> "[white][[[blue]I[]][]";
+					case warn -> "[white][[[orange]W[]][]";
+					case err -> "[white][[[red]E[]][]";
+					default -> "[white][[?][]";
+				}) + " " + message + "\n");
+			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
 		};
