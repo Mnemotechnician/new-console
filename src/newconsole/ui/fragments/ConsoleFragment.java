@@ -49,17 +49,19 @@ public class ConsoleFragment {
 				horizontal.label(() -> logBuffer).marginRight(50f).grow();
 				
 				horizontal.table(script -> {
-					script.defaults().growX();
+					script.defaults();
 					
-					area = script.area("", text -> {
-						history.set(0, text);
-						historyIndex = 0;
+					var left = script.pane(logs -> {
+						area = logs.area("", text -> {
+							history.set(0, text);
+							historyIndex = 0;
+						}).growX().get();
+						area.removeInputDialog();
+						area.setMessageText("insert your js script here");
 					}).get();
-					area.removeInputDialog();
-					area.setMessageText("insert your js script here");
-					
 					script.row();
-					script.table(buttons -> {
+					
+					var right = script.table(buttons -> {
 						buttons.defaults().fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
@@ -77,16 +79,23 @@ public class ConsoleFragment {
 							addHistory(code);
 							
 							//messages starting with \u0019 aren't re-sent
-							addLog("\u0019[blue]JS $ [grey]" + code + "\n");
+							addLog("\u0019[blue]JS $ [grey]" + code.replaceAll("\\[", "[[") + "\n");
 							String log = Vars.mods.getScripts().runConsole(code);
-							addLog("\u0019[yellow]> [white]" + log + "\n");
+							addLog("\u0019[yellow]> [lightgrey]" + log + "\n");
 						}).growX().row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
+					}).get();
+					
+					//me when no help
+					script.update(() -> {
+						float targetWidth = script.getWidth() / 2f;
+						left.setWidth(targetWidth);
+						right.setWidth(targetWidth);
 					});
-				});
+				}).growX();
 			});
 		}).row();
 		
