@@ -11,6 +11,7 @@ import arc.scene.ui.layout.*;
 import mindustry.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
+import mindustry.ui.dialogs.*;
 
 import newconsole.ui.*;
 
@@ -24,18 +25,20 @@ public class ConsoleFragment {
 	public static int historyIndex = -1;
 	
 	public float margin = 50f;
-	public boolean shown = false;
+	//public boolean shown = false;
 	public FloatingWidget floatingWidget;
 	public TextArea area;
+	public BaseDialog dialog;
 	
 	public void build(Group parent) {
 		floatingWidget = new FloatingWidget();
-		floatingWidget.button(Icon.terminal, Styles.nodei, this::toggle);
+		floatingWidget.button(Icon.terminal, Styles.nodei, dialog::show);
 		parent.addChild(floatingWidget);
 		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 2);
 		
-		parent.fill(root -> {
-			root.center().right();
+		dialog = new BaseDialog("console");
+		dialog.cont.table(root -> {
+			root.center();
 			root.table(main -> {
 				main.center().top();
 				
@@ -76,19 +79,15 @@ public class ConsoleFragment {
 			});
 			
 			root.button("@newconsole.close", Styles.nodet, () -> {
-				toggle();
+				dialog.hide();
 			}).growX();
 			
-			root.update(() -> {
+			/*root.update(() -> {
 				root.visible = shown;
 				Vec2 pos = root.localToStageCoordinates(Tmp.v1.set(0, 0));
 				Log.info("x " + pos.x + "  y " + pos.y);
-			});
+			});*/
 		});
-	}
-	
-	public void toggle() {
-		shown = !shown;
 	}
 	
 	public void addLog(String newlog) {

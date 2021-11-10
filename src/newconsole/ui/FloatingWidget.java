@@ -53,16 +53,22 @@ public class FloatingWidget extends Table {
 		
 		update(() -> {
 			color.a = isDragging ? draggedAlpha : 1f;
+			
+			if (parent == null) return;
+			setPosition(
+				Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
+				Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
+			);
 		});
 	}
 	
 	public void positionParent(float x, float y) {
 		if (parent == null) return;
 		
-		Vec2 pos = localToParentCoordinates(Tmp.v1.set(x, y));
+		Vec2 pos = dragger.localToAscendantCoordinates(this, Tmp.v1.set(x, y));
 		setPosition(
-			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth() * 2),
-			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight() * 2)
+			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
+			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
 		);
 	}
 	

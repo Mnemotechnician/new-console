@@ -30,7 +30,7 @@ public class ConsoleVars {
 			group.visible(() -> consoleEnabled);
 			
 			console = new ConsoleFragment();
-			Time.run(60, () -> console.build(group));
+			Time.run(20, () -> console.build(group));
 			
 			Core.scene.add(group); //haha, anukus ඞ
 		});
