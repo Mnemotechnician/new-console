@@ -81,6 +81,8 @@ public class ConsoleFragment {
 			
 			root.update(() -> {
 				root.visible = shown;
+				Vec2 pos = localToStageCoordinates(Tmp.v1.set(root.x, root.y));
+				Log.info("x " + pos.x + "  y " + pos.y);
 			});
 		});
 	}
