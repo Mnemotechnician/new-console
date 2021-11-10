@@ -65,7 +65,7 @@ public class ConsoleFragment {
 							String code = area.getText();
 							
 							historyIndex = 0;
-							addHistory(script);
+							addHistory(code);
 							
 							addLog("[blue]JS $ [grey]" + code + "\n");
 							String log = Vars.mods.getScripts().runConsole(code);
