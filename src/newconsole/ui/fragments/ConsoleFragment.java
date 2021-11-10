@@ -32,7 +32,7 @@ public class ConsoleFragment {
 	
 	public void build(Group parent) {
 		floatingWidget = new FloatingWidget();
-		floatingWidget.button(Icon.terminal, Styles.nodei, dialog::show);
+		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
 		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 2);
 		
