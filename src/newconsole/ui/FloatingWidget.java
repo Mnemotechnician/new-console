@@ -56,8 +56,8 @@ public class FloatingWidget extends Table {
 			
 			if (parent == null) return;
 			setPosition(
-				Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
-				Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
+				Mathf.clamp(x, 0, parent.getWidth() - getWidth()),
+				Mathf.clamp(y, 0, parent.getHeight() - getHeight())
 			);
 		});
 	}
