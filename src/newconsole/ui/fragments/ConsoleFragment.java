@@ -95,7 +95,8 @@ public class ConsoleFragment {
 				case info -> "[white][[[blue]I[]][]";
 				case warn -> "[white][[[orange]W[]][]";
 				case err -> "[white][[[red]E[]][]";
-			}) + message + "\n");
+				default -> "[white][[?][]";
+			}) + " " + message + "\n");
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
 		};
@@ -107,12 +108,12 @@ public class ConsoleFragment {
 	}
 	
 	public void addHistory(String command) {
-		String check = command.replaceAll("\\s", "");
 		if (history.size < 1) {
 			history.add("");
 		}
-		if (check.equals(history.get(1))) {
-			return; //no need to add the same scritp twice
+		String check = command.replaceAll("\\s", "");
+		if (check.equals(history.get(1)) || check.equals("")) {
+			return; //no need to add the same script twice
 		}
 		if (history.size >= 50) {
 			history.remove(history.size - 1);
