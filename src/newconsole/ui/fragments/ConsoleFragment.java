@@ -5,6 +5,7 @@ import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.*;
+import mindustry.gen.*;
 import mindustry.ui.styles.*;
 
 import newconsole.ui.*;

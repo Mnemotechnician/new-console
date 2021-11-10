@@ -5,7 +5,7 @@ import newconsole.*;
 
 public class NewConsoleMod extends Mod {
 	
-	public NewConsoleMod {
+	public NewConsoleMod() {
 		ConsoleVars.init();
 	}
 	
