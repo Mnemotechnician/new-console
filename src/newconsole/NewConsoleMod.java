@@ -1,12 +1,12 @@
 package newconsole;
 
-import arc.*;
 import mindustry.mod.*;
+import newconsole.*;
 
 public class NewConsoleMod extends Mod {
 	
-	static {
-		Core.app.exit();
+	public NewConsoleMod {
+		ConsoleVars.init();
 	}
 	
 }

@@ -6,11 +6,11 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.*;
 import mindustry.game.*;
-import newconsole.ui.fragments*;
+import newconsole.ui.fragments.*;
 
 public class ConsoleVars {
 	
-	WidgetGroup group;
+	public WidgetGroup group;
 	
 	public static void init() {
 		Events.on(EventType.ClientLoadEvent.class, a -> {
@@ -23,7 +23,7 @@ public class ConsoleVars {
 			
 			ConsoleFragment.build(group);
 			
-			Core.scene.add(group); //haha, anukus
+			Core.scene.add(group); //haha, anukus ඞ
 		});
 	}
 	
