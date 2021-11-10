@@ -34,7 +34,7 @@ public class ConsoleFragment {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
-		floatingWidget.setPosition(parent.getWidth(), parent.getHeight() / 1.5);
+		floatingWidget.setPosition(parent.getWidth(), parent.getHeight() / 1.5f);
 		
 		dialog = new BaseDialog("console");
 		dialog.closeOnBack();
