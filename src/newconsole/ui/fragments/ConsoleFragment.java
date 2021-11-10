@@ -57,14 +57,15 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-						}).minHeight(300).fillX().grow().get();
+						}).fillX().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
+						area.setPrefRows(30);
 					}).minHeight(200).growX();
 					script.row();
 					
 					script.table(buttons -> {
-						buttons.defaults().width(60).fill();
+						buttons.defaults().width(90).fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							area.setText(historyPrev());
@@ -89,7 +90,7 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					});
+					}).fillX();
 				}).get();
 				
 				//me when no help
@@ -98,12 +99,12 @@ public class ConsoleFragment {
 					left.setWidth(targetWidth);
 					right.setWidth(targetWidth);
 				});
-			});
-		}).row();
-		
-		root.button("@newconsole.close", Styles.nodet, () -> {
-			dialog.hide();
-		}).growX();
+			}).grow();
+			
+			main.button("@newconsole.close", Styles.nodet, () -> {
+				dialog.hide();
+			}).fillX();
+		}).grow().row();
 		
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
@@ -115,7 +116,7 @@ public class ConsoleFragment {
 					case warn -> "[grey][[[orange]W[]][]";
 					case err -> "[grey][[[red]E[]][]";
 					default -> "[grey][[?][]";
-				}) + " " + message + "\n");
+				}) + " [lightgrey]" + message + "\n");
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
