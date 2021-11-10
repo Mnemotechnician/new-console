@@ -32,10 +32,10 @@ public class ConsoleFragment {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, this::toggle);
 		parent.addChild(floatingWidget);
-		floatingWidget.setPosition(200, 200);
+		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 2);
 		
 		parent.fill(root -> {
-			root.center();
+			root.center().right();
 			root.table(main -> {
 				main.center().top();
 				
@@ -87,7 +87,6 @@ public class ConsoleFragment {
 	
 	public void toggle() {
 		shown = !shown;
-		Log.info("toggled: " + shown);
 	}
 	
 	public void addLog(String newlog) {

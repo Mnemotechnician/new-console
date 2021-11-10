@@ -19,10 +19,12 @@ import mindustry.ui.fragments.*;
 /** Table that can be dragged across a WidgetGroup. */
 public class FloatingWidget extends Table {
 	
-	public static float draggedAlpha = 0.6f;
+	public static float draggedAlpha = 0.45f;
 	
 	public ImageButton dragger;
 	public boolean isDragging = false;
+	
+	protected float dragx, dragy;
 	
 	public FloatingWidget() {
 		dragger = new ImageButton(Icon.move, Styles.nodei);
@@ -32,13 +34,14 @@ public class FloatingWidget extends Table {
 			
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button) {
+				dragx = x; dragy = y;
 				isDragging = true;
 				return true;
 			}
 			
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				positionParent(x, y);
+				positionParent(x - dragx, y - dragy);
 			}
 			
 			@Override
@@ -58,8 +61,8 @@ public class FloatingWidget extends Table {
 		
 		Vec2 pos = localToParentCoordinates(Tmp.v1.set(x, y));
 		setPosition(
-			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
-			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
+			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth() * 2),
+			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight() * 2)
 		);
 	}
 	
