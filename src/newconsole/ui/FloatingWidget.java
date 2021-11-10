@@ -54,11 +54,12 @@ public class FloatingWidget extends Table {
 		update(() -> {
 			color.a = isDragging ? draggedAlpha : 1f;
 			
-			if (parent == null) return;
+			keepInStage();
+			/*if (parent == null) return;
 			setPosition(
 				Mathf.clamp(x, getWidth(), parent.getWidth() - getWidth()),
 				Mathf.clamp(y, getHeight(), parent.getHeight() - getHeight())
-			);
+			);*/
 		});
 	}
 	
