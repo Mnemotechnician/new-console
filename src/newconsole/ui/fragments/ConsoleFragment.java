@@ -1,27 +1,30 @@
 package newconsole.ui.fragments;
 
 import arc.*;
+import arc.struct.*;
 import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.*;
 import mindustry.gen.*;
-import mindustry.ui.styles.*;
+import mindustry.ui.*;
 
 import newconsole.ui.*;
 
-public class ConsoleFragment extends Fragment {
+public class ConsoleFragment {
+	
+	/** Input & output log */
+	public static StringBuffer logBuffer = new StringBuffer(); //haha jaba
+	/** Input history, used to allow the user to redo/undo last inputs */
+	public static Seq<String> history = new Seq(10);
+	/** Current command. -1 means that the input is empty */
+	public static int historyIndex = -1;
 	
 	public float margin = 50f;
 	public boolean shown = false;
 	public FloatingWidget floatingWidget;
 	public TextArea area;
 	
-	public StringBuffer logBuffer = new StringBuffer();
-	public Seq<String> history = new Seq(10);
-	public int historyIndex = -1;
-	
-	@Override
 	public void build(Group parent) {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, this::toggle);

@@ -1,8 +1,10 @@
 package newconsole.ui;
 
 import arc.*;
+import arc.util.*;
 import arc.math.*;
 import arc.math.geom.*;
+import arc.input.*;
 import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -11,7 +13,8 @@ import arc.scene.event.InputEvent.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import mindustry.gen.*;
-import mindustry.ui.styles.*;
+import mindustry.ui.*;
+import mindustry.ui.fragments.*;
 
 /** Table that can be dragged across a WidgetGroup. */
 public class FloatingWidget extends Table {
@@ -46,7 +49,7 @@ public class FloatingWidget extends Table {
 		});
 		
 		update(() -> {
-			color = isDragging ? dragged : normal;
+			color.set(isDragging ? dragged : normal);
 		});
 	}
 	
