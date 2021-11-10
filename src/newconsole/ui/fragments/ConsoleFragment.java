@@ -107,12 +107,12 @@ public class ConsoleFragment {
 	}
 	
 	public void addHistory(String command) {
-		String check = command.replaceAll("\\s");
+		String check = command.replaceAll("\\s", "");
 		if (history.size < 1) {
 			history.add("");
 		}
 		if (check.equals(history.get(1))) {
-			
+			return; //no need to add the same scritp twice
 		}
 		if (history.size >= 50) {
 			history.remove(history.size - 1);
