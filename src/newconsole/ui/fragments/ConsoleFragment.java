@@ -1,6 +1,9 @@
 package newconsole.ui.fragments;
 
 import arc.*;
+import arc.util.*;
+import arc.math.*;
+import arc.math.geom.*;
 import arc.struct.*;
 import arc.scene.*;
 import arc.scene.ui.*;
@@ -28,7 +31,8 @@ public class ConsoleFragment {
 	public void build(Group parent) {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, this::toggle);
-		parent.add(floatingWidget);
+		parent.addActor(floatingWidget);
+		floatingWidget.setPosition(200, 200);
 		
 		parent.fill(root -> {
 			root.center();
@@ -57,23 +61,28 @@ public class ConsoleFragment {
 							area.setText(historyNext());
 						});
 						
-						script.button("@newconsole.run", Styles.nodei, () -> {
-							String script = area.getText();
+						script.button("@newconsole.run", Styles.nodet, () -> {
+							String code = area.getText();
 							
 							historyIndex = 0;
 							addHistory(script);
 							
-							addLog("[blue]JS $ [grey]" + script + "\n");
-							String log = Vars.mods.scripts.runConsole(script);
+							addLog("[blue]JS $ [grey]" + code + "\n");
+							String log = Vars.mods.getScripts().runConsole(code);
 							addLog("[yellow]> [white]" + log + "\n");
 						}).growX();
 					});
 				});
 			});
+			
 			root.button("@newconsole.close", Styles.nodet, () -> {
 				toggle();
 			}).growX();
-		}).visible(() -> shown);
+			
+			update(() -> {
+				root.visible = shown;
+			});
+		});
 	}
 	
 	public void toggle() {
@@ -89,7 +98,7 @@ public class ConsoleFragment {
 		if (history.size >= 10) {
 			history.remove(history.size - 1);
 		}
-		history.add(1, command);
+		history.insert(1, command);
 	}
 	
 	public String historyPrev() {
