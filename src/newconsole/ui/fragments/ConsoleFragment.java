@@ -60,7 +60,7 @@ public class ConsoleFragment {
 						}).minHeight(300).fillX().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).prefHeight.growX();
+					}).minHeight(200).growX();
 					script.row();
 					
 					script.table(buttons -> {
