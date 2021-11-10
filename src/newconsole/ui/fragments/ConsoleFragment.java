@@ -31,7 +31,7 @@ public class ConsoleFragment {
 	public void build(Group parent) {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, this::toggle);
-		parent.addActor(floatingWidget);
+		parent.addChild(floatingWidget);
 		floatingWidget.setPosition(200, 200);
 		
 		parent.fill(root -> {
@@ -79,7 +79,7 @@ public class ConsoleFragment {
 				toggle();
 			}).growX();
 			
-			update(() -> {
+			root.update(() -> {
 				root.visible = shown;
 			});
 		});
