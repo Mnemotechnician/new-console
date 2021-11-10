@@ -1,6 +1,7 @@
 package newconsole;
 
 import arc.*;
+import arc.util.*;
 import arc.scene.*;
 import arc.scene.event.*;
 import arc.scene.ui.*;
@@ -29,7 +30,7 @@ public class ConsoleVars {
 			group.visible(() -> consoleEnabled);
 			
 			console = new ConsoleFragment();
-			console.build(group);
+			Time.run(60, () -> console.build(group));
 			
 			Core.scene.add(group); //haha, anukus ඞ
 		});
