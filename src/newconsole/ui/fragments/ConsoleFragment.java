@@ -57,14 +57,14 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-						}).growX().get();
+						}).minHeight(300).fillX().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).growX();
+					}).prefHeight.growX();
 					script.row();
 					
 					script.table(buttons -> {
-						buttons.defaults().fill();
+						buttons.defaults().width(60).fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							area.setText(historyPrev());
@@ -84,7 +84,7 @@ public class ConsoleFragment {
 							addLog("\u0019[blue]JS $ [grey]" + code.replaceAll("\\[", "[[") + "\n");
 							String log = Vars.mods.getScripts().runConsole(code);
 							addLog("\u0019[yellow]> [lightgrey]" + log + "\n");
-						}).growX().row();
+						}).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
