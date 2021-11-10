@@ -87,6 +87,7 @@ public class ConsoleFragment {
 	
 	public void toggle() {
 		shown = !shown;
+		Log.info("toggled: " + shown);
 	}
 	
 	public void addLog(String newlog) {

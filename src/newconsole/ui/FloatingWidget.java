@@ -19,14 +19,14 @@ import mindustry.ui.fragments.*;
 /** Table that can be dragged across a WidgetGroup. */
 public class FloatingWidget extends Table {
 	
-	public static Color dragged = Color.valueOf("#aaaaaa"), normal = Color.white.cpy();
+	public static Color d
 	
 	public ImageButton dragger;
 	public boolean isDragging = false;
 	
 	public FloatingWidget() {
 		dragger = new ImageButton(Icon.move, Styles.nodei);
-		add(dragger).size(40f);
+		add(dragger);
 		
 		dragger.addListener(new InputListener() {
 			
@@ -54,8 +54,13 @@ public class FloatingWidget extends Table {
 	}
 	
 	public void positionParent(float x, float y) {
+		if (parent == null) return;
+		
 		Vec2 pos = localToParentCoordinates(Tmp.v1.set(x, y));
-		setPosition(pos.x, pos.y);
+		setPosition(
+			Mathf.clamp(pos.x, 0, parent.getWidth() - getWidth()),
+			Mathf.clamp(pos.y, 0, parent.getHeight() - getHeight())
+		);
 	}
 	
 }
