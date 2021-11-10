@@ -90,7 +90,7 @@ public class ConsoleFragment {
 							logBuffer.setLength(0);
 						});
 					});
-				});
+				}).get();
 				
 				//me when no help
 				horizontal.update(() -> {
