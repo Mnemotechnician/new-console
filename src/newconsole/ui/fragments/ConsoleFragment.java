@@ -20,7 +20,7 @@ import static arc.util.Log.*;
 public class ConsoleFragment {
 	
 	/** Input & output log */
-	public static StringBuffer logBuffer = new StringBuffer(); //haha jaba
+	public static StringBuffer logBuffer = new StringBuffer("------------- js console output goes here -------------\n"); //haha jaba
 	/** Input history, used to allow the user to redo/undo last inputs */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
@@ -51,18 +51,7 @@ public class ConsoleFragment {
 				}).marginRight(50f).get();
 				
 				var right = horizontal.table(script -> {
-					script.defaults();
-					
-					script.pane(input -> {
-						area = input.area("", text -> {
-							history.set(0, text);
-							historyIndex = 0;
-						}).fillX().grow().get();
-						area.removeInputDialog();
-						area.setMessageText("insert your js script here");
-						area.setPrefRows(30);
-					}).minHeight(200).growX();
-					script.row();
+					script.defaults().left();
 					
 					script.table(buttons -> {
 						buttons.defaults().width(90).fill();
@@ -90,7 +79,17 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					}).fillX();
+					}).fillX().row();
+					
+					script.pane(input -> {
+						area = input.area("", text -> {
+							history.set(0, text);
+							historyIndex = 0;
+							area.setPrefRows(area.getLines());
+						}).left().grow().get();
+						area.removeInputDialog();
+						area.setMessageText("insert your js script here");
+					}).minHeight(200).growX();
 				}).get();
 				
 				//me when no help
@@ -99,7 +98,7 @@ public class ConsoleFragment {
 					left.setWidth(targetWidth);
 					right.setWidth(targetWidth);
 				});
-			}).grow();
+			}).grow().row();
 			
 			main.button("@newconsole.close", Styles.nodet, () -> {
 				dialog.hide();
