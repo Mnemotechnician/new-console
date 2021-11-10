@@ -20,7 +20,7 @@ import static arc.util.Log.*;
 public class ConsoleFragment {
 	
 	/** Input & output log */
-	public static StringBuffer logBuffer = new StringBuffer("------------- js console output goes here -------------\n"); //haha jaba
+	public static StringBuffer logBuffer = new StringBuffer("-------- js console output goes here --------\n"); //haha jaba
 	/** Input history, used to allow the user to redo/undo last inputs */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
@@ -34,7 +34,7 @@ public class ConsoleFragment {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
-		floatingWidget.setPosition(parent.getWidth(), parent.getHeight() / 1.5f);
+		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f);
 		
 		dialog = new BaseDialog("console");
 		dialog.closeOnBack();
@@ -46,6 +46,8 @@ public class ConsoleFragment {
 			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
+				horizontal.center();
+				
 				var left = horizontal.pane(logs -> {
 					logs.label(() -> logBuffer).grow();
 				}).marginRight(50f).get();
@@ -79,7 +81,7 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					}).fillX().row();
+					}).growX().row();
 					
 					script.pane(input -> {
 						area = input.area("", text -> {
