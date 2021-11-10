@@ -20,7 +20,7 @@ public class ConsoleFragment {
 	/** Input & output log */
 	public static StringBuffer logBuffer = new StringBuffer(); //haha jaba
 	/** Input history, used to allow the user to redo/undo last inputs */
-	public static Seq<String> history = new Seq(10);
+	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
 	
@@ -34,37 +34,39 @@ public class ConsoleFragment {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
-		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 2);
+		floatingWidget.setPosition(parent.getWidth(), parent.getHeight() / 1.5);
 		
 		dialog = new BaseDialog("console");
-		dialog.cont.table(root -> {
-			root.center();
-			root.table(main -> {
-				main.center().top();
+		dialog.closeOnBack();
+		var root = dialog.cont;
+		root.center();
+		root.table(main -> {
+			main.center().top();
+			
+			main.add("@newconsole.console-header");
+			
+			main.table(horizontal -> {
+				horizontal.label(() -> logBuffer).width(200).height(300);
 				
-				main.add("@newconsole.console-header");
-				
-				main.table(horizontal -> {
-					horizontal.label(() -> logBuffer).width(200).height(300);
+				horizontal.table(script -> {
+					area = script.area("", text -> {
+						history.set(0, text);
+						historyIndex = 0;
+					}).marginLeft(margin).marginRight(margin).width(200).height(300f).get();
+					area.removeInputDialog();
+					area.setMessageText("input your js script here");
 					
-					horizontal.table(script -> {
-						area = script.area("", text -> {
-							history.set(0, text);
-							historyIndex = 0;
-						}).marginLeft(margin).marginRight(margin).width(200).height(300f).get();
-						area.removeInputDialog();
-						area.setMessageText("input your js script here");
-						
-						script.row();
-						script.button("@newconsole.prev", Styles.nodet, () -> {
+					script.row();
+					script.table(buttons -> {
+						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							area.setText(historyPrev());
 						});
 						
-						script.button("@newconsole.next", Styles.nodet, () -> {
+						buttons.button("@newconsole.next", Styles.nodet, () -> {
 							area.setText(historyNext());
 						});
 						
-						script.button("@newconsole.run", Styles.nodet, () -> {
+						buttons.button("@newconsole.run", Styles.nodet, () -> {
 							String code = area.getText();
 							
 							historyIndex = 0;
@@ -77,17 +79,11 @@ public class ConsoleFragment {
 					});
 				});
 			});
-			
-			root.button("@newconsole.close", Styles.nodet, () -> {
-				dialog.hide();
-			}).growX();
-			
-			/*root.update(() -> {
-				root.visible = shown;
-				Vec2 pos = root.localToStageCoordinates(Tmp.v1.set(0, 0));
-				Log.info("x " + pos.x + "  y " + pos.y);
-			});*/
-		});
+		}).row();
+		
+		root.button("@newconsole.close", Styles.nodet, () -> {
+			dialog.hide();
+		}).growX();
 	}
 	
 	public void addLog(String newlog) {
@@ -98,6 +94,8 @@ public class ConsoleFragment {
 	public void addHistory(String command) {
 		if (history.size >= 10) {
 			history.remove(history.size - 1);
+		} else if (history.size < 1) {
+			history.add("");
 		}
 		history.insert(1, command);
 	}
