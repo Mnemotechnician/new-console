@@ -46,22 +46,24 @@ public class ConsoleFragment {
 			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
-				horizontal.label(() -> logBuffer).marginRight(50f).grow();
+				var left = horizontal.pane(logs -> {
+					logs.label(() -> logBuffer).grow();
+				}).marginRight(50f).get();
 				
-				horizontal.table(script -> {
+				var right = horizontal.table(script -> {
 					script.defaults();
 					
-					var left = script.pane(logs -> {
-						area = logs.area("", text -> {
+					script.pane(input -> {
+						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
 						}).growX().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).get();
+					}).growX();
 					script.row();
 					
-					var right = script.table(buttons -> {
+					script.table(buttons -> {
 						buttons.defaults().fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
@@ -87,15 +89,15 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					}).get();
-					
-					//me when no help
-					script.update(() -> {
-						float targetWidth = script.getWidth() / 2f;
-						left.setWidth(targetWidth);
-						right.setWidth(targetWidth);
 					});
-				}).growX();
+				});
+				
+				//me when no help
+				horizontal.update(() -> {
+					float targetWidth = horizontal.getWidth() / 2f;
+					left.setWidth(targetWidth);
+					right.setWidth(targetWidth);
+				});
 			});
 		}).row();
 		
