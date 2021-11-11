@@ -90,7 +90,7 @@ public class ConsoleFragment {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines());
-							area.moveCursorLine(area.getLines());
+							area.moveCursorLine(area.getLines() - 1);
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
