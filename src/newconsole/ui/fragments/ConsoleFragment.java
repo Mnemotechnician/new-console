@@ -52,7 +52,7 @@ public class ConsoleFragment {
 				
 				Label logLabel;
 				var left = horizontal.pane(logs -> {
-					logLabel = logs.label(() -> logBuffer).grow();
+					logLabel = logs.label(() -> logBuffer).grow().get();
 				}).get();
 				
 				var right = horizontal.table(script -> {
