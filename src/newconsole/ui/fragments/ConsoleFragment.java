@@ -29,6 +29,7 @@ public class ConsoleFragment {
 	public FloatingWidget floatingWidget;
 	public TextArea area;
 	public BaseDialog dialog;
+	public Label logLabel;
 	
 	protected float lastWidth;
 	
@@ -50,7 +51,6 @@ public class ConsoleFragment {
 			main.table(horizontal -> {
 				horizontal.center();
 				
-				Label logLabel;
 				var left = horizontal.pane(logs -> {
 					logLabel = logs.label(() -> logBuffer).grow().get();
 				}).get();
