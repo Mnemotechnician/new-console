@@ -52,7 +52,7 @@ public class ConsoleFragment {
 				
 				var left = horizontal.pane(logs -> {
 					logs.label(() -> logBuffer).grow();
-				}).marginRight(50f).get();
+				}).get();
 				
 				var right = horizontal.table(script -> {
 					script.defaults().left();
