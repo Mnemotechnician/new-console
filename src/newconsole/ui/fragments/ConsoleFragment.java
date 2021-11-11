@@ -99,6 +99,7 @@ public class ConsoleFragment {
 					float targetWidth = horizontal.getWidth() / 2f;
 					left.setWidth(targetWidth);
 					right.setWidth(targetWidth);
+					left.invalidateHierarchy();
 				});
 			}).grow().row();
 			
