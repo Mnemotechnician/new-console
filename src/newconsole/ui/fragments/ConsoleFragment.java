@@ -21,7 +21,7 @@ public class ConsoleFragment {
 	
 	/** Input & output log */
 	public static StringBuffer logBuffer = new StringBuffer("-------- js console output goes here --------\n"); //haha jaba
-	/** Input history, used to allow the user to redo/undo last inputs */
+	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
@@ -29,6 +29,8 @@ public class ConsoleFragment {
 	public FloatingWidget floatingWidget;
 	public TextArea area;
 	public BaseDialog dialog;
+	
+	protected float lastWidth;
 	
 	public ConsoleFragment(Group parent) {
 		floatingWidget = new FloatingWidget();
@@ -59,11 +61,11 @@ public class ConsoleFragment {
 						buttons.defaults().width(90).fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
-							area.setText(historyPrev());
+							historyShift(1);
 						});
 						
 						buttons.button("@newconsole.next", Styles.nodet, () -> {
-							area.setText(historyNext());
+							historyShift(-1);
 						});
 						
 						buttons.button("@newconsole.run", Styles.nodet, () -> {
@@ -88,6 +90,7 @@ public class ConsoleFragment {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines());
+							area.moveCursorLine(area.getLines());
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
@@ -97,9 +100,14 @@ public class ConsoleFragment {
 				//me when no help
 				horizontal.update(() -> {
 					float targetWidth = horizontal.getWidth() / 2f;
-					left.setWidth(targetWidth);
-					right.setWidth(targetWidth);
-					left.invalidateHierarchy();
+					left.setMinWidth(targetWidth);
+					right.setMinWidth(targetWidth);
+					
+					if (targetWidth != lastWidth) {
+						right.invalidateHierarchy();
+						left.invalidateHierarchy();
+						lastWidth = targetWidth;
+					}
 				});
 			}).grow().row();
 			
@@ -113,11 +121,11 @@ public class ConsoleFragment {
 		logger = (level, message) -> {
 			if (!message.startsWith("\u0019")) {
 				logBuffer.append((switch (level) {
-					case debug -> "[grey][[[yellow]D[]][]";
-					case info -> "[grey][[[blue]I[]][]";
-					case warn -> "[grey][[[orange]W[]][]";
-					case err -> "[grey][[[red]E[]][]";
-					default -> "[grey][[?][]";
+					case debug -> "[lightgrey][[[yellow]D[]][]";
+					case info -> "[lightgrey][[[blue]I[]][]";
+					case warn -> "[lightgrey][[[orange]W[]][]";
+					case err -> "[lightgrey][[[red]E[]][]";
+					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
 			}
 			
@@ -144,16 +152,13 @@ public class ConsoleFragment {
 		history.insert(1, command);
 	}
 	
-	public String historyPrev() {
-		historyIndex = Mathf.clamp(historyIndex + 1, -1, history.size - 1);
-		if (historyIndex < 0) return "";
-		return history.get(historyIndex);
-	}
-	
-	public String historyNext() {
-		historyIndex = Mathf.clamp(historyIndex - 1, -1, history.size - 1);
-		if (historyIndex < 0) return "";
-		return history.get(historyIndex);
+	public void historyShift(int shift) {
+		historyIndex = Mathf.clamp(historyIndex + shift, -1, history.size - 1);
+		if (historyIndex < 0) {
+			area.setText("");
+			return;
+		}
+		area.setText(history.get(historyIndex));
 	}
 	
 }
