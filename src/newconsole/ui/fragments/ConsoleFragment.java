@@ -50,8 +50,9 @@ public class ConsoleFragment {
 			main.table(horizontal -> {
 				horizontal.center();
 				
+				Label logLabel;
 				var left = horizontal.pane(logs -> {
-					logs.label(() -> logBuffer).grow();
+					logLabel = logs.label(() -> logBuffer).grow();
 				}).get();
 				
 				var right = horizontal.table(script -> {
@@ -90,7 +91,7 @@ public class ConsoleFragment {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines());
-							area.moveCursorLine(area.getLines() - 1);
+							area.moveCursorLine(area.getLines() - 2);
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
@@ -99,13 +100,14 @@ public class ConsoleFragment {
 				
 				//me when no help
 				horizontal.update(() -> {
-					float targetWidth = horizontal.getWidth() / 2f;
+					float targetWidth = main.getWidth() / 2f;
+					logLabel.setWidth(targetWidth);
 					left.setWidth(targetWidth);
 					right.setWidth(targetWidth);
 					
 					if (targetWidth != lastWidth) {
 						right.invalidateHierarchy();
-						left.invalidateHierarchy();
+						logLabel.invalidateHierarchy();
 						lastWidth = targetWidth;
 					}
 				});
@@ -142,8 +144,8 @@ public class ConsoleFragment {
 		if (history.size < 1) {
 			history.add("");
 		}
-		String check = command.replaceAll("\\s", "");
-		if (check.equals(history.get(1)) || check.equals("")) {
+		
+		if (command.equals(history.get(1)) || command.replaceAll("\\s", "").equals("")) {
 			return; //no need to add the same script twice
 		}
 		if (history.size >= 50) {
