@@ -42,7 +42,7 @@ public class ConsoleFragment {
 		dialog = new BaseDialog("console");
 		dialog.closeOnBack();
 		var root = dialog.cont;
-		root.center();
+		root.center().margin(0).pad(0);
 		root.table(main -> {
 			main.center().top();
 			
@@ -100,14 +100,13 @@ public class ConsoleFragment {
 				
 				//me when no help
 				horizontal.update(() -> {
-					float targetWidth = main.getWidth() / 2f;
-					logLabel.setWidth(targetWidth);
+					float targetWidth = Core.scene.width / 2.5f;
 					left.setWidth(targetWidth);
 					right.setWidth(targetWidth);
 					
 					if (targetWidth != lastWidth) {
 						right.invalidateHierarchy();
-						logLabel.invalidateHierarchy();
+						left.invalidateHierarchy();
 						lastWidth = targetWidth;
 					}
 				});
