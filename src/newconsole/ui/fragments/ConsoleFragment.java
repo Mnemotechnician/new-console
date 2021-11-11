@@ -100,8 +100,8 @@ public class ConsoleFragment {
 				//me when no help
 				horizontal.update(() -> {
 					float targetWidth = horizontal.getWidth() / 2f;
-					left.setMinWidth(targetWidth);
-					right.setMinWidth(targetWidth);
+					left.setWidth(targetWidth);
+					right.setWidth(targetWidth);
 					
 					if (targetWidth != lastWidth) {
 						right.invalidateHierarchy();
