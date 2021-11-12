@@ -55,11 +55,6 @@ public class FloatingWidget extends Table {
 			color.a = isDragging ? draggedAlpha : 1f;
 			
 			keepInStage();
-			/*if (parent == null) return;
-			setPosition(
-				Mathf.clamp(x, getWidth(), parent.getWidth() - getWidth()),
-				Mathf.clamp(y, getHeight(), parent.getHeight() - getHeight())
-			);*/
 		});
 	}
 	
@@ -68,8 +63,8 @@ public class FloatingWidget extends Table {
 		
 		Vec2 pos = localToParentCoordinates(Tmp.v1.set(x, y));
 		setPosition(
-			Mathf.clamp(pos.x, getWidth(), parent.getWidth() - getWidth()),
-			Mathf.clamp(pos.y, getHeight(), parent.getHeight() - getHeight())
+			Mathf.clamp(pos.x, getPrefWidth(), parent.getWidth() - getPrefWidth()),
+			Mathf.clamp(pos.y, getPrefHeight(), parent.getHeight() - getPrefHeight())
 		);
 	}
 	
