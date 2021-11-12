@@ -52,7 +52,7 @@ public class ConsoleFragment {
 				horizontal.center();
 				
 				var left = horizontal.pane(logs -> {
-					logLabel = logs.label(() -> logBuffer).grow().get();
+					logLabel = logs.label(() -> logBuffer).fillX().get();
 				}).get();
 				
 				var right = horizontal.table(script -> {
@@ -90,11 +90,11 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-							area.setPrefRows(area.getLines());
-						}).left().grow().get();
+							area.setPrefRows(area.getLines() * 2);
+						}).left().fillX().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).minHeight(200).growX();
+					}).minHeight(200);
 				}).get();
 				
 				//me when no help
