@@ -52,7 +52,7 @@ public class ConsoleFragment {
 				horizontal.center();
 				
 				var left = horizontal.pane(logs -> {
-					logLabel = logs.label(() -> logBuffer).fillX().get();
+					logLabel = logs.label(() -> logBuffer).fillX().right().get();
 				}).get();
 				
 				var right = horizontal.table(script -> {
@@ -84,17 +84,17 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					}).growX().row();
+					}).left().growX().row();
 					
 					script.pane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines() * 2);
-						}).left().fillX().get();
+						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).minHeight(200);
+					}).fill().minHeight(200);
 				}).get();
 				
 				//me when no help
@@ -127,6 +127,8 @@ public class ConsoleFragment {
 					case err -> "[lightgrey][[[red]E[]][]";
 					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
+				
+				logLabel.invalidateHierarchy(); //it doesn't seem to invalidate automatically upon such a event
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
