@@ -62,7 +62,7 @@ public class ConsoleFragment {
 				horizontal.add(left);
 				
 				var right = horizontal.table(script -> {
-					script.defaults().left();
+					script.defaults().bottom().left();
 					
 					script.table(buttons -> {
 						buttons.defaults().width(100).fill();
