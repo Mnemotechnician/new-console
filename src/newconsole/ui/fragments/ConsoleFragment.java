@@ -175,6 +175,7 @@ public class ConsoleFragment {
 		
 		public BetterPane(Cons<Table> build) {
 			super(new Table());
+			build.get((Table) getWidget());
 		}
 		
 		@Override
