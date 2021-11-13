@@ -73,19 +73,19 @@ public class SavesDialog extends BaseDialog {
 			entry.table(actions -> {
 				actions.center().right().defaults().center().width(60);
 				
-				actions.button(Icon.play.getRegion(), Styles.nodei, () -> {
+				actions.button(CStyles.playIcon, Styles.nodei, () -> {
 					ConsoleVars.console.runConsole(script);
-				}).color(Color.green);
+				});
 				
-				actions.button(Icon.edit.getRegion(), Styles.nodei, () -> {
+				actions.button(CStyles.editIcon, Styles.nodei, () -> {
 					ConsoleVars.console.area.setText(script);
 					hide();
-				}).color(Color.yellow);
+				});
 				
-				actions.button(Icon.trash.getRegion(), Styles.nodet, () -> {
+				actions.button(CStyles.deleteIcon, Styles.nodet, () -> {
 					ScriptsManager.deleteScript(name);
 					scriptsTable.removeChild(entry);
-				}).color(Color.red);
+				});
 			}).growX();
 		}).growX().marginBottom(10).row();
 	}
