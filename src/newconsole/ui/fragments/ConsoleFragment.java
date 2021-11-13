@@ -51,7 +51,7 @@ public class ConsoleFragment {
 			main.table(horizontal -> {
 				horizontal.center();
 				
-				var left = horizontal.pane(logLabel = new Label(() -> logBuffer));
+				var left = horizontal.pane(logLabel = new Label(() -> logBuffer)).get();
 				
 				var right = horizontal.table(script -> {
 					script.defaults().left();
