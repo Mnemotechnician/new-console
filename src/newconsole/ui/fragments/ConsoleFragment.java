@@ -51,7 +51,8 @@ public class ConsoleFragment {
 			main.table(horizontal -> {
 				horizontal.center();
 				
-				var left = horizontal.pane(logLabel = new Label(() -> logBuffer)).get();
+				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
+				horizontal.add(left);
 				
 				var right = horizontal.table(script -> {
 					script.defaults().left();
@@ -126,7 +127,7 @@ public class ConsoleFragment {
 					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
 				
-				logLabel.invalidateHierarchy(); //it doesn't seem to invalidate automatically upon such a event
+				logLabel.invalidateHierarchy(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
@@ -159,6 +160,19 @@ public class ConsoleFragment {
 			return;
 		}
 		area.setText(history.get(historyIndex));
+	}
+	
+	public static class BetterPane extends ScrollPane {
+		
+		public BetterPane(Element element) {
+			super(element);
+		}
+		
+		@Override
+		public float getPrefWidth() {
+			return width; //fuck
+		}
+		
 	}
 	
 }
