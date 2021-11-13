@@ -82,7 +82,7 @@ public class ConsoleFragment {
 							addHistory(code);
 							runConsole(code);
 							
-							left.setScrollY(Float.MAX_VALUE);
+							Time.run(1, () -> left.setScrollY(Float.MAX_VALUE));
 						}).width(130).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
@@ -137,7 +137,6 @@ public class ConsoleFragment {
 					case err -> "[lightgrey][[[red]E[]][]";
 					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
-				
 				//logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			
