@@ -61,23 +61,23 @@ public class SavesDialog extends BaseDialog {
 			entry.add(name).marginRight(40);
 			
 			entry.table(actions -> {
-				actions.right();
+				actions.center().right().defaults().center().width(60);
 				
 				actions.button("Run", Styles.nodet, () -> {
 					ConsoleVars.console.runConsole(script);
 				});
 				
-				entry.button("Edit", Styles.nodet, () -> {
+				actions.button("Edit", Styles.nodet, () -> {
 					ConsoleVars.console.area.setText(script);
 					hide();
 				});
 				
-				entry.button("Delete", Styles.nodet, () -> {
+				actions.button("Delete", Styles.nodet, () -> {
 					ScriptsManager.deleteScript(name);
 					scriptsTable.removeChild(entry);
 				});
 			}).growX();
-		}).growX().pad(20).marginBottom(20).row();
+		}).growX().marginBottom(10).row();
 	}
 	
 }

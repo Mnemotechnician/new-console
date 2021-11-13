@@ -53,16 +53,16 @@ public class ConsoleFragment {
 		var root = dialog.cont;
 		root.center().margin(0).fill();
 		root.table(main -> {
-			main.left().top();
+			main.left().bottom();
 			
 			main.table(horizontal -> {
-				horizontal.left();
+				horizontal.left().bottom();
 				
 				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
 				horizontal.add(left);
 				
 				var right = horizontal.table(script -> {
-					script.defaults().bottom().left();
+					script.bottom().defaults().bottom().left();
 					
 					script.table(buttons -> {
 						buttons.defaults().width(100).fill();
@@ -98,7 +98,7 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-							area.setPrefRows(area.getLines() + 50);
+							area.setPrefRows(area.getLines() + 10);
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
