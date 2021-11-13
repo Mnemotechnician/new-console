@@ -12,7 +12,7 @@ public class NewConsoleMod extends Mod {
 	
 	@Override
 	public void loadContent() {
-		CStyles.load();
+		//CStyles.load();
 	}
 	
 }

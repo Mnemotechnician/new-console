@@ -10,6 +10,7 @@ import mindustry.*;
 import mindustry.game.*;
 
 import newconsole.io.*;
+import newconsole.ui.*;
 import newconsole.ui.fragments.*;
 
 public class ConsoleVars {
@@ -24,6 +25,8 @@ public class ConsoleVars {
 	
 	public static void init() {
 		Events.on(EventType.ClientLoadEvent.class, a -> {
+			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
+			
 			ScriptsManager.init();
 			
 			Vars.loadLogger();
