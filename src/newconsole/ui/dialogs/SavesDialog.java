@@ -21,7 +21,7 @@ public class SavesDialog extends BaseDialog {
 		closeOnBack();
 		
 		cont.table(save -> {
-			save.button("[accent]Save", Styles.nodet, () -> {
+			save.button("@newconsole.save", Styles.nodet, () -> {
 				String name = saveName.getText();
 				if (name.replaceAll("\\w", "").equals("")) {
 					//todo: show a popup
@@ -29,11 +29,12 @@ public class SavesDialog extends BaseDialog {
 				}
 				
 				String script = ConsoleVars.console.area.getText();
-				if (script.replaceAll("\\w", "").equals("")) {
+				if (script.replaceAll("\\s", "").equals("")) {
 					//todo: show popup
 					return;
 				}
 				ScriptsManager.saveScript(name, script);
+				rebuild();
 			}).width(90).get();
 			
 			saveName = save.field("", input -> {}).growX().get();
@@ -41,17 +42,23 @@ public class SavesDialog extends BaseDialog {
 		
 		cont.add(new BetterPane(table -> {
 			scriptsTable = table;
-			
-			ScriptsManager.eachScript((name, script) -> add(name, script));
 		})).grow().row();
+		rebuild();
 		
 		cont.button("@newconsole.close", Styles.nodet, () -> hide()).growX();
 	}
 	
+	public void rebuild() {
+		scriptsTable.clearChildren();
+		ScriptsManager.eachScript((name, script) -> add(name, script));
+	}
+	
 	public void add(String name, String script) {
 		scriptsTable.table(entry -> {
-			entry.left().setBackground(CStyles.scriptbg);
+			entry.growX().left().setBackground(CStyles.scriptbg);
 			entry.add(name).marginRight(40);
+			
+			entry.right();
 					
 			entry.button("Run", Styles.nodet, () -> {
 				ConsoleVars.console.runConsole(script);
@@ -59,6 +66,7 @@ public class SavesDialog extends BaseDialog {
 			
 			entry.button("Edit", Styles.nodet, () -> {
 				ConsoleVars.console.area.setText(script);
+				hide();
 			});
 			
 			entry.button("Delete", Styles.nodet, () -> {

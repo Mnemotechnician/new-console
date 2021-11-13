@@ -65,7 +65,7 @@ public class ConsoleFragment {
 					script.defaults().left();
 					
 					script.table(buttons -> {
-						buttons.defaults().width(90).fill();
+						buttons.defaults().width(100).fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							historyShift(1);
@@ -83,7 +83,7 @@ public class ConsoleFragment {
 							runConsole(code);
 							
 							left.setScrollY(Float.MAX_VALUE);
-						}).row();
+						}).width(130).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
@@ -98,7 +98,6 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-							area.setPrefRows(area.getLines() * 2);
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
@@ -107,8 +106,10 @@ public class ConsoleFragment {
 				
 				//me when no help
 				horizontal.update(() -> {
+					area.setPrefRows(area.getLines() * 2);
+					
 					float targetWidth = root.getWidth() / 2f;
-					float targetHeight =  root.getHeight() / 2f;
+					float targetHeight =  root.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
 					
@@ -174,6 +175,7 @@ public class ConsoleFragment {
 	public void historyShift(int shift) {
 		historyIndex = Mathf.clamp(historyIndex + shift, -1, history.size - 1);
 		if (historyIndex < 0) {
+			addHistory(area.getText());
 			area.setText("");
 			return;
 		}
