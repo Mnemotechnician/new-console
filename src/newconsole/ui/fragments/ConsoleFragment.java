@@ -98,6 +98,8 @@ public class ConsoleFragment {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
+							area.setPrefRows(area.getLines() + 20); //additional lines allow the user to adjust the possition
+							area.invalidateHierarchy(); //required for the slider to appear
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
@@ -106,10 +108,8 @@ public class ConsoleFragment {
 				
 				//me when no help
 				horizontal.update(() -> {
-					area.setPrefRows(area.getLines() * 2);
-					
-					float targetWidth = root.getWidth() / 2f;
-					float targetHeight =  root.getHeight();
+					float targetWidth = main.getWidth() / 2f;
+					float targetHeight =  main.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
 					
