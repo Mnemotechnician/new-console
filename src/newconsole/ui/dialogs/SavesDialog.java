@@ -82,12 +82,12 @@ public class SavesDialog extends BaseDialog {
 					hide();
 				});
 				
-				actions.button(CStyles.deleteIcon, Styles.nodet, () -> {
+				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
 					ScriptsManager.deleteScript(name);
 					scriptsTable.removeChild(entry);
 				});
 			}).growX();
-		}).growX().marginBottom(10).row();
+		}).growX().pad(10f).marginBottom(20).row();
 	}
 	
 }
