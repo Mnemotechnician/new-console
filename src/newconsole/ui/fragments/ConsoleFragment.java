@@ -31,7 +31,7 @@ public class ConsoleFragment {
 	public BaseDialog dialog;
 	public Label logLabel;
 	
-	protected float lastWidth;
+	protected float lastWidth, lastHeight;
 	
 	public ConsoleFragment(Group parent) {
 		floatingWidget = new FloatingWidget();
@@ -83,9 +83,9 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
 						});
-					}).left().growX().row();
+					}).left().row();
 					
-					script.pane(input -> {
+					script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -93,19 +93,21 @@ public class ConsoleFragment {
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					}).fill().minHeight(200);
+					})).fill().minHeight(200);
 				}).get();
 				
 				//me when no help
 				horizontal.update(() -> {
-					float targetWidth = Core.scene.getWidth() / 2.5f;
-					left.setWidth(targetWidth);
-					right.setWidth(targetWidth);
+					float targetWidth = root.getWidth() / 2f;
+					float targetHeight =  root.getHeight() / 2f;
+					left.setSize(targetWidth, targetHeight);
+					right.setSize(targetWidth, targetHeight);
 					
-					if (targetWidth != lastWidth) {
+					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
 						left.invalidateHierarchy();
 						lastWidth = targetWidth;
+						lastHeight = targetHeight;
 					}
 				});
 			}).grow().row();
@@ -162,15 +164,26 @@ public class ConsoleFragment {
 		area.setText(history.get(historyIndex));
 	}
 	
+	/** Anuke, what the fucking fuck?
+	 * the whole point of a scroll pane is to fit bigger widgets in a smaller space, not to reduce their visual space */
 	public static class BetterPane extends ScrollPane {
 		
 		public BetterPane(Element element) {
 			super(element);
 		}
 		
+		public BetterPane(Cons<Table> build) {
+			super(new Table());
+		}
+		
 		@Override
 		public float getPrefWidth() {
-			return width; //fuck
+			return width;
+		}
+		
+		@Override
+		public void getPrefHeight() {
+			return height;
 		}
 		
 	}
