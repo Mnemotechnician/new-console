@@ -1,8 +1,8 @@
 displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"
-description: "sussy ui mod"
-version: 0.0.0
+description: "Adds a much better console ui.\n\nSee README.md for more info."
+version: 1.0.0
 minGameVersion: 134.1
 
 java: true
