@@ -23,6 +23,7 @@ public class ConsoleFragment {
 	
 	/** Logs starting with this char aren't retranslated to the console */
 	public static final char dontResend = '\u0019';
+	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
 	public static StringBuffer logBuffer = new StringBuffer("-------- js console output goes here --------\n"); //haha jaba
@@ -128,7 +129,7 @@ public class ConsoleFragment {
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
-			if (!message.startsWith(dontResend)) {
+			if (!message.startsWith(dontResendStr)) {
 				logBuffer.append((switch(level) {
 					case debug -> "[lightgrey][[[yellow]D[]][]";
 					case info -> "[lightgrey][[[blue]I[]][]";

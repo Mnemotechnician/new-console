@@ -1,8 +1,9 @@
-package newconsole.ui;
+package newconsole.io;
 
 import arc.func.*;
 import arc.struct.*;
 import arc.files.*;
+import arc.util.*;
 import mindustry.*;
 
 public class ScriptsManager {
@@ -40,7 +41,7 @@ public class ScriptsManager {
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
 		try {
-			var stream = file.read();
+			var stream = save.read();
 			//read scripts
 			int b;
 			while ((b = stream.read()) != -1) {

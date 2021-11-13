@@ -4,6 +4,7 @@ import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.gen.*;
+import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 
 import newconsole.*;
@@ -35,7 +36,7 @@ public class SavesDialog extends BaseDialog {
 				ScriptManager.saveScript(name, script);
 			}).width(90).get();
 			
-			saveName = save.field("", () -> {}).growX().get();
+			saveName = save.field("", input -> {}).growX().get();
 		}).marginBottom(50).row();
 		
 		cont.add(new BetterPane(table -> {
