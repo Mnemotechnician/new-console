@@ -20,6 +20,9 @@ import static arc.util.Log.*;
 
 public class ConsoleFragment {
 	
+	/** Logs starting with this char aren't retranslated to the console */
+	public static final char dontResend = '\u0019';
+	
 	/** Input & output log */
 	public static StringBuffer logBuffer = new StringBuffer("-------- js console output goes here --------\n"); //haha jaba
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
@@ -40,14 +43,12 @@ public class ConsoleFragment {
 		parent.addChild(floatingWidget);
 		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f);
 		
-		dialog = new BaseDialog("console");
+		dialog = new BaseDialog("@newconsole.console-header");
 		dialog.closeOnBack();
 		var root = dialog.cont;
-		root.center().margin(0);
+		root.center().margin(0).fill();
 		root.table(main -> {
 			main.left().top();
-			
-			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
 				horizontal.left();
@@ -74,15 +75,17 @@ public class ConsoleFragment {
 							
 							historyIndex = 0;
 							addHistory(code);
+							runConsole(code);
 							
-							//messages starting with \u0019 aren't re-sent
-							addLog("\u0019[blue]JS $ [grey]" + code.replaceAll("\\[", "[[") + "\n");
-							String log = Vars.mods.getScripts().runConsole(code);
-							addLog("\u0019[yellow]> [lightgrey]" + log + "\n");
+							left.setScrollY(Float.MAX_VALUE);
 						}).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
 							logBuffer.setLength(0);
+						});
+						
+						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
+							//a
 						});
 					}).left().row();
 					
@@ -121,7 +124,7 @@ public class ConsoleFragment {
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
-			if (!message.startsWith("\u0019")) {
+			if (!message.startsWith(dontResend)) {
 				logBuffer.append((switch(level) {
 					case debug -> "[lightgrey][[[yellow]D[]][]";
 					case info -> "[lightgrey][[[blue]I[]][]";
@@ -140,6 +143,13 @@ public class ConsoleFragment {
 	public void addLog(String newlog) {
 		info(newlog);
 		logBuffer.append(newlog);
+	}
+	
+	public void runConsole(String code) {
+		//messages starting with \u0019 aren't re-sent
+		addLog(dontResend + "[blue]JS $ [grey]" + Strings.stripColors(code) + "\n");
+		String log = Vars.mods.getScripts().runConsole(code);
+		addLog(dontResend + "[yellow]> [lightgrey]" + Strings.stripColors(log) + "\n");
 	}
 	
 	public void addHistory(String command) {
@@ -163,31 +173,6 @@ public class ConsoleFragment {
 			return;
 		}
 		area.setText(history.get(historyIndex));
-	}
-	
-	/** Anuke, what the fucking fuck?
-	 * the whole point of a scroll pane is to fit bigger widgets in a smaller space, not to reduce their visual space */
-	public static class BetterPane extends ScrollPane {
-		
-		public BetterPane(Element element) {
-			super(element);
-		}
-		
-		public BetterPane(Cons<Table> build) {
-			super(new Table());
-			build.get((Table) getWidget());
-		}
-		
-		@Override
-		public float getPrefWidth() {
-			return width;
-		}
-		
-		@Override
-		public float getPrefHeight() {
-			return height;
-		}
-		
 	}
 	
 }

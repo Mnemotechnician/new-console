@@ -8,6 +8,8 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.*;
 import mindustry.game.*;
+
+import newconsole.io.*;
 import newconsole.ui.fragments.*;
 
 public class ConsoleVars {
@@ -22,15 +24,15 @@ public class ConsoleVars {
 	
 	public static void init() {
 		Events.on(EventType.ClientLoadEvent.class, a -> {
+			ScriptsManager.init();
+			
 			Vars.loadLogger();
 			
 			group = new WidgetGroup();
 			group.setFillParent(true);
 			group.touchable = Touchable.childrenOnly;
 			group.visible(() -> consoleEnabled);
-			
 			Time.run(20, () -> console = new ConsoleFragment(group));
-			
 			Core.scene.add(group); //haha, anukus ඞ
 		});
 	}
