@@ -94,7 +94,7 @@ public class ConsoleFragment {
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("insert your js script here");
-					})).fill().minHeight(200);
+					})).grow().minHeight(200);
 				}).get();
 				
 				//me when no help
@@ -122,7 +122,7 @@ public class ConsoleFragment {
 		var defaultLogger = logger;
 		logger = (level, message) -> {
 			if (!message.startsWith("\u0019")) {
-				logBuffer.append((switch (level) {
+				logBuffer.append((switch(level) {
 					case debug -> "[lightgrey][[[yellow]D[]][]";
 					case info -> "[lightgrey][[[blue]I[]][]";
 					case warn -> "[lightgrey][[[orange]W[]][]";
