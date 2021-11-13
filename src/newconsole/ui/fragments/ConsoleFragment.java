@@ -45,12 +45,12 @@ public class ConsoleFragment {
 		var root = dialog.cont;
 		root.center().margin(0);
 		root.table(main -> {
-			main.center().top();
+			main.left().top();
 			
 			main.add("@newconsole.console-header").row();
 			
 			main.table(horizontal -> {
-				horizontal.center();
+				horizontal.left();
 				
 				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
 				horizontal.add(left);
