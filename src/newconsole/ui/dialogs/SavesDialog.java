@@ -71,7 +71,7 @@ public class SavesDialog extends BaseDialog {
 			entry.add(name).marginRight(40);
 			
 			entry.table(actions -> {
-				actions.center().right().defaults().center().width(60);
+				actions.center().right().defaults().center().size(60);
 				
 				actions.button(CStyles.playIcon, Styles.nodei, () -> {
 					ConsoleVars.console.runConsole(script);
@@ -83,8 +83,10 @@ public class SavesDialog extends BaseDialog {
 				});
 				
 				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
-					ScriptsManager.deleteScript(name);
-					scriptsTable.removeChild(entry);
+					Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
+						ScriptsManager.deleteScript(name);
+						scriptsTable.removeChild(entry);
+					});
 				});
 			}).growX();
 		}).growX().pad(10f).marginBottom(20).row();

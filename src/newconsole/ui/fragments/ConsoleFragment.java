@@ -82,7 +82,7 @@ public class ConsoleFragment {
 							addHistory(code);
 							runConsole(code);
 							
-							Time.run(1, () -> left.setScrollY(Float.MAX_VALUE));
+							Time.run(4, () -> left.setScrollY(left.getScrollY()));
 						}).width(130).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
@@ -102,22 +102,22 @@ public class ConsoleFragment {
 						}).left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
-					})).grow().minHeight(200);
+					})).grow();
 				}).get();
 				
 				//me when no help
 				horizontal.update(() -> {
 					float targetWidth = horizontal.getWidth() / 2f;
-					float targetHeight =  horizontal.getHeight();
+					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
 					
-					/*if (targetWidth != lastWidth || targetHeight != lastHeight) {
+					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
 						left.invalidateHierarchy();
 						lastWidth = targetWidth;
 						lastHeight = targetHeight;
-					}*/
+					}
 				});
 			}).grow().row();
 			
