@@ -40,7 +40,7 @@ public class SavesDialog extends BaseDialog {
 			
 			saveName = save.field("", input -> {}).growX().get();
 			saveName.setMessageText("@newconsole.input-name");
-		}).marginBottom(50).row();
+		}).growX().marginBottom(50).row();
 		
 		cont.add(new BetterPane(table -> {
 			scriptsTable = table;

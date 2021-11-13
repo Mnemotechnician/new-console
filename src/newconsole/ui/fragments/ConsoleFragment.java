@@ -138,7 +138,7 @@ public class ConsoleFragment {
 					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
 				
-				logLabel.invalidateHierarchy(); //it doesn't seem to invalidate automatically upon such an event
+				//logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
