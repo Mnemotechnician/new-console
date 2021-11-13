@@ -15,6 +15,7 @@ import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 
 import newconsole.ui.*;
+import newconsole.ui.dialogs.*;
 
 import static arc.util.Log.*;
 
@@ -30,6 +31,7 @@ public class ConsoleFragment {
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
 	
+	public SavesDialog scripts;
 	public FloatingWidget floatingWidget;
 	public TextArea area;
 	public BaseDialog dialog;
@@ -38,6 +40,8 @@ public class ConsoleFragment {
 	protected float lastWidth, lastHeight;
 	
 	public ConsoleFragment(Group parent) {
+		scripts = new SavesDialog();
+		
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
@@ -85,7 +89,7 @@ public class ConsoleFragment {
 						});
 						
 						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
-							//a
+							scripts.show();
 						});
 					}).left().row();
 					

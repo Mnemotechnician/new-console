@@ -2,7 +2,7 @@ package newconsole.ui;
 
 import arc.util.*;
 import mindustry.gen.*;
-import mindustry.graphics.*!
+import mindustry.graphics.*;
 
 public class CStyles {
 	
