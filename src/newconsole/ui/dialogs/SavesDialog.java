@@ -34,8 +34,17 @@ public class SavesDialog extends BaseDialog {
 					Vars.ui.showInfo("@newconsole.empty-script");
 					return;
 				}
-				ScriptsManager.saveScript(name, script);
-				rebuild();
+				
+				if (ScriptsManager.scripts.containsKey(name)) {
+					//Overwrite, ask the player to confirm
+					Vars.ui.showConfirm("@newconsole.overwrite-confirm", () -> {
+						ScriptsManager.saveScript(name, script);
+						rebuild();
+					});
+				} else {
+					ScriptsManager.saveScript(name, script);
+					rebuild();
+				}
 			}).width(90).get();
 			
 			saveName = save.field("", input -> {}).growX().get();
@@ -63,19 +72,19 @@ public class SavesDialog extends BaseDialog {
 			entry.table(actions -> {
 				actions.center().right().defaults().center().width(60);
 				
-				actions.button("Run", Styles.nodet, () -> {
+				actions.button(Icon.play.getDrawable(), Styles.nodei, () -> {
 					ConsoleVars.console.runConsole(script);
-				});
+				}).color(Color.green);
 				
-				actions.button("Edit", Styles.nodet, () -> {
+				actions.button(Icon.edit.getDrawable(), Styles.nodei, () -> {
 					ConsoleVars.console.area.setText(script);
 					hide();
-				});
+				}).color(Color.yellow);
 				
-				actions.button("Delete", Styles.nodet, () -> {
+				actions.button(Icon.trash.getDrawable(), Styles.nodet, () -> {
 					ScriptsManager.deleteScript(name);
 					scriptsTable.removeChild(entry);
-				});
+				}).color(Color.red);
 			}).growX();
 		}).growX().marginBottom(10).row();
 	}

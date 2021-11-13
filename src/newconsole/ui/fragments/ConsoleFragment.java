@@ -112,12 +112,12 @@ public class ConsoleFragment {
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
 					
-					if (targetWidth != lastWidth || targetHeight != lastHeight) {
+					/*if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
 						left.invalidateHierarchy();
 						lastWidth = targetWidth;
 						lastHeight = targetHeight;
-					}
+					}*/
 				});
 			}).grow().row();
 			
