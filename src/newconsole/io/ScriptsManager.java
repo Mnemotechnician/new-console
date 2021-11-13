@@ -28,7 +28,9 @@ public class ScriptsManager {
 		if (loadSave(root.child(save))) {
 			//loaded normal save
 		} else if (loadSave(root.child(save + ".backup"))) {
-			//loaded backup save
+			//original file corrupt, all scripts that could be recognized were loaded, so we just delete it and replace with backup
+			root.child(save).delete();
+			root.child(save + ".backup").copyTo(root.child(save));
 		} else if (loadSave(Vars.tree.get(def))) {
 			Log.info("loaded default scripts");
 		} else {
