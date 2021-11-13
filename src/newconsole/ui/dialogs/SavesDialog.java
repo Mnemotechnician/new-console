@@ -33,7 +33,7 @@ public class SavesDialog extends BaseDialog {
 					//todo: show popup
 					return;
 				}
-				ScriptManager.saveScript(name, script);
+				ScriptsManager.saveScript(name, script);
 			}).width(90).get();
 			
 			saveName = save.field("", input -> {}).growX().get();
