@@ -1,6 +1,7 @@
 package newconsole.ui.fragments;
 
 import arc.*;
+import arc.func.*;
 import arc.util.*;
 import arc.math.*;
 import arc.math.geom.*;
@@ -182,7 +183,7 @@ public class ConsoleFragment {
 		}
 		
 		@Override
-		public void getPrefHeight() {
+		public float getPrefHeight() {
 			return height;
 		}
 		
