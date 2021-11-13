@@ -68,10 +68,10 @@ public class SavesDialog extends BaseDialog {
 	public void add(String name, String script) {
 		scriptsTable.table(entry -> {
 			entry.center().left().setBackground(CStyles.scriptbg);
-			entry.add(name).marginRight(40);
+			entry.add(name).marginLeft(20);
 			
 			entry.table(actions -> {
-				actions.center().right().defaults().center().size(60);
+				actions.center().right().defaults().center().size(80);
 				
 				actions.button(CStyles.playIcon, Styles.nodei, () -> {
 					ConsoleVars.console.runConsole(script);
@@ -88,7 +88,7 @@ public class SavesDialog extends BaseDialog {
 						scriptsTable.removeChild(entry);
 					});
 				});
-			}).growX();
+			}).center().growX();
 		}).growX().pad(10f).marginBottom(20).row();
 	}
 	

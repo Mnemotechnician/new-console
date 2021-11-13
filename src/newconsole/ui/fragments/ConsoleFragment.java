@@ -82,7 +82,7 @@ public class ConsoleFragment {
 							addHistory(code);
 							runConsole(code);
 							
-							Time.run(4, () -> left.setScrollY(left.getScrollY()));
+							Time.run(4, () -> left.setScrollY(Float.MAX_VALUE));
 						}).width(130).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
@@ -92,14 +92,14 @@ public class ConsoleFragment {
 						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
 							scripts.show();
 						});
-					}).left().row();
+					}).row();
 					
 					script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines() + 10);
-						}).left().grow().get();
+						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
 					})).grow();
@@ -137,7 +137,7 @@ public class ConsoleFragment {
 					case err -> "[lightgrey][[[red]E[]][]";
 					default -> "[lightgrey][[?][]";
 				}) + " [lightgrey]" + message + "\n");
-				//logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
+				logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
