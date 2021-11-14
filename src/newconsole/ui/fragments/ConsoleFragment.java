@@ -95,7 +95,7 @@ public class ConsoleFragment {
 						});
 					}).row();
 					
-					codeCell = script.add(new BetterPane(input -> {
+					script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -103,7 +103,7 @@ public class ConsoleFragment {
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
-					})).minHeight(400).grow();
+					})).grow().get().setOrigin(Align.bottom);
 				}).get();
 				
 				//me when no help
