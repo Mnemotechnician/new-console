@@ -10,7 +10,7 @@ import mindustry.*;
 public class ScriptsManager {
 	
 	public static final String save = "newconsole.save", def = "assets/console/default.save";
-	public static final byte startScript = 3, endScript = 4, splitter = 17;
+	public static final byte startScript = 3, endScript = 4, splitter = 17, eof = 127;
 	
 	public static StringMap scripts = new StringMap();
 	
@@ -23,7 +23,7 @@ public class ScriptsManager {
 		
 		if (!root.exists() || !root.isDirectory()) {
 			Log.err("Scripts manager failed to init");
-			return;
+		return;
 		}
 		
 		if (loadSave(root.child(save))) {
@@ -44,40 +44,45 @@ public class ScriptsManager {
 		if (!save.exists()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
-		InputStream stream = null;
+		var reads = save.reads();
 		try {
-			stream = save.read();
-			//read scripts
-			int b;
-			while ((b = stream.read()) != -1) {
+			byte b;
+			scripts:
+			do {
+				b = reads.b();
 				if (b == startScript) {
-					//read name
-					build.setLength(0);
-					while ((b = stream.read()) != splitter && b != -1) {
-						if (b == endScript) continue;
-						build.append((char) b);
-					}
-					String name = build.toString();
+					String name = reads.str();
+					//find splitter
+					do (b = reads.b()) {
+						if (b == endScript) {
+							Log.warn("illegal EOS, skipping");
+							continue scripts;
+						} else if (b == eof) {
+							Log.warn("Illegal end of file: splitter and script body expected");
+							reads.close();
+							return false;
+						}
+					} while (b != splitter);
 					
-					//read script
-					build.setLength(0);
-					while ((b = stream.read()) != endScript && b != -1) {
-						build.append((char) b);
-					}
-					String script = build.toString();
-					
+					String script = reads.str();
 					scripts.put(name, script);
+					
+					//find end of script, just in case
+					do (b = reads.b()) {
+						if (b == eof) {
+							Log.warn("EOS expected, found EOF. Ignoring.");
+							break scripts;
+						}
+					} while (b != endScript);
 				}
-			}
-			if (stream != null) stream.close();
-			return true;
-		} catch (IOException e) {
-			Log.warn(e.toString());
-			if (stream != null) {
-				try {stream.close();} catch (IOException FUCK_CHECKED_EXCEPTIONS) {/*I'm disgusted*/}
-			}
+			} while (b != eof);
+		} catch (Exception e) {
+			Log.warn("Failed to read existing save file. Illegal modification?");
+			reads.close();
 			return false;
 		}
+		reads.close();
+		return true;
 	}
 	
 	/** Save scripts & create a backup */
@@ -96,6 +101,7 @@ public class ScriptsManager {
 			writes.str(script);
 			writes.b(endScript);
 		});
+		writes.b(eof);
 		writes.close();
 	}
 	

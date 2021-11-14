@@ -82,8 +82,6 @@ public class ConsoleFragment {
 							historyIndex = 0;
 							addHistory(code);
 							runConsole(code);
-							
-							Time.run(4, () -> left.setScrollY(Float.MAX_VALUE));
 						}).width(130).row();
 						
 						buttons.button("@newconsole.clear", Styles.nodet, () -> {
@@ -148,6 +146,7 @@ public class ConsoleFragment {
 	public void addLog(String newlog) {
 		info(newlog);
 		logBuffer.append(newlog);
+		Time.run(4, () -> left.setScrollY(Float.MAX_VALUE)); //scroll down
 	}
 	
 	public void runConsole(String code) {
