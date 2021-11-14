@@ -103,7 +103,7 @@ public class ConsoleFragment {
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
-					})).grow();
+					})).minHeight(400).grow();
 				}).get();
 				
 				//me when no help
@@ -112,8 +112,6 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
-					//no fucking idea, this just works
-					codeCell.minHeight(codeCell.get().getHeight());
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
