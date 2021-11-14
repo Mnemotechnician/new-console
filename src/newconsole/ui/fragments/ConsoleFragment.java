@@ -39,6 +39,7 @@ public class ConsoleFragment {
 	public Label logLabel;
 	
 	protected float lastWidth, lastHeight;
+	Cell codeCell;
 	
 	public ConsoleFragment(Group parent) {
 		scripts = new SavesDialog();
@@ -61,7 +62,6 @@ public class ConsoleFragment {
 				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
 				horizontal.add(left);
 				
-				Cell codeCell;
 				var right = horizontal.table(script -> {
 					script.bottom().defaults().bottom().left();
 					
