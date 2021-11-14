@@ -47,7 +47,7 @@ public class ConsoleFragment {
 		floatingWidget = new FloatingWidget();
 		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
 		parent.addChild(floatingWidget);
-		floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f);
+		Time.run(10, () -> floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f));
 		
 		dialog = new BaseDialog("@newconsole.console-header");
 		dialog.closeOnBack();
@@ -95,7 +95,7 @@ public class ConsoleFragment {
 						});
 					}).row();
 					
-					codePane = script.add(new BetterPane(input -> {
+					script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -104,8 +104,7 @@ public class ConsoleFragment {
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
 					})).grow().get();
-					codePane.setOrigin(Align.bottom);
-				}).get();
+				}).bottom().get();
 				
 				//me when no help
 				horizontal.update(() -> {
@@ -113,7 +112,6 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
-					codePane.setPosition(codePane.getX(Align.bottom), 0, Align.bottom);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();

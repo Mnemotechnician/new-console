@@ -1,5 +1,6 @@
 package newconsole.io;
 
+import java.io.*;
 import arc.func.*;
 import arc.struct.*;
 import arc.files.*;
@@ -31,6 +32,7 @@ public class ScriptsManager {
 			//original file corrupt, all scripts that could be recognized were loaded, so we just delete it and replace with backup
 			root.child(save).delete();
 			save();
+			Log.info("loaded backup");
 		} else if (loadSave(Vars.tree.get(def))) {
 			Log.info("loaded default scripts");
 		} else {
@@ -42,8 +44,9 @@ public class ScriptsManager {
 		if (!save.exists()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
+		InputStream stream;
 		try {
-			var stream = save.read();
+			stream = save.read();
 			//read scripts
 			int b;
 			while ((b = stream.read()) != -1) {
@@ -66,9 +69,11 @@ public class ScriptsManager {
 					scripts.put(name, script);
 				}
 			}
+			stream.close();
 			return true;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			Log.warn(e.toString());
+			stream.close();
 			return false;
 		}
 	}

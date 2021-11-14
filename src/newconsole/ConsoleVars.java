@@ -24,18 +24,19 @@ public class ConsoleVars {
 	
 	
 	public static void init() {
+		Vars.loadLogger();
+		
 		Events.on(EventType.ClientLoadEvent.class, a -> {
+			console = new ConsoleFragment(group);
+			
 			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
 			
 			ScriptsManager.init();
-			
-			Vars.loadLogger();
 			
 			group = new WidgetGroup();
 			group.setFillParent(true);
 			group.touchable = Touchable.childrenOnly;
 			group.visible(() -> consoleEnabled);
-			Time.run(20, () -> console = new ConsoleFragment(group));
 			Core.scene.add(group); //haha, anukus ඞ
 		});
 	}
