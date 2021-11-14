@@ -44,7 +44,7 @@ public class ScriptsManager {
 		if (!save.exists()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
-		InputStream stream;
+		InputStream stream = null;
 		try {
 			stream = save.read();
 			//read scripts
@@ -69,11 +69,11 @@ public class ScriptsManager {
 					scripts.put(name, script);
 				}
 			}
-			stream.close();
+			if (stream != null) stream.close();
 			return true;
 		} catch (IOException e) {
 			Log.warn(e.toString());
-			stream.close();
+			if (stream != null) stream.close();
 			return false;
 		}
 	}

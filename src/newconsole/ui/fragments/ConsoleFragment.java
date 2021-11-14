@@ -26,7 +26,7 @@ public class ConsoleFragment {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuffer logBuffer = new StringBuffer("-------- js console output goes here --------\n"); //haha jaba
+	public static StringBuilder logBuffer = new StringBuilder("-------- js console output goes here --------\n"); //haha jaba
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
