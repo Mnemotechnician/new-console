@@ -81,7 +81,7 @@ public class ScriptsManager {
 			savef.moveTo(root.child(save + ".backup"));
 		}
 		//save
-		var writes = savef.writes();
+		var writes = root.child(save).writes();
 		scripts.each((name, script) -> {
 			writes.b(startScript);
 			writes.str(name);

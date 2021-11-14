@@ -37,9 +37,9 @@ public class ConsoleFragment {
 	public TextArea area;
 	public BaseDialog dialog;
 	public Label logLabel;
+	public BetterPane codePane;
 	
 	protected float lastWidth, lastHeight;
-	Cell codeCell;
 	
 	public ConsoleFragment(Group parent) {
 		scripts = new SavesDialog();
@@ -95,7 +95,7 @@ public class ConsoleFragment {
 						});
 					}).row();
 					
-					script.add(new BetterPane(input -> {
+					codePane = script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -103,7 +103,8 @@ public class ConsoleFragment {
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
-					})).grow().get().setOrigin(Align.bottom);
+					})).grow().get();
+					codePane.setOrigin(Align.bottom);
 				}).get();
 				
 				//me when no help
@@ -112,6 +113,7 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
+					codePane.setY(0);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
