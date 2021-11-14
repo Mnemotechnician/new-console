@@ -96,6 +96,7 @@ public class ScriptsManager {
 			writes.str(script);
 			writes.b(endScript);
 		});
+		writes.close();
 	}
 	
 	public static void eachScript(Cons2<String, String> cons) {
