@@ -65,9 +65,9 @@ public class SavesDialog extends BaseDialog {
 	}
 	
 	@Override
-	public void show() {
+	public Dialog show(Scene stage, Action action) {
 		rebuild();
-		super.show();
+		return super.show(stage, action);
 	}
 	
 	public void add(String name, String script) {
