@@ -37,7 +37,7 @@ public class ConsoleFragment {
 	public TextArea area;
 	public BaseDialog dialog;
 	public Label logLabel;
-	public BetterPane codePane;
+	public BetterPane leftPane, rightPane;
 	
 	protected float lastWidth, lastHeight;
 	
@@ -59,10 +59,10 @@ public class ConsoleFragment {
 			main.table(horizontal -> {
 				horizontal.left().bottom();
 				
-				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
-				horizontal.add(left);
+				leftPane = new BetterPane(logLabel = new Label(() -> logBuffer));
+				horizontal.add(leftPane);
 				
-				var right = horizontal.table(script -> {
+				var rightTable = horizontal.table(script -> {
 					script.bottom().defaults().bottom().left();
 					
 					script.table(buttons -> {
@@ -93,7 +93,7 @@ public class ConsoleFragment {
 						});
 					}).row();
 					
-					script.add(new BetterPane(input -> {
+					rightPane = script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -108,12 +108,12 @@ public class ConsoleFragment {
 				horizontal.update(() -> {
 					float targetWidth = horizontal.getWidth() / 2f;
 					float targetHeight = horizontal.getHeight();
-					left.setSize(targetWidth, targetHeight);
-					right.setSize(targetWidth, targetHeight);
+					leftPane.setSize(targetWidth, targetHeight);
+					rightTable.setSize(targetWidth, targetHeight);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
-						right.invalidateHierarchy();
-						left.invalidateHierarchy();
+						rightTable.invalidateHierarchy();
+						leftPane.invalidateHierarchy();
 						lastWidth = targetWidth;
 						lastHeight = targetHeight;
 					}
@@ -146,7 +146,7 @@ public class ConsoleFragment {
 	public void addLog(String newlog) {
 		info(newlog);
 		logBuffer.append(newlog);
-		Time.run(4, () -> left.setScrollY(Float.MAX_VALUE)); //scroll down
+		Time.run(4, () -> leftPane.setScrollY(Float.MAX_VALUE)); //scroll down
 	}
 	
 	public void runConsole(String code) {
