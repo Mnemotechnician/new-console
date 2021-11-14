@@ -44,6 +44,7 @@ public class ScriptsManager {
 		if (!save.exists()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
+		//yeah, i did all the funny code just in case of unexpected modifications performed by the user
 		var reads = save.reads();
 		try {
 			byte b;
@@ -53,7 +54,7 @@ public class ScriptsManager {
 				if (b == startScript) {
 					String name = reads.str();
 					//find splitter
-					do (b = reads.b()) {
+					while ((b = reads.b()) != splitter) {
 						if (b == endScript) {
 							Log.warn("illegal EOS, skipping");
 							continue scripts;
@@ -62,18 +63,18 @@ public class ScriptsManager {
 							reads.close();
 							return false;
 						}
-					} while (b != splitter);
+					}
 					
 					String script = reads.str();
 					scripts.put(name, script);
 					
 					//find end of script, just in case
-					do (b = reads.b()) {
+					while ((b = reads.b()) != endScript) {
 						if (b == eof) {
 							Log.warn("EOS expected, found EOF. Ignoring.");
 							break scripts;
 						}
-					} while (b != endScript);
+					}
 				}
 			} while (b != eof);
 		} catch (Exception e) {
