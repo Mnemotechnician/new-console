@@ -112,7 +112,7 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
-					codeCell.setMinHeight(targetHeight / 2f);
+					codeCell.minHeight(targetHeight / 2f);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
