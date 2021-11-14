@@ -27,17 +27,16 @@ public class ConsoleVars {
 		Vars.loadLogger();
 		
 		Events.on(EventType.ClientLoadEvent.class, a -> {
-			console = new ConsoleFragment(group);
-			
-			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
-			
-			ScriptsManager.init();
-			
 			group = new WidgetGroup();
 			group.setFillParent(true);
 			group.touchable = Touchable.childrenOnly;
 			group.visible(() -> consoleEnabled);
 			Core.scene.add(group); //haha, anukus ඞ
+			console = new ConsoleFragment(group);
+			
+			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
+			
+			ScriptsManager.init();
 		});
 	}
 	

@@ -55,7 +55,6 @@ public class SavesDialog extends BaseDialog {
 		cont.add(new BetterPane(table -> {
 			scriptsTable = table;
 		})).grow().row();
-		rebuild();
 		
 		cont.button("@newconsole.close", Styles.nodet, () -> hide()).growX();
 	}
@@ -63,6 +62,12 @@ public class SavesDialog extends BaseDialog {
 	public void rebuild() {
 		scriptsTable.clearChildren();
 		ScriptsManager.eachScript((name, script) -> add(name, script));
+	}
+	
+	@Override
+	public void show() {
+		rebuild();
+		super.show();
 	}
 	
 	public void add(String name, String script) {
