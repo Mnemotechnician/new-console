@@ -74,7 +74,7 @@ public class ScriptsManager {
 		} catch (IOException e) {
 			Log.warn(e.toString());
 			if (stream != null) {
-				try {stream.close();} catch (IOException e) {/*I'm disgusted*/}
+				try {stream.close();} catch (IOException FUCK_CHECKED_EXCEPTIONS) {/*I'm disgusted*/}
 			}
 			return false;
 		}
