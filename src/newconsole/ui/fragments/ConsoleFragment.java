@@ -63,7 +63,6 @@ public class ConsoleFragment {
 				
 				var right = horizontal.table(script -> {
 					script.bottom().defaults().bottom().left();
-					script.setOrigin(Align.bottom);
 					
 					script.table(buttons -> {
 						buttons.defaults().width(100).fill();
@@ -112,6 +111,7 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
+					area.setMinHeight(targetHeight / 2f);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
