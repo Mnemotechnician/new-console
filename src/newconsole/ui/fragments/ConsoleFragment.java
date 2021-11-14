@@ -113,7 +113,7 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
-					codePane.setY(0);
+					codePane.setPosition(codePane.getX(Align.bottom), 0, Align.bottom);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
