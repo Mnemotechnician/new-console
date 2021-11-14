@@ -61,6 +61,7 @@ public class ConsoleFragment {
 				var left = new BetterPane(logLabel = new Label(() -> logBuffer));
 				horizontal.add(left);
 				
+				Cell codeCell;
 				var right = horizontal.table(script -> {
 					script.bottom().defaults().bottom().left();
 					
@@ -94,7 +95,7 @@ public class ConsoleFragment {
 						});
 					}).row();
 					
-					script.add(new BetterPane(input -> {
+					codeCell = script.add(new BetterPane(input -> {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
@@ -111,7 +112,7 @@ public class ConsoleFragment {
 					float targetHeight = horizontal.getHeight();
 					left.setSize(targetWidth, targetHeight);
 					right.setSize(targetWidth, targetHeight);
-					area.setMinHeight(targetHeight / 2f);
+					codeCell.setMinHeight(targetHeight / 2f);
 					
 					if (targetWidth != lastWidth || targetHeight != lastHeight) {
 						right.invalidateHierarchy();
