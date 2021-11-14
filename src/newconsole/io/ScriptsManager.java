@@ -9,7 +9,7 @@ import mindustry.*;
 
 public class ScriptsManager {
 	
-	public static final String save = "newconsole.save", def = "assets/console/default.save";
+	public static final String save = "newconsole.save", def = "console/default.save";
 	public static final byte startScript = 3, endScript = 4, splitter = 17, eof = 127;
 	
 	public static StringMap scripts = new StringMap();
