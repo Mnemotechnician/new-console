@@ -73,7 +73,9 @@ public class ScriptsManager {
 			return true;
 		} catch (IOException e) {
 			Log.warn(e.toString());
-			if (stream != null) stream.close();
+			if (stream != null) {
+				try {stream.close();} catch (IOException e) {/*I'm disgusted*/}
+			}
 			return false;
 		}
 	}
