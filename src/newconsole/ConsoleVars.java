@@ -40,6 +40,8 @@ public class ConsoleVars {
 			Core.scene.add(group); //haha, anukus ඞ
 			console = new Console();
 			
+			saves = new SavesDialog();
+			
 			floatingWidget = new FloatingWidget();
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
 			group.addChild(floatingWidget);
