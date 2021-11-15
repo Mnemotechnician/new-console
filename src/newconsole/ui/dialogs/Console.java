@@ -78,7 +78,7 @@ public class Console extends BaseDialog {
 						});
 						
 						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
-							CVars.saves.show();
+							ConsoleVars.saves.show();
 						});
 					}).row();
 					
@@ -110,7 +110,7 @@ public class Console extends BaseDialog {
 			}).grow().row();
 			
 			main.button("@newconsole.close", Styles.nodet, () -> {
-				dialog.hide();
+				hide();
 			}).fillX();
 		}).grow().row();
 		

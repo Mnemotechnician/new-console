@@ -7,7 +7,9 @@ import arc.scene.event.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.*;
+import mindustry.gen.*;
 import mindustry.game.*;
+import mindustry.ui.*;
 
 import newconsole.io.*;
 import newconsole.ui.*;
@@ -40,8 +42,8 @@ public class ConsoleVars {
 			
 			floatingWidget = new FloatingWidget();
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
-			parent.addChild(floatingWidget);
-			Time.run(10, () -> floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f));
+			group.addChild(floatingWidget);
+			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
 			
 			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
 			
