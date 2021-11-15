@@ -36,6 +36,7 @@ public class Console extends BaseDialog {
 	public Label logLabel;
 	public BetterPane leftPane, rightPane;
 	
+	protected boolean needsInit = true;
 	protected float lastWidth, lastHeight;
 	
 	public Console() {
@@ -114,6 +115,13 @@ public class Console extends BaseDialog {
 			}).fillX();
 		}).grow().row();
 		
+		if (needsInit) {
+			init();
+			needsInit = false;
+		}
+	}
+		
+	public void init() {
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
@@ -124,7 +132,7 @@ public class Console extends BaseDialog {
 					case warn -> "[lightgrey][[[orange]W[]][]";
 					case err -> "[lightgrey][[[red]E[]][]";
 					default -> "[lightgrey][[?][]";
-				}) + " [lightgrey]" + message + "\n");
+				})).append(" [lightgrey]").append(message).append("\n");
 				logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			

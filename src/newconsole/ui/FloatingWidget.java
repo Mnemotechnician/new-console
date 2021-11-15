@@ -24,13 +24,13 @@ public class FloatingWidget extends Table {
 	public ImageButton dragger;
 	public boolean isDragging = false;
 	
-	protected float dragx, dragy;
-	
 	public FloatingWidget() {
 		dragger = new ImageButton(Icon.move, Styles.nodei);
 		add(dragger);
 		
 		dragger.addListener(new InputListener() {
+			
+			protected float dragx, dragy;
 			
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button) {
@@ -41,7 +41,7 @@ public class FloatingWidget extends Table {
 			
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				positionParent(x - dragx, y - dragy);
+				positionParent(x + dragx, y + dragy);
 			}
 			
 			@Override
