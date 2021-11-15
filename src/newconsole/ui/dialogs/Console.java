@@ -1,4 +1,4 @@
-package newconsole.ui.fragments;
+package newconsole.ui.dialogs;
 
 import arc.*;
 import arc.func.*;
@@ -14,12 +14,12 @@ import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 
+import newconsole.*;
 import newconsole.ui.*;
-import newconsole.ui.dialogs.*;
 
 import static arc.util.Log.*;
 
-public class ConsoleFragment {
+public class Console extends BaseDialog {
 	
 	/** Logs starting with this char aren't retranslated to the console */
 	public static final char dontResend = '\u0019';
@@ -32,28 +32,17 @@ public class ConsoleFragment {
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
 	
-	public SavesDialog scripts;
-	public FloatingWidget floatingWidget;
 	public TextArea area;
-	public BaseDialog dialog;
 	public Label logLabel;
 	public BetterPane leftPane, rightPane;
 	
 	protected float lastWidth, lastHeight;
 	
-	public ConsoleFragment(Group parent) {
-		scripts = new SavesDialog();
-		
-		floatingWidget = new FloatingWidget();
-		floatingWidget.button(Icon.terminal, Styles.nodei, () -> dialog.show());
-		parent.addChild(floatingWidget);
-		Time.run(10, () -> floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f));
-		
-		dialog = new BaseDialog("@newconsole.console-header");
-		dialog.closeOnBack();
-		var root = dialog.cont;
-		root.center().margin(0).fill();
-		root.table(main -> {
+	public Console() {
+		super("@newconsole.console-header");
+		closeOnBack();
+		cont.center().margin(0).fill();
+		cont.table(main -> {
 			main.left().bottom();
 			
 			main.table(horizontal -> {
@@ -89,7 +78,7 @@ public class ConsoleFragment {
 						});
 						
 						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
-							scripts.show();
+							CVars.saves.show();
 						});
 					}).row();
 					

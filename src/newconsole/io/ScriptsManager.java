@@ -23,7 +23,7 @@ public class ScriptsManager {
 		
 		if (!root.exists() || !root.isDirectory()) {
 			Log.err("Scripts manager failed to init");
-		return;
+			return;
 		}
 		
 		if (loadSave(root.child(save))) {
@@ -44,7 +44,8 @@ public class ScriptsManager {
 		if (!save.exists()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
-		//yeah, i did all the funny code just in case of unexpected modifications performed by the user
+		//yeah, i did all the funny code just in case of unexpected modifications
+		//also this thing will not break if I'll add something else. and I'll definitely do.
 		var reads = save.reads();
 		try {
 			byte b;
@@ -88,8 +89,8 @@ public class ScriptsManager {
 	
 	/** Save scripts & create a backup */
 	public static void save() {
-		Fi savef = root.child(save);
 		//backup
+		Fi savef = root.child(save);
 		if (savef.exists()) {
 			savef.moveTo(root.child(save + ".backup"));
 		}

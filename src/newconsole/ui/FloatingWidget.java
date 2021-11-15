@@ -14,7 +14,7 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
-import mindustry.ui.fragments.*;
+import mindustry.ui.dialogs.*;
 
 /** Table that can be dragged across a WidgetGroup. */
 public class FloatingWidget extends Table {
@@ -65,7 +65,7 @@ public class FloatingWidget extends Table {
 	public void positionParent(float x, float y) {
 		if (parent == null) return;
 		
-		Vec2 pos = localToParentCoordinates(Tmp.v1.set(x, y));
+		Vec2 pos = dragger.localToAscendantCoordinates(parent, Tmp.v1.set(x, y));
 		setPosition(
 			Mathf.clamp(pos.x, getPrefWidth() / 2, parent.getWidth() - getPrefWidth() / 2),
 			Mathf.clamp(pos.y, getPrefHeight() / 2, parent.getHeight() - getPrefHeight() / 2)

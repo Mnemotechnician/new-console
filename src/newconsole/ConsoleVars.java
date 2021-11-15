@@ -11,14 +11,18 @@ import mindustry.game.*;
 
 import newconsole.io.*;
 import newconsole.ui.*;
-import newconsole.ui.fragments.*;
+import newconsole.ui.dialogs.*;
 
 public class ConsoleVars {
 	
 	/** Main group containing the console ui */
 	public static WidgetGroup group;
-	/** Main fragment containing the console ui */
-	public static ConsoleFragment console;
+	/** The floating window that allows the user to open the console ui */
+	public static FloatingWidget floatingWidget;
+	/** Custom console handler */
+	public static Console console;
+	/** Dialog that allows the user to save & load scripts */
+	public static SavesDialog saves;
 	/** Whether the console ui is enabled */
 	public static boolean consoleEnabled = true;
 	
@@ -32,7 +36,12 @@ public class ConsoleVars {
 			group.touchable = Touchable.childrenOnly;
 			group.visible(() -> consoleEnabled);
 			Core.scene.add(group); //haha, anukus ඞ
-			console = new ConsoleFragment(group);
+			console = new Console();
+			
+			floatingWidget = new FloatingWidget();
+			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
+			parent.addChild(floatingWidget);
+			Time.run(10, () -> floatingWidget.setPosition(parent.getWidth() / 2, parent.getHeight() / 1.5f));
 			
 			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
 			

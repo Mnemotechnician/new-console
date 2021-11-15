@@ -10,9 +10,4 @@ public class NewConsoleMod extends Mod {
 		ConsoleVars.init();
 	}
 	
-	@Override
-	public void loadContent() {
-		//CStyles.load();
-	}
-	
 }
