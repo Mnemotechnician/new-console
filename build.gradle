@@ -36,6 +36,7 @@ dependencies{
 }
 
 task jarAndroid{
+    sourceSets.main.java.srcDirs = ["src"]
     dependsOn "jar"
 
     doLast{
