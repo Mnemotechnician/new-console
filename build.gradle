@@ -32,13 +32,12 @@ dependencies{
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
     
-    implementation fileTree(include: ['*.jar'], dir: 'lib')
+    implementation files('lib/Autoupdate-lib.jar')
 }
 
 task jarAndroid{
-    sourceSets.main.java.srcDirs = ["src"]
     dependsOn "jar"
-
+    
     doLast{
         if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.");
 
@@ -58,9 +57,7 @@ task jarAndroid{
 jar{
     archiveFileName = "${project.archivesBaseName}Desktop.jar"
 
-    from{
-        configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
-    }
+    from{configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }}
 
     from(rootDir){
         include "mod.hjson"
