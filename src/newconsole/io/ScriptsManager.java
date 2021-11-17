@@ -41,7 +41,7 @@ public class ScriptsManager {
 	}
 	
 	public static boolean loadSave(Fi save) {
-		if (!save.exists()) return false;
+		if (!save.exists() || save.isDirectory()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
 		
 		//yeah, i did all the funny code just in case of unexpected modifications

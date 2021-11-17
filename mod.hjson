@@ -1,3 +1,6 @@
+#!VERSION 1;
+#!REPO MHeMoTexHuK/New-console;
+
 displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"
