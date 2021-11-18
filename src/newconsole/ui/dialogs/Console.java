@@ -120,7 +120,7 @@ public class Console extends BaseDialog {
 	}
 		
 	public static void init() {
-		if (!needsinit()) return;
+		if (!needsinit) return;
 		needsInit = false;
 		
 		//register a new log handler that retranslates logs to the custom console
@@ -145,10 +145,10 @@ public class Console extends BaseDialog {
 			if (log.exists()) {
 				logBuffer.append(log.readString());
 			} else {
-				Log.warn("last log file doesn't exist");
+				warn("last log file doesn't exist");
 			}
 		} catch (Throwable e) {
-			Log.err("Failed to read last log", e);
+			err("Failed to read last log", e);
 		}
 	}
 	
