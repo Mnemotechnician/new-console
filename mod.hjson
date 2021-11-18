@@ -1,5 +1,5 @@
-#!VERSION 3;
-#!REPO MHeMoTexHuK/New-console;
+#!VERSION 3.1
+#!REPO "MHeMoTexHuK/New-console"
 
 displayName: "New Console"
 name: "newconsole"

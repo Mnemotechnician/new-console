@@ -31,6 +31,7 @@ public class ConsoleVars {
 	
 	public static void init() {
 		Vars.loadLogger();
+		Console.init();
 		
 		Events.on(EventType.ClientLoadEvent.class, a -> {
 			group = new WidgetGroup();

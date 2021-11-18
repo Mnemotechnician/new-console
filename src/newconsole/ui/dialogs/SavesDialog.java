@@ -50,7 +50,7 @@ public class SavesDialog extends BaseDialog {
 			
 			saveName = save.field("", input -> {}).growX().get();
 			saveName.setMessageText("@newconsole.input-name");
-		}).growX().marginBottom(50).row();
+		}).growX().marginBottom(40).row();
 		
 		cont.add(new BetterPane(table -> {
 			scriptsTable = table;
@@ -94,7 +94,7 @@ public class SavesDialog extends BaseDialog {
 					});
 				});
 			}).center().growX();
-		}).growX().pad(10f).marginBottom(20).row();
+		}).growX().pad(2f).marginBottom(20).row();
 	}
 	
 }

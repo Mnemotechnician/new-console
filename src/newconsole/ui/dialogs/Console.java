@@ -26,17 +26,18 @@ public class Console extends BaseDialog {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuilder logBuffer = new StringBuilder("-------- js console output goes here --------\n"); //haha jaba
+	public static StringBuilder logBuffer = new StringBuilder(5000).append("-------- js console output goes here --------\n\n");
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
 	public static int historyIndex = -1;
 	
+	protected static boolean needsInit = true;
+	
 	public TextArea area;
 	public Label logLabel;
 	public BetterPane leftPane, rightPane;
 	
-	protected boolean needsInit = true;
 	protected float lastWidth, lastHeight;
 	
 	public Console() {
@@ -115,13 +116,13 @@ public class Console extends BaseDialog {
 			}).fillX();
 		}).grow().row();
 		
-		if (needsInit) {
-			init();
-			needsInit = false;
-		}
+		init();
 	}
 		
-	public void init() {
+	public static void init() {
+		if (!needsinit()) return;
+		needsInit = false;
+		
 		//register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
@@ -133,11 +134,22 @@ public class Console extends BaseDialog {
 					case err -> "[lightgrey][[[red]E[]][]";
 					default -> "[lightgrey][[?][]";
 				})).append(" [lightgrey]").append(message).append("\n");
-				logLabel.invalidate(); //it doesn't seem to invalidate automatically upon such an event
 			}
 			
 			if (defaultLogger != null) defaultLogger.log(level, message);
 		};
+		
+		//try to read last log to know what happened before initialization
+		try {
+			var log = Vars.dataDirectory.child("last_log.txt");
+			if (log.exists()) {
+				logBuffer.append(log.readString());
+			} else {
+				Log.warn("last log file doesn't exist");
+			}
+		} catch (Throwable e) {
+			Log.err("Failed to read last log", e);
+		}
 	}
 	
 	public void addLog(String newlog) {
