@@ -120,7 +120,7 @@ public class Console extends BaseDialog {
 	}
 		
 	public static void init() {
-		if (!needsinit) return;
+		if (!needsInit) return;
 		needsInit = false;
 		
 		//register a new log handler that retranslates logs to the custom console
