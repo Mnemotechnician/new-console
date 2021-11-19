@@ -148,7 +148,7 @@ public class Console extends BaseDialog {
 	}
 	
 	/* Tries to read the last log. Overrides the buffer on success. */
-	public void backread() {
+	public static void backread() {
 		try {
 			var log = Vars.dataDirectory.child("last_log.txt");
 			if (log.exists()) {

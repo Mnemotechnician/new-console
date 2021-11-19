@@ -2,6 +2,7 @@ package newconsole.js;
 
 import arc.files.*;
 import arc.struct.*;
+import mindustry.*;
 import newconsole.*;
 import newconsole.io.*;
 import newconsole.ui.dialogs.*;
@@ -24,15 +25,15 @@ public class JSInterface {
 	}
 	
 	public void loadScripts(Fi file) {
-		ScriptsManager.loadFile(file);
+		ScriptsManager.loadSave(file);
 	}
 	
 	public void saveAll() {
 		ScriptsManager.save();
 	}
 	
-	public ObjectMap<String, String> getScriptMap() {
-		
+	public StringMap getScriptsMap() {
+		return ScriptsManager.scripts;
 	}
 	
 	public void eachScript(Cons2<String, String> cons) {
@@ -45,6 +46,10 @@ public class JSInterface {
 	
 	public void deleteScript(String name) {
 		ScriptsManager.deleteScript(name);
+	}
+	
+	public void checkUpdates() {
+		NewConsoleMod.checkUpdates();
 	}
 	
 }

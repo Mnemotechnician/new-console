@@ -11,9 +11,11 @@ public class NewConsoleMod extends Mod {
 	public NewConsoleMod() {
 		ConsoleVars.init();
 		
-		Events.on(EventType.ClientLoadEvent.class, a -> {
-			Updater.checkUpdates(this);
-		});
+		Events.on(EventType.ClientLoadEvent.class, a -> checkUpdates());
+	}
+	
+	public static void checkUpdates() {
+		Updater.checkUpdates(this);
 	}
 	
 }
