@@ -18,13 +18,13 @@ function NCHelp() {
 	//todo: create a separate file? these .append()s are killing me
 	
 	_buffer.append("\n\n[green]")
-	.append("####################")
-	.append("# New Console Help #")
+	.append("####################\n")
+	.append("# New Console Help #\n")
 	.append("####################[]\n\n")
 	.append("[white]You can use [blue]NewConsole[] object to access newconsole stuff.\n")
 	.append("Available methods of NewConsole object (self-explanatory):\n")
 	for (i in _interface) {
-		_buffer.append(_interface[i].toString()).append("\n");
+		_buffer.append("NewConsole.[blue]").append(i).append("[];\n");
 	}
 	_buffer.append("\n\n")
 	.append("You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.\n")
@@ -33,10 +33,10 @@ function NCHelp() {
 	.append("In order to do that, press the 'scripts' button in bottom right panel.\n\n")
 	.append("\n\n\n")
 	.append("[blue]Default functions:[]\n")
-	.append("NCHelp() — show this help")
-	.append("append(Any value) — append value directly to the log.")
-	.append("println(Any value) — same as append() but adds a newline")
-	.append("backread() — reads last_log.txt and overrides the output");
+	.append("NCHelp() — show this help\n")
+	.append("append(Any value) — append value directly to the log.\n")
+	.append("println(Any value) — same as append() but adds a newline\n")
+	.append("backread() — reads last_log.txt and overrides the output\n");
 }
 
 const append = text => {
