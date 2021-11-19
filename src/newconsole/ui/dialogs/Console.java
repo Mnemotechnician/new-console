@@ -26,7 +26,7 @@ public class Console extends BaseDialog {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuilder logBuffer = new StringBuilder(5000).append("-------- js console output goes here --------\n\n");
+	public static StringBuilder logBuffer = new StringBuilder(15000).append("-------- js console output goes here --------\n\n");
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */

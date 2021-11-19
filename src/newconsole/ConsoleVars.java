@@ -27,6 +27,8 @@ public class ConsoleVars {
 	public static SavesDialog saves;
 	/** Whether the console ui is enabled */
 	public static boolean consoleEnabled = true;
+	/**Startup js script path*/
+	public static String startup = "console/startup.js";
 	
 	
 	public static void init() {
@@ -51,7 +53,26 @@ public class ConsoleVars {
 			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
 			
 			ScriptsManager.init();
+			
+			executeStartup();
 		});
+	}
+	
+	public static void executeStartup() {
+		try {
+			var file = Vars.tree.get(startup);
+			if (!file.exists()) {
+				Log.warn("Startup script not found.");
+				return;
+			}
+			
+			Log.info("Executing startup script...");
+			Time.mark();
+			Vars.mods.getScripts().runConsole(file.readString());
+			Log.info("Startup script executed in [blue]" + Time.elapsed() + "[] ms.");
+		} catch (Throwable e) {
+			Log.err("Failed to execute startup script!", e);
+		}
 	}
 	
 }
