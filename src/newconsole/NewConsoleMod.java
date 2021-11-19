@@ -14,7 +14,7 @@ public class NewConsoleMod extends Mod {
 		Events.on(EventType.ClientLoadEvent.class, a -> checkUpdates());
 	}
 	
-	public static void checkUpdates() {
+	public void checkUpdates() {
 		Updater.checkUpdates(this);
 	}
 	

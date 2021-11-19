@@ -1,6 +1,7 @@
 package newconsole.js;
 
 import arc.files.*;
+import arc.func.*;
 import arc.struct.*;
 import mindustry.*;
 import newconsole.*;
@@ -49,7 +50,7 @@ public class JSInterface {
 	}
 	
 	public void checkUpdates() {
-		NewConsoleMod.checkUpdates();
+		getMod().checkUpdates();
 	}
 	
 }
