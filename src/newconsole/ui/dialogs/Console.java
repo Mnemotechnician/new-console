@@ -26,7 +26,7 @@ public class Console extends BaseDialog {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuilder logBuffer = new StringBuilder(15000).append("-------- js console output goes here --------\n\n");
+	public static StringBuilder logBuffer = new StringBuilder(15000);
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
@@ -39,6 +39,11 @@ public class Console extends BaseDialog {
 	public BetterPane leftPane, rightPane;
 	
 	protected float lastWidth, lastHeight;
+	
+	static {
+		logBuffer.append("-------- js console output goes here --------\n\n");
+		logBuffer.append("[white]Tip: run [blue]NCHelp()[] for a quick overview[]\n\n");
+	}
 	
 	public Console() {
 		super("@newconsole.console-header");
@@ -139,10 +144,15 @@ public class Console extends BaseDialog {
 			if (defaultLogger != null) defaultLogger.log(level, message);
 		};
 		
-		//try to read last log to know what happened before initialization
+		backread();
+	}
+	
+	/* Tries to read the last log. Overrides the buffer on success. */
+	public void backread() {
 		try {
 			var log = Vars.dataDirectory.child("last_log.txt");
 			if (log.exists()) {
+				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
 			} else {
 				warn("last log file doesn't exist");

@@ -68,7 +68,7 @@ public class ConsoleVars {
 			
 			Log.info("Executing startup script...");
 			Time.mark();
-			Vars.mods.getScripts().runConsole(file.readString());
+			Log.info(Vars.mods.getScripts().runConsole(file.readString()));
 			Log.info("Startup script executed in [blue]" + Time.elapsed() + "[] ms.");
 		} catch (Throwable e) {
 			Log.err("Failed to execute startup script!", e);
