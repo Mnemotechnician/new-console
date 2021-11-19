@@ -147,14 +147,19 @@ public class Console extends BaseDialog {
 		backread();
 	}
 	
-	/* Tries to read the last log. Overrides the buffer on success. */
+	/** Scroll to the bottom of the log */
+	public void scrollDown() {
+		leftPane.setScrollY(Float.MAX_VALUE);
+	}
+	
+	/** Tries to read the last log. Overrides the buffer on success. */
 	public static void backread() {
 		try {
 			var log = Vars.dataDirectory.child("last_log.txt");
 			if (log.exists()) {
 				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
-				Time.run(4, () -> leftPane.setScrollY(Float.MAX_VALUE)); //scroll down
+				Time.run(4, () -> ConsoleVars.console.scrollDown());
 			} else {
 				warn("last log file doesn't exist");
 			}
@@ -166,7 +171,7 @@ public class Console extends BaseDialog {
 	public void addLog(String newlog) {
 		info(newlog);
 		logBuffer.append(newlog);
-		Time.run(4, () -> leftPane.setScrollY(Float.MAX_VALUE)); //scroll down
+		Time.run(4, () -> scrollDown());
 	}
 	
 	public void runConsole(String code) {
