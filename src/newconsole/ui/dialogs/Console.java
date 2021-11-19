@@ -154,6 +154,7 @@ public class Console extends BaseDialog {
 			if (log.exists()) {
 				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
+				Time.run(4, () -> leftPane.setScrollY(Float.MAX_VALUE)); //scroll down
 			} else {
 				warn("last log file doesn't exist");
 			}

@@ -24,9 +24,9 @@ function NCHelp() {
 	.append("[white]You can use [blue]NewConsole[] object to access newconsole stuff.\n")
 	.append("Available methods of NewConsole object (self-explanatory):\n")
 	for (i in _interface) {
-		b.append(_interface[i].toString()).append("\n");
+		_buffer.append(_interface[i].toString()).append("\n");
 	}
-	b.append("\n\n")
+	_buffer.append("\n\n")
 	.append("You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.\n")
 	.append("The current input is saved to history whenever you run it or press 'next'/'prev'\n\n")
 	.append("You can save, load and edit scripts by opening the scripts dialog.\n")
@@ -34,13 +34,19 @@ function NCHelp() {
 	.append("\n\n\n")
 	.append("[blue]Default functions:[]\n")
 	.append("NCHelp() — show this help")
-	.append("print(Any value) — print value directly to the log")
-	.append("println(Any value) — same as print() but adds a newline")
+	.append("append(Any value) — append value directly to the log.")
+	.append("println(Any value) — same as append() but adds a newline")
 	.append("backread() — reads last_log.txt and overrides the output");
 }
 
-const print = text => _buffer.append(text);
-const println = text => _buffer.append(text).append("\n");
+const append = text => {
+	_buffer.append(text);
+	return null;
+};
+const println = text => {
+	_buffer.append(text).append("\n");
+	return null;
+};
 const backread = () => _interface.getConsole().backread();
 
 const NewConsole = _interface;
