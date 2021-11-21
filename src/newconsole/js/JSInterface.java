@@ -11,8 +11,6 @@ import newconsole.ui.dialogs.*;
 /** This class allows js scripts to interact with modded classes. */
 public class JSInterface {
 
-	private ConsoleVars varsInstance;
-	
 	public NewConsoleMod getMod() {
 		return (NewConsoleMod) Vars.mods.getMod("newconsole").main;
 	}

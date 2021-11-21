@@ -159,7 +159,11 @@ public class Console extends BaseDialog {
 			if (log.exists()) {
 				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
-				Time.run(4, () -> ConsoleVars.console.scrollDown());
+				Time.run(4, () -> {
+					if (ConsoleVars.console != null) { //no idea. really. probably because of a huge last log.
+						ConsoleVars.console.scrollDown();
+					}
+				});
 			} else {
 				warn("last log file doesn't exist");
 			}
