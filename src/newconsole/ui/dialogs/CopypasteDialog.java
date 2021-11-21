@@ -40,7 +40,7 @@ public class CopypasteDialog extends BaseDialog {
 				
 				String script = Core.app.getClipboardText();
 				if (script != null && !script.equals("")) {
-					Vars.ui.showConfirm("newconsole.warn-override", () -> target.setText(script));
+					Vars.ui.showConfirm("@newconsole.warn-override", () -> target.setText(script));
 				} else {
 					Vars.ui.showInfo("@newconsole.clipboard-empty");
 				}
