@@ -85,7 +85,7 @@ public class Console extends BaseDialog {
 						
 						buttons.button("@newconsole.clipboard", Styles.nodet, () -> {
 							ConsoleVars.copypaste.setTarget(area).show();
-						});
+						}).growX();
 					}).row();
 					
 					rightPane = script.add(new BetterPane(input -> {
