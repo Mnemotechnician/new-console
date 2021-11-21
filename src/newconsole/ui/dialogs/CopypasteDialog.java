@@ -3,6 +3,7 @@ package newconsole.ui.dialogs;
 import arc.*;
 import arc.util.*;
 import arc.scene.ui.*;
+import mindustry.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 
@@ -19,6 +20,7 @@ public class CopypasteDialog extends BaseDialog {
 		
 		cont.center();
 		cont.table(main -> {
+			main.defaults().height(50f);
 			main.button("@newconsole.copy", Styles.nodet, () -> {
 				if (target == null) {
 					Log.warn("No target text area specified for CopypasteDialog");
@@ -27,7 +29,8 @@ public class CopypasteDialog extends BaseDialog {
 				
 				String script = target.getText();
 				Core.app.setClipboardText(script);
-			}).width(100);
+				hide();
+			}).width(150);
 			
 			main.button("@newconsole.paste", Styles.nodet, () -> {
 				if (target == null) {
@@ -36,8 +39,13 @@ public class CopypasteDialog extends BaseDialog {
 				}
 				
 				String script = Core.app.getClipboardText();
-				target.setText(script);
-			}).width(100).row();
+				if (script != null && !script.equals("")) {
+					Vars.ui.showConfirm("newconsole.warn-override", () -> target.setText(script));
+				} else {
+					Vars.ui.showInfo("@newconsole.clipboard-empty");
+				}
+				hide();
+			}).width(150).row();
 			
 			main.button("@newconsole.close", Styles.nodet, this::hide).colspan(2).growX();
 		});
