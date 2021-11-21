@@ -40,11 +40,6 @@ public class Console extends BaseDialog {
 	
 	protected float lastWidth, lastHeight;
 	
-	static {
-		logBuffer.append("-------- js console output goes here --------\n\n");
-		logBuffer.append("[white]Tip: run [blue]NCHelp()[] for a quick overview[]\n\n");
-	}
-	
 	public Console() {
 		super("@newconsole.console-header");
 		closeOnBack();
@@ -86,6 +81,10 @@ public class Console extends BaseDialog {
 						
 						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
 							ConsoleVars.saves.show();
+						});
+						
+						buttons.button("@newconsole.clipboard", Styles.nodet, () -> {
+							ConsoleVars.copypaste.setTarget(area).show();
 						});
 					}).row();
 					
@@ -160,7 +159,7 @@ public class Console extends BaseDialog {
 				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
 				Time.run(4, () -> {
-					if (ConsoleVars.console != null) { //no idea. really. probably because of a huge last log.
+					if (ConsoleVars.console != null) { //I'll just keep it here cus this method is static
 						ConsoleVars.console.scrollDown();
 					}
 				});

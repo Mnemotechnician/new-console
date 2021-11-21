@@ -1,11 +1,11 @@
-#!VERSION 1.21
+#!VERSION 1.22
 #!REPO "MHeMoTexHuK/New-console"
 
 displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"
 description: "Adds a much better console ui.\n\nSee README.md for more info."
-version: 1.21
+version: 1.22
 minGameVersion: 134.1
 hidden: true
 

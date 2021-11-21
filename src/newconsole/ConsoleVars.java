@@ -25,6 +25,8 @@ public class ConsoleVars {
 	public static Console console;
 	/** Dialog that allows the user to save & load scripts */
 	public static SavesDialog saves;
+	/** Copy / paste dialog, made exclusively for mobile devices (TextArea doesn't support that natively) */
+	public static CopypasteDialog copypaste;
 	/** Whether the console ui is enabled */
 	public static boolean consoleEnabled = true;
 	/**Startup js script path*/
@@ -33,7 +35,6 @@ public class ConsoleVars {
 	
 	public static void init() {
 		Vars.loadLogger();
-		Console.init();
 		
 		Events.on(EventType.ClientLoadEvent.class, a -> {
 			group = new WidgetGroup();
@@ -44,6 +45,7 @@ public class ConsoleVars {
 			console = new Console();
 			
 			saves = new SavesDialog();
+			copypaste = new CopypasteDialog();
 			
 			floatingWidget = new FloatingWidget();
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
