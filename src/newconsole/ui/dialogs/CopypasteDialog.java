@@ -1,6 +1,7 @@
 package newconsole.ui.dialogs;
 
 import arc.*;
+import arc.util.*;
 import arc.scene.ui.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
