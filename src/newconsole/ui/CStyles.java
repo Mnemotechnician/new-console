@@ -13,8 +13,9 @@ public class CStyles {
 	public static Drawable scriptbg,
 	playIcon, editIcon, deleteIcon,
 	
-	filebg,
-	directory, fileAny, fileText, fileJs, fileZip;
+	filebg;
+	
+	public static TextureRegion directory, fileAny, fileText, fileJs, fileZip;
 	
 	public static void load() {
 		scriptbg = Tex.buttonOver;
@@ -23,7 +24,7 @@ public class CStyles {
 		editIcon = Icon.edit.tint(Color.yellow);
 		deleteIcon = Icon.trash.tint(Color.red);
 		
-		filebg = Styles.flatDown.tint(Color.valueOf("2244ff"));
+		filebg = ((ScaledNinePatchDrawable) Styles.flatDown).tint(Color.valueOf("2244ff"));
 		
 		directory = Core.atlas.find("newconsole-directory");
 		fileAny = Core.atlas.find("newconsole-file-unknown");

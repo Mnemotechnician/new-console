@@ -88,7 +88,7 @@ public class FilePicker extends Dialog {
 			});
 		}
 		
-		public static Drawable pickIcon(Fi file) {
+		public static TextureRegion pickIcon(Fi file) {
 			if (file == null || file.isDirectory()) {
 				return CStyles.directory;
 			}
