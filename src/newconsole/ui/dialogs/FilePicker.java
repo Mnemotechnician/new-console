@@ -12,6 +12,7 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.files.*;
 import mindustry.*;
+import mindustry.ui.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 

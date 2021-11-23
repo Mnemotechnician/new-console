@@ -98,7 +98,7 @@ public class Console extends BaseDialog {
 							lower.button("@newconsole.files", Styles.nodet, () -> {
 								ConsoleVars.filePicker.show();
 							});
-						});
+						}).growX();
 					}).row();
 					
 					rightPane = script.add(new BetterPane(input -> {
