@@ -8,6 +8,7 @@ import arc.struct.*;
 import arc.func.*;
 import arc.scene.*;
 import arc.scene.style.*;
+import arc.scene.event.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.files.*;
@@ -20,7 +21,7 @@ import newconsole.ui.*;
 
 public class FilePicker extends Dialog {
 	
-	protected static Fi placeholderUp = new Fi(".. go up");
+	protected static Fi placeholderUp = new Fi(".. <go up>");
 	/** File types that can be readen as text */
 	static Seq readableExtensions = Seq.with("txt", "js", "java", "kt", "md", "json", "hjson", "gradle");
 	
@@ -28,6 +29,8 @@ public class FilePicker extends Dialog {
 	public Table filesTable;
 	
 	protected Fi currentDirectory;
+	/** The last directory opened before opening a zip file */
+	protected Fi zipEntryPoint;
 	
 	public FilePicker() {
 		super("");
@@ -39,7 +42,11 @@ public class FilePicker extends Dialog {
 		
 		//special case: button that allows to go to the parent directory
 		cont.add(new FileEntry(placeholderUp, it -> {
-			var lastDirectory = currentDirectory;
+			//special case for zip files
+			if (currentDirectory.parent() == null && currentDirectory instanceof ZipFi && zipEntryPoint != null) {
+				currentDirectory = zipEntryPoint; //return from the zip file
+				zipEntryPoint = null;
+			}
 			
 			//root directories may be unaccessible. This isn't a failproof way to check but whatsoever.
 			if (currentDirectory.parent().list().length > 0) {
@@ -86,7 +93,10 @@ public class FilePicker extends Dialog {
 				openDirectory(file);
 			} else {
 				String ext = it.extension();
-				if (ext.equals("zip") || it.equals("jar")) {
+				if (ext.equals("zip") || ext.equals("jar")) {
+					if (zipEntryPoint == null) {
+						zipEntryPoint = file; //if it's not null, a zip file has been opened inside of another zip file
+					}
 					openDirectory(it);
 				} else {
 					Vars.ui.showInfo("not implemented");
@@ -117,7 +127,7 @@ public class FilePicker extends Dialog {
 			this.file = file;
 			
 			setBackground(CStyles.filebg);
-			left().marginBottom(3f).defaults().pad(7f).height(50f);
+			center().left().marginBottom(3f).defaults().pad(7f).height(50f);
 			
 			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
 			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
@@ -126,6 +136,7 @@ public class FilePicker extends Dialog {
 			
 			table(right -> {
 				right.right();
+				right.setTouchable(Touchable.childrenOnly);
 				right.add("placeholder"); //todo: actions
 			}).growX();
 			
