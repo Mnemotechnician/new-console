@@ -46,6 +46,7 @@ public class FilePicker extends Dialog {
 				openDirectory(currentDirectory.parent());
 			} else { 
 				Log.warn("Cannot access superdirectory " + currentDirectory.parent());
+				Vars.ui.showInfo("@newconsole-no-permission");
 			}
 		})).growX().row();
 		
@@ -84,7 +85,12 @@ public class FilePicker extends Dialog {
 			if (it.isDirectory()) {
 				openDirectory(file);
 			} else {
-				Vars.ui.showInfo("Not implemented");
+				String ext = it.extension();
+				if (ext.equals("zip") || it.equals("jar")) {
+					openDirectory(it);
+				} else {
+					Vars.ui.showInfo("not implemented");
+				}
 			}
 		})).growX();
 	}
@@ -95,7 +101,7 @@ public class FilePicker extends Dialog {
 			return;
 		}
 		
-		if (file.extension().equals("zip")) {
+		if (!file.isDirectory()) {
 			currentDirectory = new ZipFi(file);
 		} else {
 			currentDirectory = file;
@@ -120,7 +126,7 @@ public class FilePicker extends Dialog {
 			
 			table(right -> {
 				right.right();
-				add("placeholder"); //todo: actions
+				right.add("placeholder"); //todo: actions
 			}).growX();
 			
 			clicked(() -> {
@@ -136,6 +142,7 @@ public class FilePicker extends Dialog {
 			return switch (file.extension()) {
 				case "txt" -> CStyles.fileText;
 				case "js" -> CStyles.fileJs;
+				case "jar" -> CStyles.fileZip;
 				case "zip" -> CStyles.fileZip;
 				default -> CStyles.fileAny;
 			};
