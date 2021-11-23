@@ -81,7 +81,7 @@ public class FilePicker extends Dialog {
 					Vars.ui.showInfo("@newconsole-no-permission");
 				}
 			});
-		})).growX().row();
+		}).growX().row();
 		
 		mainPane = new BetterPane(t -> {
 			filesTable = t;
