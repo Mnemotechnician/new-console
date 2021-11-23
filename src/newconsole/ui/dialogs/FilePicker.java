@@ -35,7 +35,7 @@ public class FilePicker extends Dialog {
 			var lastDirectory = currentDirectory;
 			
 			//root directories may be unaccessible. This isn't a failproof way to check but whatsoever.
-			if (it.parent().list.length > 0) {
+			if (it.parent().list().length > 0) {
 				openDirectory(it.parent());
 			} else { 
 				Log.warn("Cannot access superdirectory " + it.parent());
