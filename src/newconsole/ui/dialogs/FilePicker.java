@@ -61,7 +61,7 @@ public class FilePicker extends Dialog {
 			}));
 		}
 		
-		filesTable.getCells().sort((a, b) -> (a.isDirectory() ? 1 : -1) + (b.isDirectory() ? -1 : 1));
+		filesTable.getCells().sort((a, b) -> (a.get().file.isDirectory() ? 1 : -1) + (b.get().file.isDirectory() ? -1 : 1));
 	}
 	
 	public void openDirectory(Fi file) {
