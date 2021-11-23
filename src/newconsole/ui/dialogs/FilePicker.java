@@ -12,23 +12,29 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.files.*;
 import mindustry.*;
+import mindustry.gen.*;
 import mindustry.graphics.*;
 
 import newconsole.ui.*;
 
 public class FilePicker extends Dialog {
 	
-	static Fi placeholderUp = new Fi(".. go up");
+	protected static Fi placeholderUp = new Fi(".. go up");
+	/** File types that can be readen as text */
+	static Seq readableExtensions = Seq.with("txt", "js", "java", "kt", "md", "json", "hjson", "gradle");
 	
 	public BetterPane mainPane;
 	public Table filesTable;
 	
-	Fi currentDirectory;
+	protected Fi currentDirectory;
 	
 	public FilePicker() {
 		super("");
 		closeOnBack();
 		setFillParent(true);
+		
+		cont.label(() -> currentDirectory.absolutePath()).row();
+		cont.button(Icon.exit, Styles.nodei, this::hide).size(50f).row();
 		
 		//special case: button that allows to go to the parent directory
 		cont.add(new FileEntry(placeholderUp, it -> {
@@ -88,8 +94,11 @@ public class FilePicker extends Dialog {
 			return;
 		}
 		
-		if (file.extension().equals("zip"))
-		currentDirectory = file;
+		if (file.extension().equals("zip")) {
+			currentDirectory = new ZipFi(file);
+		} else {
+			currentDirectory = file;
+		}
 		rebuild();
 	}
 	
@@ -101,14 +110,15 @@ public class FilePicker extends Dialog {
 			this.file = file;
 			
 			setBackground(CStyles.filebg);
-			setColor(CStyles.accent);
 			left().marginBottom(3f).defaults().pad(7f).height(50f);
 			
-			image(pickIcon(file)).size(50f).marginRight(10f);
+			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
+			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
+			
 			add(file.name());
 			
 			table(right -> {
-				right();
+				right.right();
 				add("placeholder"); //todo: actions
 			}).growX();
 			
