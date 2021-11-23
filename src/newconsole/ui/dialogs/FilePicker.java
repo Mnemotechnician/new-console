@@ -30,13 +30,22 @@ public class FilePicker extends Dialog {
 		closeOnBack();
 		setFillParent(true);
 		
+		//special case: button that allows to go to the parent directory
+		cont.add(new FileEntry(placeholderUp, it -> {
+			var lastDirectory = currentDirectory;
+			
+			//root directories may be unaccessible. This isn't a failproof way to check but whatsoever.
+			if (it.parent().list.length > 0) {
+				openDirectory(it.parent());
+			} else { 
+				Log.warn("Cannot access superdirectory " + it.parent());
+			}
+		})).growX().row();
+		
 		mainPane = new BetterPane(t -> {
 			filesTable = t;
 		});
-		cont.add(mainPane).growX();
-		
-		//special case: button that allows to go to the parent directory
-		cont.add(new FileEntry(placeholderUp, it -> openDirectory(it.parent()))).growX();
+		cont.add(mainPane).grow();
 	}
 	
 	@Override

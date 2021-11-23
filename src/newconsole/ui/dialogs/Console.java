@@ -59,7 +59,7 @@ public class Console extends BaseDialog {
 					script.table(buttons -> {
 						buttons.table(twoRows -> {
 							twoRows.table(history -> {
-								buttons.defaults().height(40).width(100);
+								history.defaults().height(40).width(100);
 								
 								history.button("@newconsole.prev", Styles.nodet, () -> {
 									historyShift(1);
