@@ -21,7 +21,6 @@ import newconsole.ui.*;
 
 public class FilePicker extends Dialog {
 	
-	protected static Fi placeholderUp = new Fi(".. <go up>");
 	/** File types that can be readen as text */
 	public static Seq<String> readableExtensions = Seq.with("txt", "md");
 	/** Files containing raw code */
@@ -44,9 +43,9 @@ public class FilePicker extends Dialog {
 		//todo: replace this with clickable buttons?
 		cont.label(() -> {
 			if (currentDirectory instanceof ZipFi) {
-				(zipEntryPoint != null ? zipEntryPoint.name() : "") + ": ZIP FILE ROOT" + currentDirectory.absolutePath();
+				return (zipEntryPoint != null ? zipEntryPoint.name() : "") + ": ZIP FILE ROOT" + currentDirectory.absolutePath();
 			} else {
-				currentDirectory.absolutePath();
+				return currentDirectory.absolutePath();
 			}
 		}).row();
 		
@@ -54,25 +53,34 @@ public class FilePicker extends Dialog {
 			bar.left();
 			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f).row();
 			bar.button("@newconsole.files.save-script", Styles.nodet, () -> {
-				
+				Vars.ui.showInfo("not implemented");
 			});
 		}).growX();
 		
-		//special entry: button that allows to go to the parent directory
-		cont.add(new FileEntry(placeholderUp, it -> {
-			//special case for zip files
-			if (currentDirectory.parent() == null && currentDirectory instanceof ZipFi && zipEntryPoint != null) {
-				currentDirectory = zipEntryPoint; //return from the zip file
-				zipEntryPoint = null;
-			}
+		//special entry that allows to go to the parent directory
+		cont.table(entry -> {
+			entry.setBackground(CStyles.filebg);
+			entry.center().left().marginBottom(3f).defaults().pad(7f).height(50f);
+			entry.touchable = Touchable.enabled;
 			
-			//root & shared storage (android) directories may be unaccessible. This isn't a failproof way to check but whatsoever.
-			if (currentDirectory.parent().list().length > 0) {
-				openDirectory(currentDirectory.parent());
-			} else { 
-				Log.warn("Cannot access superdirectory " + currentDirectory.parent());
-				Vars.ui.showInfo("@newconsole-no-permission");
-			}
+			entry.image(CStyles.directory).size(50f).marginRight(10f).setColor(Color.gray);
+			entry.add("@newconsole.files.up");
+			
+			entry.clicked(() -> {
+				//special case for zip files
+				if (currentDirectory.parent() == null && currentDirectory instanceof ZipFi && zipEntryPoint != null) {
+					currentDirectory = zipEntryPoint; //return from the zip file
+					zipEntryPoint = null;
+				}
+				
+				//root & shared storage (android) directories may be unaccessible. This isn't a failproof way to check but whatsoever.
+				if (currentDirectory.parent().list().length > 0) {
+					openDirectory(currentDirectory.parent());
+				} else { 
+					Log.warn("Cannot access superdirectory " + currentDirectory.parent() + " (no permission?)");
+					Vars.ui.showInfo("@newconsole-no-permission");
+				}
+			});
 		})).growX().row();
 		
 		mainPane = new BetterPane(t -> {
@@ -160,7 +168,7 @@ public class FilePicker extends Dialog {
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
 						Vars.ui.showInfo("not implemented");
 					});
-				});
+				}));
 			}).growX();
 			
 			clicked(() -> {
@@ -174,10 +182,10 @@ public class FilePicker extends Dialog {
 			}
 			String ext = file.extension();
 			switch (ext) {
-				case "js" -> return CStyles.fileJs;
-				case "zip" -> return CStyles.fileZip;
-				case "jar" -> return CStyles.fileJar;
-				default -> break;
+				case "js": return CStyles.fileJs;
+				case "zip": return CStyles.fileZip;
+				case "jar": return CStyles.fileJar;
+				default: break;
 			}
 			if (readableExtensions.contains(ext)) return CStyles.fileText;
 			if (codeExtensions.contains(ext)) return CStyles.fileCode;
