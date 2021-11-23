@@ -1,9 +1,11 @@
 package newconsole.ui;
 
+import arc.*;
 import arc.util.*;
 import arc.graphics.*;
 import arc.scene.style.*;
 import mindustry.gen.*;
+import mindustry.ui.*;
 import mindustry.graphics.*;
 
 public class CStyles {
