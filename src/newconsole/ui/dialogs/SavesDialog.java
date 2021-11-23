@@ -76,7 +76,7 @@ public class SavesDialog extends BaseDialog {
 			entry.add(name).width(250).marginLeft(20).get().setWrap(true);
 			
 			entry.table(actions -> {
-				actions.center().right().defaults().center().size(80);
+				actions.center().right().defaults().center().size(70);
 				
 				actions.button(CStyles.playIcon, Styles.nodei, () -> {
 					ConsoleVars.console.runConsole(script);

@@ -1,6 +1,8 @@
 #!VERSION 1.25
 #!REPO "MHeMoTexHuK/New-console"
 
+#Reminder for myself: THINK TWICE BEFORE MODIFYING THE VALUES ABOVE
+
 displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"

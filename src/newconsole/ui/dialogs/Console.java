@@ -57,7 +57,7 @@ public class Console extends BaseDialog {
 					script.bottom().defaults().bottom().left();
 					
 					script.table(buttons -> {
-						buttons.defaults().width(100).fill();
+						buttons.defaults().height(40).width(100).fill();
 						
 						buttons.button("@newconsole.prev", Styles.nodet, () -> {
 							historyShift(1);
@@ -85,7 +85,11 @@ public class Console extends BaseDialog {
 						
 						buttons.button("@newconsole.clipboard", Styles.nodet, () -> {
 							ConsoleVars.copypaste.setTarget(area).show();
-						}).growX();
+						});
+						
+						buttons.button("@newconsole.files", Styles.nodet, () -> {
+							ConsoleVars.filePicker.show();
+						});
 					}).row();
 					
 					rightPane = script.add(new BetterPane(input -> {

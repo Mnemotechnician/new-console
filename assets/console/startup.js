@@ -13,6 +13,13 @@ function classForName(name) {
 
 const _interface = classForName("newconsole.js.JSInterface").newInstance();
 const _buffer = _interface.getConsole().logBuffer;
+const _defaultMethods = Object.keys(new Object());
+const _nativeContains = (array, name) => {
+	for (i in array) {
+		if (i.equals(name)) return true;
+	}
+	return false;
+}
 
 function NCHelp() {
 	//todo: create a separate file? these .append()s are killing me
@@ -24,7 +31,9 @@ function NCHelp() {
 	.append("[white]You can use [blue]NewConsole[] object to access newconsole stuff.\n")
 	.append("Available methods of NewConsole object (self-explanatory):\n")
 	for (i in _interface) {
-		_buffer.append("NewConsole.[blue]").append(i).append("[];\n");
+		if (!nativeContains(_defaultMethods, i)) {
+			_buffer.append("NewConsole.[blue]").append(i).append("[];\n");
+		}
 	}
 	_buffer.append("\n\n")
 	.append("You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.\n")

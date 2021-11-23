@@ -51,7 +51,7 @@ public class CopypasteDialog extends BaseDialog {
 		});
 	}
 	
-	public CopypasteDialog setTarget(TextArea target) {
+	public CopypasteDialog setTarget(TextField target) {
 		this.target = target;
 		return this;
 	}
