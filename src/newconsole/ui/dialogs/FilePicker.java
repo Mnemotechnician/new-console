@@ -41,9 +41,8 @@ public class FilePicker extends Dialog {
 	
 	@Override
 	public Dialog show(Scene stage, Action action) {
-		var s = super.show(stage, action);
 		rebuild();
-		return s;
+		return super.show(stage, action);
 	}
 	
 	public void rebuild() {
@@ -52,22 +51,26 @@ public class FilePicker extends Dialog {
 		}
 		
 		filesTable.clear();
-		for (Fi file : currentDirectory.list()) {
-			filesTable.row();
-			filesTable.add(new FileEntry(file, it -> {
-				if (it.isDirectory()) {
-					openDirectory(file);
-				} else {
-					Vars.ui.showInfo("Not implemented");
-				}
-			}));
+		var list = currentDirectory.list();
+		//first run: add subdirectories
+		for (Fi file : list) {
+			if (file.isDirectory()) buildFile(file);
 		}
-		
-		filesTable.getCells().sort((a, b) -> {
-			var first = (FileEntry) a.get();
-			var second = (FileEntry) b.get();
-			return (first.file.isDirectory() ? 1 : -1) + (second.file.isDirectory() ? -1 : 1);
-		});
+		//second: add files
+		for (Fi file : list) {
+			if (!file.isDirectory()) buildFile(file);
+		}
+	}
+	
+	public void buildFile(Fi file) {
+		filesTable.row();
+			filesTable.add(new FileEntry(file, it -> {
+			if (it.isDirectory()) {
+				openDirectory(file);
+			} else {
+				Vars.ui.showInfo("Not implemented");
+			}
+		}));
 	}
 	
 	public void openDirectory(Fi file) {
