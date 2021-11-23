@@ -23,13 +23,17 @@ public class FilePicker extends Dialog {
 	
 	protected static Fi placeholderUp = new Fi(".. <go up>");
 	/** File types that can be readen as text */
-	static Seq readableExtensions = Seq.with("txt", "js", "java", "kt", "md", "json", "hjson", "gradle");
+	public static Seq<String> readableExtensions = Seq.with("txt", "md");
+	/** Files containing raw code */
+	public static Seq<String> codeExtensions = Seq.with("js", "java", "kt", "json", "hjson", "gradle");
+	/** Files that can be opened as images */
+	public static Seq<String> imageExtensions = Seq.with("png", "jpg", "jpeg", "bmp" /*?*/);
 	
 	public BetterPane mainPane;
 	public Table filesTable;
 	
 	protected Fi currentDirectory;
-	/** The last directory opened before opening a zip file */
+	/** The last opened zip file. Used to return from zip file trees */
 	protected Fi zipEntryPoint;
 	
 	public FilePicker() {
@@ -37,10 +41,24 @@ public class FilePicker extends Dialog {
 		closeOnBack();
 		setFillParent(true);
 		
-		cont.label(() -> currentDirectory.absolutePath()).row();
-		cont.button(Icon.exit, Styles.nodei, this::hide).size(50f).row();
+		//todo: replace this with clickable buttons?
+		cont.label(() -> {
+			if (currentDirectory instanceof ZipFi) {
+				(zipEntryPoint != null ? zipEntryPoint.name() : "") + ": ZIP FILE ROOT" + currentDirectory.absolutePath();
+			} else {
+				currentDirectory.absolutePath();
+			}
+		}).row();
 		
-		//special case: button that allows to go to the parent directory
+		cont.table(bar -> {
+			bar.left();
+			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f).row();
+			bar.button("@newconsole.files.save-script", Styles.nodet, () -> {
+				
+			});
+		}).growX();
+		
+		//special entry: button that allows to go to the parent directory
 		cont.add(new FileEntry(placeholderUp, it -> {
 			//special case for zip files
 			if (currentDirectory.parent() == null && currentDirectory instanceof ZipFi && zipEntryPoint != null) {
@@ -48,7 +66,7 @@ public class FilePicker extends Dialog {
 				zipEntryPoint = null;
 			}
 			
-			//root directories may be unaccessible. This isn't a failproof way to check but whatsoever.
+			//root & shared storage (android) directories may be unaccessible. This isn't a failproof way to check but whatsoever.
 			if (currentDirectory.parent().list().length > 0) {
 				openDirectory(currentDirectory.parent());
 			} else { 
@@ -128,6 +146,7 @@ public class FilePicker extends Dialog {
 			
 			setBackground(CStyles.filebg);
 			center().left().marginBottom(3f).defaults().pad(7f).height(50f);
+			touchable = Touchable.enabled;
 			
 			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
 			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
@@ -136,8 +155,12 @@ public class FilePicker extends Dialog {
 			
 			table(right -> {
 				right.right();
-				right.touchable = Touchable.childrenOnly;
-				right.add("placeholder"); //todo: actions
+				right.add(new Spinner("@newconsole.actions", spinner -> {
+					spinner.add("placeholder"); //todo: actions
+					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
+						Vars.ui.showInfo("not implemented");
+					});
+				});
 			}).growX();
 			
 			clicked(() -> {
@@ -149,14 +172,16 @@ public class FilePicker extends Dialog {
 			if (file == null || file.isDirectory()) {
 				return CStyles.directory;
 			}
-			
-			return switch (file.extension()) {
-				case "txt" -> CStyles.fileText;
-				case "js" -> CStyles.fileJs;
-				case "jar" -> CStyles.fileZip;
-				case "zip" -> CStyles.fileZip;
-				default -> CStyles.fileAny;
-			};
+			String ext = file.extension();
+			switch (ext) {
+				case "js" -> return CStyles.fileJs;
+				case "zip" -> return CStyles.fileZip;
+				case "jar" -> return CStyles.fileJar;
+				default -> break;
+			}
+			if (readableExtensions.contains(ext)) return CStyles.fileText;
+			if (codeExtensions.contains(ext)) return CStyles.fileCode;
+			if (imageExtensions.contains(ext)) return CStyles.fileImage;
 		}
 		
 	}

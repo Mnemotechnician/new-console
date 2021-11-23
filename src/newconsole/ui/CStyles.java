@@ -9,14 +9,19 @@ import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.graphics.*;
 
+import static arc.Core.*;
+
 public class CStyles {
 	
-	public static Drawable scriptbg,
-	playIcon, editIcon, deleteIcon,
+	public static Drawable 
+	scriptbg, filebg,
+	playIcon, editIcon, deleteIcon;
 	
-	filebg;
-	
-	public static TextureRegion directory, fileAny, fileText, fileJs, fileZip;
+	public static TextureRegion 
+	directory,
+	fileAny,
+	fileText, fileJs, fileCode, fileImage,
+	fileZip, fileJar;
 	
 	public static Color accent = Color.valueOf("2244ff");
 	
@@ -29,10 +34,13 @@ public class CStyles {
 		
 		filebg = ((ScaledNinePatchDrawable) Styles.flatDown).tint(accent);
 		
-		directory = Core.atlas.find("newconsole-folder");
-		fileAny = Core.atlas.find("newconsole-file-unknown");
-		fileText = Core.atlas.find("newconsole-file-text");
-		fileJs = Core.atlas.find("newconsole-file-js");
-		fileZip = Core.atlas.find("newconsole-file-zip");
+		directory = atlas.find("newconsole-folder");
+		fileAny = atlas.find("newconsole-file-unknown");
+		fileText = atlas.find("newconsole-file-text");
+		fileJs = atlas.find("newconsole-file-js");
+		fileZip = atlas.find("newconsole-file-zip");
+		fileJar = atlas.find("newconsole-file-jar");
+		fileCode = atlas.find("newconsole-file-code");
+		fileImage = atlas.find("newconsole-file-image");
 	}
 }
