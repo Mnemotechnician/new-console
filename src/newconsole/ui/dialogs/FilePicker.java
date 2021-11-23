@@ -63,8 +63,8 @@ public class FilePicker extends Dialog {
 			entry.center().left().marginBottom(3f).defaults().pad(7f).height(50f);
 			entry.touchable = Touchable.enabled;
 			
-			entry.image(CStyles.directory).size(50f).marginRight(10f).setColor(Color.gray);
-			entry.add("@newconsole.files.up");
+			entry.image(CStyles.directory).size(50f).marginRight(10f).get().setColor(Color.gray);
+			entry.add("@newconsole.files-up");
 			
 			entry.clicked(() -> {
 				//special case for zip files

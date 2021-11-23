@@ -62,7 +62,7 @@ public class Spinner extends TextButton {
 		
 		col.update(() -> {
 			if (unique && lastCollapser != col) {
-				hide();
+				hide(true);
 			}
 			
 			if (col.getScene() != null) {
