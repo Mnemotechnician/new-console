@@ -136,7 +136,7 @@ public class FilePicker extends Dialog {
 			
 			table(right -> {
 				right.right();
-				right.setTouchable(Touchable.childrenOnly);
+				right.touchable = Touchable.childrenOnly;
 				right.add("placeholder"); //todo: actions
 			}).growX();
 			
