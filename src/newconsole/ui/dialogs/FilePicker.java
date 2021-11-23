@@ -2,11 +2,13 @@ package newconsole.ui.dialogs;
 
 import arc.*;
 import arc.util.*;
+import arc.graphics.*;
+import arc.graphics.g2d.*;
 import arc.struct.*;
 import arc.func.*;
 import arc.scene.*;
 import arc.scene.ui.*;
-import arc.scene.ui.layout;
+import arc.scene.ui.layout.*;
 import arc.files.*;
 import mindustry.*;
 import mindustry.graphics.*;
@@ -35,17 +37,17 @@ public class FilePicker extends Dialog {
 	}
 	
 	public void rebuild() {
-		if (file == null || !file.exists()) {
-			file = Vars.dataDirectory;
+		if (currentDirectory == null || !currentDirectory.exists()) {
+			currentDirectory = Vars.dataDirectory;
 		}
 		
 		//special case: button that allows to go to the parent directory
 		filesTable.add(new FileEntry(placeholderUp, it -> openDirectory(it.parent()))).growX();
 		
-		for (Fi file : currentDirectory) {
+		for (Fi file : currentDirectory.list()) {
 			filesTable.add(new FileEntry(file, it -> {
 				if (it.isDirectory()) {
-					openFile(file);
+					openDirectory(file);
 				} else {
 					Vars.ui.showInfo("Not implemented");
 				}
@@ -65,7 +67,7 @@ public class FilePicker extends Dialog {
 	
 	public static class FileEntry extends Table {
 		
-		public FileEntry(Fi file, Cons<File> onclick) {
+		public FileEntry(Fi file, Cons<Fi> onclick) {
 			setBackground(CStyles.filebg);
 			marginBottom(3f);
 			
@@ -81,7 +83,7 @@ public class FilePicker extends Dialog {
 			}).growX();
 			
 			clicked(() -> {
-				onClick.get(file);
+				onclick.get(file);
 			});
 		}
 		
