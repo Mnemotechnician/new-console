@@ -51,11 +51,11 @@ public class FilePicker extends Dialog {
 		
 		cont.table(bar -> {
 			bar.left();
-			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f).row();
+			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f);
 			bar.button("@newconsole.files.save-script", Styles.nodet, () -> {
 				Vars.ui.showInfo("not implemented");
-			});
-		}).growX();
+			}).width(200);
+		}).growX().row();
 		
 		//special entry that allows to go to the parent directory
 		cont.table(entry -> {
@@ -164,6 +164,8 @@ public class FilePicker extends Dialog {
 			table(right -> {
 				right.right();
 				right.add(new Spinner("@newconsole.actions", spinner -> {
+					spinner.setBackground(CStyles.filebg);
+					
 					spinner.add("placeholder"); //todo: actions
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
 						Vars.ui.showInfo("not implemented");
