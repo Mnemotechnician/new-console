@@ -41,8 +41,9 @@ public class FilePicker extends Dialog {
 	
 	@Override
 	public Dialog show(Scene stage, Action action) {
+		var s = super.show(stage, action);
 		rebuild();
-		return super.show(stage, action);
+		return s;
 	}
 	
 	public void rebuild() {

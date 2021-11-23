@@ -57,8 +57,6 @@ public class Console extends BaseDialog {
 					script.bottom().defaults().bottom().left();
 					
 					script.table(buttons -> {
-						buttons.defaults().height(40).width(100).fill();
-						
 						buttons.table(twoRows -> {
 							twoRows.table(history -> {
 								buttons.defaults().height(40).width(100);
@@ -86,10 +84,12 @@ public class Console extends BaseDialog {
 								historyIndex = 0;
 								addHistory(code);
 								runConsole(code);
-							}).growY();
+							}).width(100).growY();
 						}).row();
 						
 						buttons.table(lower -> {
+							lower.defaults().width(100).height(40);
+							
 							lower.button("@newconsole.scripts", Styles.nodet, () -> {
 								ConsoleVars.saves.show();
 							});
