@@ -35,7 +35,7 @@ public class FilePicker extends Dialog {
 		cont.add(mainPane).growX();
 	}
 	
-	Override
+	@Override
 	public Dialog show(Scene stage, Action action) {
 		rebuild();
 		return super.show(stage, action);
