@@ -35,10 +35,10 @@ public class FilePicker extends Dialog {
 			var lastDirectory = currentDirectory;
 			
 			//root directories may be unaccessible. This isn't a failproof way to check but whatsoever.
-			if (it.parent().list().length > 0) {
-				openDirectory(it.parent());
+			if (currentDirectory.parent().list().length > 0) {
+				openDirectory(currentDirectory.parent());
 			} else { 
-				Log.warn("Cannot access superdirectory " + it.parent());
+				Log.warn("Cannot access superdirectory " + currentDirectory.parent());
 			}
 		})).growX().row();
 		
@@ -73,13 +73,13 @@ public class FilePicker extends Dialog {
 	
 	public void buildFile(Fi file) {
 		filesTable.row();
-			filesTable.add(new FileEntry(file, it -> {
+		filesTable.add(new FileEntry(file, it -> {
 			if (it.isDirectory()) {
 				openDirectory(file);
 			} else {
 				Vars.ui.showInfo("Not implemented");
 			}
-		}));
+		})).growX();
 	}
 	
 	public void openDirectory(Fi file) {
@@ -88,6 +88,7 @@ public class FilePicker extends Dialog {
 			return;
 		}
 		
+		if (file.extension().equals("zip"))
 		currentDirectory = file;
 		rebuild();
 	}
@@ -100,10 +101,8 @@ public class FilePicker extends Dialog {
 			this.file = file;
 			
 			setBackground(CStyles.filebg);
-			marginBottom(3f);
-			
-			left();
-			defaults().pad(7f).height(50f);
+			setColor(CStyles.accent);
+			left().marginBottom(3f).defaults().pad(7f).height(50f);
 			
 			image(pickIcon(file)).size(50f).marginRight(10f);
 			add(file.name());

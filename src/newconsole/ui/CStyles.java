@@ -18,6 +18,8 @@ public class CStyles {
 	
 	public static TextureRegion directory, fileAny, fileText, fileJs, fileZip;
 	
+	public static Color accent = Color.valueOf("2244ff");
+	
 	public static void load() {
 		scriptbg = Tex.buttonOver;
 		
@@ -25,9 +27,9 @@ public class CStyles {
 		editIcon = Icon.edit.tint(Color.yellow);
 		deleteIcon = Icon.trash.tint(Color.red);
 		
-		filebg = ((ScaledNinePatchDrawable) Styles.flatDown).tint(Color.valueOf("2244ff"));
+		filebg = ((ScaledNinePatchDrawable) Styles.flatDown).tint(accent);
 		
-		directory = Core.atlas.find("newconsole-directory");
+		directory = Core.atlas.find("newconsole-folder");
 		fileAny = Core.atlas.find("newconsole-file-unknown");
 		fileText = Core.atlas.find("newconsole-file-text");
 		fileJs = Core.atlas.find("newconsole-file-js");

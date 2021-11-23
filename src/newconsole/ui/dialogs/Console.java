@@ -89,6 +89,7 @@ public class Console extends BaseDialog {
 						
 						buttons.table(lower -> {
 							lower.defaults().width(100).height(40);
+							lower.left();
 							
 							lower.button("@newconsole.scripts", Styles.nodet, () -> {
 								ConsoleVars.saves.show();
