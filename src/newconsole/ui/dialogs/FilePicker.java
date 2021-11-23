@@ -190,6 +190,7 @@ public class FilePicker extends Dialog {
 			if (readableExtensions.contains(ext)) return CStyles.fileText;
 			if (codeExtensions.contains(ext)) return CStyles.fileCode;
 			if (imageExtensions.contains(ext)) return CStyles.fileImage;
+			return CStyles.fileAny;
 		}
 		
 	}
