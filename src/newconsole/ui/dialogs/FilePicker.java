@@ -28,11 +28,15 @@ public class FilePicker extends Dialog {
 	public FilePicker() {
 		super("");
 		closeOnBack();
+		setFillParent(true);
 		
 		mainPane = new BetterPane(t -> {
 			filesTable = t;
 		});
 		cont.add(mainPane).growX();
+		
+		//special case: button that allows to go to the parent directory
+		cont.add(new FileEntry(placeholderUp, it -> openDirectory(it.parent()))).growX();
 	}
 	
 	@Override
@@ -46,10 +50,8 @@ public class FilePicker extends Dialog {
 			currentDirectory = Vars.dataDirectory;
 		}
 		
-		//special case: button that allows to go to the parent directory
-		filesTable.add(new FileEntry(placeholderUp, it -> openDirectory(it.parent()))).growX();
-		
 		for (Fi file : currentDirectory.list()) {
+			filesTable.row();
 			filesTable.add(new FileEntry(file, it -> {
 				if (it.isDirectory()) {
 					openDirectory(file);
@@ -58,6 +60,8 @@ public class FilePicker extends Dialog {
 				}
 			}));
 		}
+		
+		filesTable.getCells().sort((a, b) -> (a.isDirectory() ? 1 : -1) + (b.isDirectory() ? -1 : 1));
 	}
 	
 	public void openDirectory(Fi file) {
@@ -72,7 +76,11 @@ public class FilePicker extends Dialog {
 	
 	public static class FileEntry extends Table {
 		
+		public Fi file;
+		
 		public FileEntry(Fi file, Cons<Fi> onclick) {
+			this.file = file;
+			
 			setBackground(CStyles.filebg);
 			marginBottom(3f);
 			

@@ -59,36 +59,44 @@ public class Console extends BaseDialog {
 					script.table(buttons -> {
 						buttons.defaults().height(40).width(100).fill();
 						
-						buttons.button("@newconsole.prev", Styles.nodet, () -> {
-							historyShift(1);
-						});
-						
-						buttons.button("@newconsole.next", Styles.nodet, () -> {
-							historyShift(-1);
-						});
-						
-						buttons.button("@newconsole.run", Styles.nodet, () -> {
-							String code = area.getText();
+						buttons.table(twoRows -> {
+							button.table(history -> {
+								buttons.defaults().height(40).width(100);
+								
+								history.button("@newconsole.prev", Styles.nodet, () -> {
+									historyShift(1);
+								});
+								
+								history.button("@newconsole.next", Styles.nodet, () -> {
+									historyShift(-1);
+								}).row();
+								
+								history.button("@newconsole.clear", Styles.nodet, () -> {
+									logBuffer.setLength(0);
+								});
+								
+								history.button("@newconsole.clipboard", Styles.nodet, () -> {
+									ConsoleVars.copypaste.setTarget(area).show();
+								});
+							});
 							
-							historyIndex = 0;
-							addHistory(code);
-							runConsole(code);
-						}).width(130).row();
-						
-						buttons.button("@newconsole.clear", Styles.nodet, () -> {
-							logBuffer.setLength(0);
+							twoRows.button("@newconsole.run", Styles.nodet, () -> {
+								String code = area.getText();
+								
+								historyIndex = 0;
+								addHistory(code);
+								runConsole(code);
+							}).growY().row();
 						});
 						
-						buttons.button("@newconsole.scripts", Styles.nodet, () -> {
-							ConsoleVars.saves.show();
-						});
-						
-						buttons.button("@newconsole.clipboard", Styles.nodet, () -> {
-							ConsoleVars.copypaste.setTarget(area).show();
-						});
-						
-						buttons.button("@newconsole.files", Styles.nodet, () -> {
-							ConsoleVars.filePicker.show();
+						buttons.table(lower -> {
+							lower.button("@newconsole.scripts", Styles.nodet, () -> {
+								ConsoleVars.saves.show();
+							});
+							
+							lower.button("@newconsole.files", Styles.nodet, () -> {
+								ConsoleVars.filePicker.show();
+							});
 						});
 					}).row();
 					
