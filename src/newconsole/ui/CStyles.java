@@ -11,7 +11,7 @@ public class CStyles {
 	public static Drawable scriptbg,
 	playIcon, editIcon, deleteIcon,
 	
-	filebg
+	filebg,
 	directory, fileAny, fileText, fileJs, fileZip;
 	
 	public static void load() {
@@ -27,6 +27,6 @@ public class CStyles {
 		fileAny = Core.atlas.find("newconsole-file-unknown");
 		fileText = Core.atlas.find("newconsole-file-text");
 		fileJs = Core.atlas.find("newconsole-file-js");
-		fileZip = Core.atlas.find("newconsole-file-zip")
+		fileZip = Core.atlas.find("newconsole-file-zip");
 	}
 }

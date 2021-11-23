@@ -31,7 +31,7 @@ function NCHelp() {
 	.append("[white]You can use [blue]NewConsole[] object to access newconsole stuff.\n")
 	.append("Available methods of NewConsole object (self-explanatory):\n")
 	for (i in _interface) {
-		if (!nativeContains(_defaultMethods, i)) {
+		if (!_nativeContains(_defaultMethods, i)) {
 			_buffer.append("NewConsole.[blue]").append(i).append("[];\n");
 		}
 	}

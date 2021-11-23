@@ -95,7 +95,7 @@ public class FilePicker extends Dialog {
 				case "js" -> CStyles.fileJs;
 				case "zip" -> CStyles.fileZip;
 				default -> CStyles.fileAny;
-			}
+			};
 		}
 		
 	}
