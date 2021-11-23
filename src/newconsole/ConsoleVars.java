@@ -39,6 +39,8 @@ public class ConsoleVars {
 		Vars.loadLogger();
 		
 		Events.on(EventType.ClientLoadEvent.class, a -> {
+			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
+			
 			group = new WidgetGroup();
 			group.setFillParent(true);
 			group.touchable = Touchable.childrenOnly;
@@ -54,8 +56,6 @@ public class ConsoleVars {
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
 			group.addChild(floatingWidget);
 			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
-			
-			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
 			
 			ScriptsManager.init();
 			
