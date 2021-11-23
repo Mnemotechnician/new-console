@@ -33,8 +33,12 @@ public class FilePicker extends Dialog {
 			filesTable = t;
 		});
 		cont.add(mainPane).growX();
-		
+	}
+	
+	Override
+	public Dialog show(Scene stage, Action action) {
 		rebuild();
+		return super.show(stage, action);
 	}
 	
 	public void rebuild() {
