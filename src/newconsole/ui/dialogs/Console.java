@@ -86,8 +86,8 @@ public class Console extends BaseDialog {
 								historyIndex = 0;
 								addHistory(code);
 								runConsole(code);
-							}).growY().row();
-						});
+							}).growY();
+						}).row();
 						
 						buttons.table(lower -> {
 							lower.button("@newconsole.scripts", Styles.nodet, () -> {

@@ -50,6 +50,7 @@ public class FilePicker extends Dialog {
 			currentDirectory = Vars.dataDirectory;
 		}
 		
+		filesTable.clear();
 		for (Fi file : currentDirectory.list()) {
 			filesTable.row();
 			filesTable.add(new FileEntry(file, it -> {
