@@ -96,7 +96,7 @@ public class Console extends BaseDialog {
 							});
 							
 							lower.button("@newconsole.files", Styles.nodet, () -> {
-								ConsoleVars.filePicker.show();
+								ConsoleVars.fileBrowser.show();
 							});
 						}).growX();
 					}).row();

@@ -27,8 +27,8 @@ public class ConsoleVars {
 	public static SavesDialog saves;
 	/** Copy / paste dialog, made exclusively for mobile devices (TextArea doesn't support that natively) */
 	public static CopypasteDialog copypaste;
-	/** File picker dialog */
-	public static FilePicker filePicker;
+	/** File browser dialog */
+	public static FileBrowser fileBrowser;
 	/** Whether the console ui is enabled */
 	public static boolean consoleEnabled = true;
 	/**Startup js script path*/
@@ -50,7 +50,7 @@ public class ConsoleVars {
 			
 			saves = new SavesDialog();
 			copypaste = new CopypasteDialog();
-			filePicker = new FilePicker();
+			fileBrowser = new FileBrowser();
 			
 			floatingWidget = new FloatingWidget();
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());

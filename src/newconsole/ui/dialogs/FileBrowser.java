@@ -20,7 +20,8 @@ import mindustry.graphics.*;
 import newconsole.*;
 import newconsole.ui.*;
 
-public class FilePicker extends Dialog {
+/** A full-blown file browser dialog. */
+public class FileBrowser extends Dialog {
 	
 	/** File types that can be readen as text */
 	public static Seq<String> readableExtensions = Seq.with("txt", "md", "properties");
@@ -39,7 +40,7 @@ public class FilePicker extends Dialog {
 	/** The last opened zip file. Used to return from zip file trees */
 	protected Fi zipEntryPoint;
 	
-	public FilePicker() {
+	public FileBrowser() {
 		super("");
 		closeOnBack();
 		setFillParent(true);
@@ -230,7 +231,7 @@ public class FilePicker extends Dialog {
 			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
 			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
 			
-			add(file.name()).width(200f).setEllipsis("...");
+			add(file.name()).width(200f).get().setEllipsis("...");
 			
 			table(middle -> {
 				middle.right();
