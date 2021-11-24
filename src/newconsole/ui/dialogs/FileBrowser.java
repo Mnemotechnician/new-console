@@ -132,7 +132,7 @@ public class FileBrowser extends Dialog {
 							}
 						}
 					}
-				}).size(90, 50).update(button -> button.checked(movedFile != null));
+				}).size(90, 50).update(button -> button.setChecked(movedFile != null));
 			}).growX();
 		}).growX().row();
 		
