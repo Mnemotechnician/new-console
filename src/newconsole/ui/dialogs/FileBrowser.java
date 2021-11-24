@@ -306,7 +306,7 @@ public class FileBrowser extends Dialog {
 					
 					spinner.button("@newconsole.files-rename", Styles.cleart, () -> {
 						ifNotZip(() -> {
-							inputPrompt.prompt("@newconsole.file-rename", name -> {
+							inputPrompt.prompt("@newconsole.file-rename", file.name(), name -> {
 								var target = file.parent().child(name.replaceAll("/", "_"));
 								if (target.exists()) {
 									Vars.ui.showInfo("@newconsole.file-exists");
