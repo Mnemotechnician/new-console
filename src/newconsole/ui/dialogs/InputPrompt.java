@@ -18,6 +18,7 @@ public class InputPrompt extends Dialog {
 	
 	public InputPrompt() {
 		super("");
+		closeOnBack();
 		cont.center();
 		
 		label = new Label("");
@@ -29,7 +30,7 @@ public class InputPrompt extends Dialog {
 			return true;
 		}, text -> {}).width(200f).get();
 		
-		cont.button("@newconsole.done", Styles.nodet, this::done).width(50f).row();
+		cont.button("@newconsole.done", Styles.nodet, this::done).width(80f).row();
 		
 		cont.button("@newconsole.close", Styles.nodet, this::hide).colspan(2).growX();
 	}

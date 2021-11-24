@@ -72,11 +72,11 @@ public class FilePicker extends Dialog {
 						String script = ConsoleVars.console.area.getText();
 						var file = currentDirectory.child(name);
 						if (!file.exists()) {
-							file.mkdirs();
 							file.writeString(script, false);
 						} else {
 							Vars.ui.showConfirm("@newconsole.file-override", () -> {
 								file.writeString(script, false);
+								rebuild();
 							});
 						}
 					});
@@ -90,7 +90,8 @@ public class FilePicker extends Dialog {
 						if (dir.exists()) {
 							Vars.ui.showInfo("@newconsole.already-exists");
 						} else {
-							dir.child("").mkdirs();
+							dir.mkdirs();
+							rebuild();
 						}
 					});
 				});
@@ -164,6 +165,9 @@ public class FilePicker extends Dialog {
 		for (Fi file : list) {
 			if (!file.isDirectory()) buildFile(file);
 		}
+		
+		//workaround. idk how to fix that
+		Spinner.hideAllUnique();
 	}
 	
 	public void buildFile(Fi file) {
@@ -236,7 +240,7 @@ public class FilePicker extends Dialog {
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
 						Vars.ui.showInfo("not implemented");
 					});
-				})).width(100f);
+				})).width(200f);
 			}).growX();
 			
 			clicked(() -> {

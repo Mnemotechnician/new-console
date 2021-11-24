@@ -136,4 +136,9 @@ public class Spinner extends TextButton {
 		return super.getPrefWidth() + padH;
 	}
 	
+	/** Makes every unique spinner collapse */
+	public static void hideAllUnique() {
+		lastCollapser = null;
+	}
+	
 }
