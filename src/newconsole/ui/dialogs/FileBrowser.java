@@ -108,7 +108,7 @@ public class FileBrowser extends Dialog {
 			bar.table(right -> {
 				right.right();
 				
-				right.button("newconsole.files-paste", Styles.nodet, () -> {
+				right.button("@newconsole.files-paste", Styles.nodet, () -> {
 					if (movedFile != null) {
 						var target = currentDirectory.child(movedFile.name());
 						if (target.equals(movedFile)) {
@@ -299,26 +299,30 @@ public class FileBrowser extends Dialog {
 					spinner.defaults().growX();
 					
 					spinner.button("@newconsole.files-rename", Styles.cleart, () -> {
-						inputPrompt.prompt("newconsole.file-rename", name -> {
-							var target = file.parent().child(name.replaceAll("/", "_"));
-							if (target.exists()) {
-								Vars.ui.showInfo("newconsole.file-exists");
-							} else {
-								file.moveTo(target);
-								rebuild();
-							}
+						ifNotZip(() -> {
+							inputPrompt.prompt("@newconsole.file-rename", name -> {
+								var target = file.parent().child(name.replaceAll("/", "_"));
+								if (target.exists()) {
+									Vars.ui.showInfo("@newconsole.file-exists");
+								} else {
+									file.moveTo(target);
+									rebuild();
+								}
+							});
 						});
-					});
+					}).row();
 					
-					spinner.button("@newconsole.files.copy", Styles.cleart, () -> {
+					spinner.button("@newconsole.files-copy", Styles.cleart, () -> {
 						movedFile = file;
 						isMoved = false;
-					});
+					}).row();
 					
-					spinner.button("@newconsole.files.move", Styles.cleart, () -> {
-						movedFile = file;
-						isMoved = true;
-					});
+					spinner.button("@newconsole.files-move", Styles.cleart, () -> {
+						ifNotZip(() -> {
+							movedFile = file;
+							isMoved = true;
+						});
+					}).row();
 					
 					spinner.button("@newconsole.files-delete", Styles.cleart, () -> {
 						ifNotZip(() -> {
@@ -390,7 +394,7 @@ public class FileBrowser extends Dialog {
 				label.setText(file.name());
 				image.setDrawable(new TextureRegion(new Texture(file)));
 				show();
-			} catch (ArcRuntimeException e) {
+			} catch (Throwable e) {
 				Vars.ui.showException("@newconsole.image-corrupt", e);
 			}
 		}
