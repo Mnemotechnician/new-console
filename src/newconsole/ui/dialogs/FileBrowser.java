@@ -132,7 +132,7 @@ public class FileBrowser extends Dialog {
 							}
 						}
 					}
-				}).size(90, 50).checked(button -> movedFile != null);
+				}).size(90, 50).update(button -> button.checked(movedFile != null));
 			}).growX();
 		}).growX().row();
 		
@@ -296,7 +296,7 @@ public class FileBrowser extends Dialog {
 				//actions
 				right.add(new Spinner("@newconsole.actions", spinner -> {
 					spinner.setBackground(CStyles.filebg);
-					spinner.defaults().growX();
+					spinner.defaults().height(40f).growX();
 					
 					spinner.button("@newconsole.files-rename", Styles.cleart, () -> {
 						ifNotZip(() -> {
@@ -392,7 +392,11 @@ public class FileBrowser extends Dialog {
 		public void showFor(Fi file) {
 			try {
 				label.setText(file.name());
-				image.setDrawable(new TextureRegion(new Texture(file)));
+				//"new Texture(Fi file)" invokes some sussy native-level methods that, in case of a failure, crash the whole application without a java-level exception
+				var pixmap = PixmapIO.readPNG(file);
+				var texture = new Texture(pixmap);
+				image.setDrawable(new TextureRegion(texture));
+				
 				show();
 			} catch (Throwable e) {
 				Vars.ui.showException("@newconsole.image-corrupt", e);
