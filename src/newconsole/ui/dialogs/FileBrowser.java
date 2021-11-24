@@ -113,7 +113,7 @@ public class FileBrowser extends Dialog {
 						var target = currentDirectory.child(movedFile.name());
 						if (target.equals(movedFile)) {
 							Vars.ui.showInfo("@newconsole.same-folder");
-						} else if (currentDirectory.absolutePath().startsWith(target.absolutePath()) {
+						} else if (currentDirectory.absolutePath().startsWith(target.absolutePath())) {
 							Vars.ui.showInfo("@newconsole.recursive-copy");
 						} else {
 							//aaaaa save my soul qwq
@@ -321,12 +321,14 @@ public class FileBrowser extends Dialog {
 					spinner.button("@newconsole.files-copy", Styles.cleart, () -> {
 						movedFile = file;
 						isMoved = false;
+						rebuild();
 					}).row();
 					
 					spinner.button("@newconsole.files-move", Styles.cleart, () -> {
 						ifNotZip(() -> {
 							movedFile = file;
 							isMoved = true;
+							rebuild();
 						});
 					}).row();
 					

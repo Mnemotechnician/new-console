@@ -35,3 +35,18 @@ You can run, edit (copy to the console) or delete any scripts by pressing the re
 
 You can add the current script to the list by inputting a
 name in the text field and pressing the "save" button in the left top corner.
+
+# File browser
+You can open the file browser by clicking on the "files" button.
+
+The file browser is full-blown and allows you to perform most actions a real file browser allow you to perform.
+
+The full list of features:
+* Browse the file system
+* Browse zip/jar files as if they were just normal directories (you can't modify them, though)
+* Save the current script/text as a file
+* Load text/code files into console
+* Preview image files
+* Create new directories
+* Rename, copy, move and delete existing files
+* More will be added in the next updates (let me rest qwq)
