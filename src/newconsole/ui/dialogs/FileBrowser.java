@@ -247,13 +247,15 @@ public class FileBrowser extends Dialog {
 					spinner.setBackground(CStyles.filebg);
 					
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
-						Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
-							if (file.isDirectory()) {
-								file.deleteDirectory();
-							} else {
-								file.delete();
-							}
-							rebuild();
+						ifNotZip(() -> {
+							Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
+								if (file.isDirectory()) {
+									file.deleteDirectory();
+								} else {
+									file.delete();
+								}
+								rebuild();
+							});
 						});
 					}).growX();
 				})).width(200f);
@@ -283,10 +285,10 @@ public class FileBrowser extends Dialog {
 		
 		/** Formats file size to a human-readable format, i.e. 334 Mb, 2 Gb */
 		public static String formatSize(long bytes) {
-			if (bytes > 1e13) return bytes / 1e12 + " Tb"; //well, i don't think someone will ever get this number
-			if (bytes > 1e10) return bytes / 1e9 + " Gb";
-			if (bytes > 1e7) return bytes / 1e6 + " Mb";
-			if (bytes > 1e4) return bytes / 1e3 + " Kb";
+			if (bytes > 1e12) return Math.floor(bytes / 1e11) / 10f + " Tb"; //well, i don't think someone will ever get this number
+			if (bytes > 1e9) return Math.floor(bytes / 1e8) / 10f + " Gb";
+			if (bytes > 1e6) return Math.floor(bytes / 1e5) / 10f + " Mb";
+			if (bytes > 1e3) return Math.floor(bytes / 1e2) / 10f + " Kb";
 			return bytes + " b";
 		}
 		
