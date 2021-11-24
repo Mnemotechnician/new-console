@@ -80,7 +80,7 @@ public class FilePicker extends Dialog {
 							});
 						}
 					});
-				}
+				});
 			}).width(250);
 			
 			bar.button("@newconsole.files.new-folder", Styles.nodet, () -> {
@@ -93,7 +93,7 @@ public class FilePicker extends Dialog {
 							dir.child("").mkdirs();
 						}
 					});
-				})
+				});
 			}).width(150);
 		}).growX().row();
 		
@@ -145,7 +145,7 @@ public class FilePicker extends Dialog {
 		if (isZipTree()) {
 			Vars.ui.showInfo("@newconsole.zip-not-permitted");
 		} else {
-			run.run()
+			run.run();
 		}
 	}
 	
