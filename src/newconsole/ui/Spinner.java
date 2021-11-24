@@ -67,6 +67,7 @@ public class Spinner extends TextButton {
 			
 			if (col.getScene() != null) {
 				col.visible = true;
+				toFront();
 				col.color.a = parentAlpha * color.a;
 				col.setSize(width, col.getPrefHeight());
 				

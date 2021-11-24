@@ -23,13 +23,15 @@ import newconsole.ui.*;
 public class FilePicker extends Dialog {
 	
 	/** File types that can be readen as text */
-	public static Seq<String> readableExtensions = Seq.with("txt", "md");
+	public static Seq<String> readableExtensions = Seq.with("txt", "md", "properties");
 	/** Files containing raw code */
 	public static Seq<String> codeExtensions = Seq.with("js", "java", "kt", "json", "hjson", "gradle", "frag", "vert");
 	/** Files that can be opened as images */
 	public static Seq<String> imageExtensions = Seq.with("png", "jpg", "jpeg", "bmp" /*?*/);
 	
+	public InputPrompt inputPrompt;
 	public ImageDialog imageDialog;
+	
 	public BetterPane mainPane;
 	public Table filesTable;
 	
@@ -42,6 +44,7 @@ public class FilePicker extends Dialog {
 		closeOnBack();
 		setFillParent(true);
 		
+		inputPrompt = new InputPrompt();
 		imageDialog = new ImageDialog();
 		
 		//todo: replace this with clickable buttons?
@@ -60,21 +63,37 @@ public class FilePicker extends Dialog {
 			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f);
 			
 			bar.button("@newconsole.files.save-script", Styles.nodet, () -> {
-				if (isZipTree()) {
-					Vars.ui.showInfo("@newconsole.zip-not-permitted");
-				} else {
-					//TODO: create an input dialog
-					Vars.ui.showInfo("not implemented"); 
+				ifNotZip(() -> {
+					inputPrompt.prompt("@newconsole.file-name", name -> {
+						if (name.indexOf(".") == -1) {
+							name = name + ".js"; //no extension - set to .js
+						}
+						
+						String script = ConsoleVars.console.area.getText();
+						var file = currentDirectory.child(name);
+						if (!file.exists()) {
+							file.mkdirs();
+							file.writeString(script, false);
+						} else {
+							Vars.ui.showConfirm("@newconsole.file-override", () -> {
+								file.writeString(script, false);
+							});
+						}
+					});
 				}
 			}).width(250);
 			
 			bar.button("@newconsole.files.new-folder", Styles.nodet, () -> {
-				if (isZipTree()) {
-					Vars.ui.showInfo("newconsole.zip-not-permitted");
-				} else {
-					//Todo: same as above
-					Vars.ui.showInfo("not implemented");
-				}
+				ifNotZip(() -> {
+					inputPrompt.prompt("@newconsole.folder-name", name -> {
+						var dir = currentDirectory.child(name);
+						if (dir.exists()) {
+							Vars.ui.showInfo("@newconsole.already-exists");
+						} else {
+							dir.child("").mkdirs();
+						}
+					});
+				})
 			}).width(150);
 		}).growX().row();
 		
@@ -121,6 +140,15 @@ public class FilePicker extends Dialog {
 		return zipEntryPoint != null && currentDirectory instanceof ZipFi;
 	}
 	
+	/** Runs the runnable if the current directory is not in a zip tree, shows an info popup otherwise */
+	protected void ifNotZip(Runnable run) {
+		if (isZipTree()) {
+			Vars.ui.showInfo("@newconsole.zip-not-permitted");
+		} else {
+			run.run()
+		}
+	}
+	
 	public void rebuild() {
 		if (currentDirectory == null || !currentDirectory.exists()) {
 			currentDirectory = Vars.dataDirectory;
@@ -155,6 +183,7 @@ public class FilePicker extends Dialog {
 						if (ConsoleVars.console != null) { //todo: is this check required?
 							Vars.ui.showConfirm("newconsole.open-readable", () -> {
 								ConsoleVars.console.area.setText(it.readString());
+								hide();
 							});
 						}
 					} else if (imageExtensions.contains(ext)) {
@@ -206,8 +235,8 @@ public class FilePicker extends Dialog {
 					spinner.add("placeholder").row(); //todo: actions
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
 						Vars.ui.showInfo("not implemented");
-					}).width(200f);
-				}));
+					});
+				})).width(100f);
 			}).growX();
 			
 			clicked(() -> {
@@ -249,7 +278,7 @@ public class FilePicker extends Dialog {
 			
 			cont.add(label).row();
 			cont.add(image).row();
-			cont.button("newconsole.close", Styles.nodet, this::hide).fillX();
+			cont.button("@newconsole.close", Styles.nodet, this::hide).fillX();
 		}
 		
 		public void showFor(Fi file) {
