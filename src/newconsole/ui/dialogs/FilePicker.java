@@ -73,6 +73,7 @@ public class FilePicker extends Dialog {
 						var file = currentDirectory.child(name);
 						if (!file.exists()) {
 							file.writeString(script, false);
+							rebuild();
 						} else {
 							Vars.ui.showConfirm("@newconsole.file-override", () -> {
 								file.writeString(script, false);
@@ -185,7 +186,7 @@ public class FilePicker extends Dialog {
 				} else {
 					if (readableExtensions.contains(ext) || codeExtensions.contains(ext)) {
 						if (ConsoleVars.console != null) { //todo: is this check required?
-							Vars.ui.showConfirm("newconsole.open-readable", () -> {
+							Vars.ui.showConfirm("@newconsole.open-readable", () -> {
 								ConsoleVars.console.area.setText(it.readString());
 								hide();
 							});
@@ -215,7 +216,7 @@ public class FilePicker extends Dialog {
 	}
 	
 	/** An element representing a file or a directory */
-	public static class FileEntry extends Table {
+	public class FileEntry extends Table {
 		
 		public Fi file;
 		
@@ -229,19 +230,33 @@ public class FilePicker extends Dialog {
 			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
 			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
 			
-			add(file.name());
+			add(file.name()).width(200f).setEllipsis("...");
+			
+			table(middle -> {
+				middle.right();
+				
+				middle.add(formatSize(file.length())).get().setColor(Color.gray);
+			}).growX();
 			
 			table(right -> {
 				right.right();
+				right.touchable = Touchable.childrenOnly;
+				
 				right.add(new Spinner("@newconsole.actions", spinner -> {
 					spinner.setBackground(CStyles.filebg);
 					
-					spinner.add("placeholder").row(); //todo: actions
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
-						Vars.ui.showInfo("not implemented");
-					});
+						Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
+							if (file.isDirectory()) {
+								file.deleteDirectory();
+							} else {
+								file.delete();
+							}
+							rebuild();
+						});
+					}).growX();
 				})).width(200f);
-			}).growX();
+			});
 			
 			clicked(() -> {
 				onclick.get(file);
@@ -263,6 +278,16 @@ public class FilePicker extends Dialog {
 			if (codeExtensions.contains(ext)) return CStyles.fileCode;
 			if (imageExtensions.contains(ext)) return CStyles.fileImage;
 			return CStyles.fileAny;
+		}
+		
+		/** Formats file size to a human-readable format, i.e. 3.4 Mb, 2.3 Gb */
+		public static String formatSize(long bytes) {
+			// /10f division allows to keep 1 digit after the floating point
+			if (bytes > 1e12) return bytes / 1e11 / 10f + " Tb"; //well
+			if (bytes > 1e9) return bytes / 1e8 / 10f + " Gb";
+			if (bytes > 1e6) return bytes / 1e5 / 10f + " Mb";
+			if (bytes > 1e3) return bytes / 1e2 / 10f + " Kb";
+			return bytes + " b";
 		}
 		
 	}
