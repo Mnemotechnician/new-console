@@ -31,7 +31,7 @@ public class InputPrompt extends Dialog {
 		
 		cont.button("@newconsole.done", Styles.nodet, this::done).width(50f).row();
 		
-		cont.button("@newconsole.close", Styles.nodet, this::hide).colSpan(2f).growX();
+		cont.button("@newconsole.close", Styles.nodet, this::hide).colspan(2).growX();
 	}
 	
 	/** Shows the dialog, runs the consumer when the done button is pressed */
@@ -47,7 +47,7 @@ public class InputPrompt extends Dialog {
 	protected void done() {
 		if (onFinish != null) {
 			String text = field.getText();
-			if (text.replaceAll("\\s").equals("")) {
+			if (text.replaceAll("\\s", "").equals("")) {
 				Vars.ui.showInfo("@newconsole.empty-field");
 			} else {
 				onFinish.get(text);
