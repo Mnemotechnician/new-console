@@ -281,13 +281,12 @@ public class FileBrowser extends Dialog {
 			return CStyles.fileAny;
 		}
 		
-		/** Formats file size to a human-readable format, i.e. 3.4 Mb, 2.3 Gb */
+		/** Formats file size to a human-readable format, i.e. 334 Mb, 2 Gb */
 		public static String formatSize(long bytes) {
-			// /10f division allows to keep 1 digit after the floating point
-			if (bytes > 1e12) return bytes / 1e11 / 10f + " Tb"; //well
-			if (bytes > 1e9) return bytes / 1e8 / 10f + " Gb";
-			if (bytes > 1e6) return bytes / 1e5 / 10f + " Mb";
-			if (bytes > 1e3) return bytes / 1e2 / 10f + " Kb";
+			if (bytes > 1e13) return bytes / 1e12 + " Tb"; //well, i don't think someone will ever get this number
+			if (bytes > 1e10) return bytes / 1e9 + " Gb";
+			if (bytes > 1e7) return bytes / 1e6 + " Mb";
+			if (bytes > 1e4) return bytes / 1e3 + " Kb";
 			return bytes + " b";
 		}
 		
@@ -306,6 +305,7 @@ public class FileBrowser extends Dialog {
 			label = new Label("");
 			image = new Image();
 			
+			cont.center();
 			cont.add(label).row();
 			cont.add(image).row();
 			cont.button("@newconsole.close", Styles.nodet, this::hide).fillX();

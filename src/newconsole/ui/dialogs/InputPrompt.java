@@ -29,6 +29,7 @@ public class InputPrompt extends Dialog {
 			if (letter == '\n') done();
 			return true;
 		}, text -> {}).width(200f).get();
+		field.removeInputDialog();
 		
 		cont.button("@newconsole.done", Styles.nodet, this::done).width(80f).row();
 		

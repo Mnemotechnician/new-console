@@ -39,6 +39,8 @@ public class Spinner extends TextButton {
 		add(image = new Image(Icon.downOpen)).size(Icon.downOpen.imageSize() * Scl.scl(1f)).padLeft(padW / 2f).left();
 		getCells().reverse();
 		
+		touchable = Touchable.enabled;
+		
 		col = new Collapser(base -> base.pane(t -> {
 			t.left();
 			constructor.get(t);
