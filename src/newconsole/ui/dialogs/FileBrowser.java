@@ -113,6 +113,8 @@ public class FileBrowser extends Dialog {
 						var target = currentDirectory.child(movedFile.name());
 						if (target.equals(movedFile)) {
 							Vars.ui.showInfo("@newconsole.same-folder");
+						} else if (currentDirectory.absolutePath().startsWith(target.absolutePath()) {
+							Vars.ui.showInfo("@newconsole.recursive-copy");
 						} else {
 							//aaaaa save my soul qwq
 							Runnable run = () -> {
