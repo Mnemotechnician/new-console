@@ -40,6 +40,12 @@ public class FileBrowser extends Dialog {
 	/** The last opened zip file. Used to return from zip file trees */
 	protected Fi zipEntryPoint;
 	
+	/** The file that's being moved/copied. If null, no file is being moved/copied */
+	protected Fi movedFile;
+	/** If this.movedFile is not null, this field indicates whether it's being moved or copied (true or false, respectively) */
+	protected boolean isMoved = false;
+	
+	
 	public FileBrowser() {
 		super("");
 		closeOnBack();
@@ -98,6 +104,36 @@ public class FileBrowser extends Dialog {
 					});
 				});
 			}).width(150);
+			
+			bar.table(right -> {
+				right.right();
+				
+				right.button("newconsole.files-paste", Styles.nodet, () -> {
+					if (movedFile != null) {
+						var target = currentDirectory.child(movedFile.name());
+						if (target.equals(movedFile)) {
+							Vars.ui.showInfo("@newconsole.same-folder");
+						} else {
+							//aaaaa save my soul qwq
+							Runnable run = () -> {
+								if (isMoved) {
+									movedFile.moveTo(target);
+								} else {
+									movedFile.copyTo(target);
+								}
+								movedFile = null;
+								rebuild();
+							};
+							
+							if (target.exists()) {
+								Vars.ui.showConfirm("@newconsole.file-override", run);
+							} else {
+								run.run();
+							}
+						}
+					}
+				}).size(90, 50).checked(button -> movedFile != null);
+			}).growX();
 		}).growX().row();
 		
 		//special entry that allows to go to the parent directory
@@ -172,7 +208,8 @@ public class FileBrowser extends Dialog {
 		Spinner.hideAllUnique();
 	}
 	
-	public void buildFile(Fi file) {
+	/** Adds the providen file to the list */
+	protected void buildFile(Fi file) {
 		filesTable.row();
 		filesTable.add(new FileEntry(file, it -> {
 			if (it.isDirectory()) {
@@ -202,6 +239,7 @@ public class FileBrowser extends Dialog {
 		})).growX();
 	}
 	
+	/** Sets the current directory to the providen file. If the file is not a directory, it tries to read it as a zip file. */
 	public void openDirectory(Fi file) {
 		if (file == null || !file.exists()) {
 			Log.warn("Attempt to open an inexistent directory. Ignored.");
@@ -226,27 +264,63 @@ public class FileBrowser extends Dialog {
 			
 			setBackground(CStyles.filebg);
 			center().left().marginBottom(3f).defaults().pad(7f).height(50f);
-			touchable = Touchable.enabled;
 			
-			var image = image(pickIcon(file)).size(50f).marginRight(10f).get();
-			image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
-			
-			add(file.name()).width(200f).get().setEllipsis("...");
-			
-			table(middle -> {
-				middle.right();
+			//this is a workaround. a widget group would fire an onclick event even if one of it's children fired such an event too. fuck libgdx.
+			table(touchable -> {
+				touchable.touchable = Touchable.enabled; //such a meme lol
 				
-				middle.add(formatSize(file.length())).get().setColor(Color.gray);
+				//icon
+				var image = touchable.image(pickIcon(file)).size(50f).marginRight(10f).get();
+				image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
+				
+				//name
+				touchable.add(file.name()).width(200f).get().setEllipsis("...");
+				
+				touchable.table(middle -> {
+					middle.right();
+					
+					//file size
+					if (!file.isDirectory()) {
+						middle.add(formatSize(file.length())).get().setColor(Color.gray);
+					}
+				}).growX();
+				
+				touchable.clicked(() -> {
+					onclick.get(file);
+				});
 			}).growX();
 			
 			table(right -> {
 				right.right();
-				right.touchable = Touchable.childrenOnly;
 				
+				//actions
 				right.add(new Spinner("@newconsole.actions", spinner -> {
 					spinner.setBackground(CStyles.filebg);
+					spinner.defaults().growX();
 					
-					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
+					spinner.button("@newconsole.files-rename", Styles.cleart, () -> {
+						inputPrompt.prompt("newconsole.file-rename", name -> {
+							var target = file.parent().child(name.replaceAll("/", "_"));
+							if (target.exists()) {
+								Vars.ui.showInfo("newconsole.file-exists");
+							} else {
+								file.moveTo(target);
+								rebuild();
+							}
+						});
+					});
+					
+					spinner.button("@newconsole.files.copy", Styles.cleart, () -> {
+						movedFile = file;
+						isMoved = false;
+					});
+					
+					spinner.button("@newconsole.files.move", Styles.cleart, () -> {
+						movedFile = file;
+						isMoved = true;
+					});
+					
+					spinner.button("@newconsole.files-delete", Styles.cleart, () -> {
 						ifNotZip(() -> {
 							Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
 								if (file.isDirectory()) {
@@ -257,15 +331,12 @@ public class FileBrowser extends Dialog {
 								rebuild();
 							});
 						});
-					}).growX();
+					});
 				})).width(200f);
-			});
-			
-			clicked(() -> {
-				onclick.get(file);
 			});
 		}
 		
+		/** Picks an icon based on the extension of the file, returns a folder icon for directories */
 		public static TextureRegion pickIcon(Fi file) {
 			if (file == null || file.isDirectory()) {
 				return CStyles.directory;
@@ -313,6 +384,7 @@ public class FileBrowser extends Dialog {
 			cont.button("@newconsole.close", Styles.nodet, this::hide).fillX();
 		}
 		
+		/** Loads the providen image and shows it. Shows an error if the file isn't an image */
 		public void showFor(Fi file) {
 			try {
 				label.setText(file.name());
