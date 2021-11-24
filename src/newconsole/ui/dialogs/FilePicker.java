@@ -24,10 +24,11 @@ public class FilePicker extends Dialog {
 	/** File types that can be readen as text */
 	public static Seq<String> readableExtensions = Seq.with("txt", "md");
 	/** Files containing raw code */
-	public static Seq<String> codeExtensions = Seq.with("js", "java", "kt", "json", "hjson", "gradle");
+	public static Seq<String> codeExtensions = Seq.with("js", "java", "kt", "json", "hjson", "gradle", "frag", "vert");
 	/** Files that can be opened as images */
 	public static Seq<String> imageExtensions = Seq.with("png", "jpg", "jpeg", "bmp" /*?*/);
 	
+	public ImageDialog imageDialog;
 	public BetterPane mainPane;
 	public Table filesTable;
 	
@@ -40,21 +41,40 @@ public class FilePicker extends Dialog {
 		closeOnBack();
 		setFillParent(true);
 		
+		imageDialog = new ImageDialog();
+		
 		//todo: replace this with clickable buttons?
 		cont.label(() -> {
 			if (currentDirectory instanceof ZipFi) {
-				return (zipEntryPoint != null ? zipEntryPoint.name() : "") + ": ZIP FILE ROOT" + currentDirectory.absolutePath();
+				return "[darkgrey]" + (zipEntryPoint != null ? zipEntryPoint.name() : "") + ": ZIP FILE ROOT[]" + currentDirectory.absolutePath();
 			} else {
 				return currentDirectory.absolutePath();
 			}
-		}).row();
+		}).growX().get().setWrap(true);
+		cont.row();
 		
 		cont.table(bar -> {
-			bar.left();
+			bar.left().defaults().height(50f);
+			
 			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f);
+			
 			bar.button("@newconsole.files.save-script", Styles.nodet, () -> {
-				Vars.ui.showInfo("not implemented");
-			}).width(200);
+				if (isZipTree()) {
+					Vars.ui.showInfo("@newconsole.zip-not-permitted");
+				} else {
+					//TODO: create an input dialog
+					Vars.ui.showInfo("not implemented"); 
+				}
+			}).width(250);
+			
+			bar.button("@newconsole.files.new-folder", Styles.nodet, () -> {
+				if (isZipTree()) {
+					Vars.ui.showInfo("newconsole.zip-not-permitted");
+				} else {
+					//Todo: same as above
+					Vars.ui.showInfo("not implemented");
+				}
+			}).width(150);
 		}).growX().row();
 		
 		//special entry that allows to go to the parent directory
@@ -95,6 +115,11 @@ public class FilePicker extends Dialog {
 		return super.show(stage, action);
 	}
 	
+	/** Returns whether the current directory is inside a zip file */
+	public boolean isZipTree() {
+		return zipEntryPoint != null && currentDirectory instanceof ZipFi;
+	}
+	
 	public void rebuild() {
 		if (currentDirectory == null || !currentDirectory.exists()) {
 			currentDirectory = Vars.dataDirectory;
@@ -116,7 +141,7 @@ public class FilePicker extends Dialog {
 		filesTable.row();
 		filesTable.add(new FileEntry(file, it -> {
 			if (it.isDirectory()) {
-				openDirectory(file);
+				openDirectory(it);
 			} else {
 				String ext = it.extension();
 				if (ext.equals("zip") || ext.equals("jar")) {
@@ -125,7 +150,17 @@ public class FilePicker extends Dialog {
 					}
 					openDirectory(it);
 				} else {
-					Vars.ui.showInfo("not implemented");
+					if (readableExtensions.contains(ext) || codeExtensions.contains(ext)) {
+						if (Vars.console != null) { //todo: is this check required?
+							Vars.ui.showConfirm("newconsole.open-readable", () -> {
+								Vars.console.area.setText(it.rearString());
+							});
+						}
+					} else if (imageExtensions.contains(ext)) {
+						imageDialog.showFor(it);
+					} else {
+						Vars.ui.showInfo("@newconsole.unknown-format");
+					}
 				}
 			}
 		})).growX();
@@ -145,6 +180,7 @@ public class FilePicker extends Dialog {
 		rebuild();
 	}
 	
+	/** An element representing a file or a directory */
 	public static class FileEntry extends Table {
 		
 		public Fi file;
@@ -166,10 +202,10 @@ public class FilePicker extends Dialog {
 				right.add(new Spinner("@newconsole.actions", spinner -> {
 					spinner.setBackground(CStyles.filebg);
 					
-					spinner.add("placeholder"); //todo: actions
+					spinner.add("placeholder").row(); //todo: actions
 					spinner.button("@newconsole.files-delete", Styles.nodet, () -> {
 						Vars.ui.showInfo("not implemented");
-					});
+					}).width(200f);
 				}));
 			}).growX();
 			
@@ -184,7 +220,7 @@ public class FilePicker extends Dialog {
 			}
 			String ext = file.extension();
 			switch (ext) {
-				case "js": return CStyles.fileJs;
+				case "js": return CStyles.fileJs; //this is a js console, after all
 				case "zip": return CStyles.fileZip;
 				case "jar": return CStyles.fileJar;
 				default: break;
@@ -193,6 +229,36 @@ public class FilePicker extends Dialog {
 			if (codeExtensions.contains(ext)) return CStyles.fileCode;
 			if (imageExtensions.contains(ext)) return CStyles.fileImage;
 			return CStyles.fileAny;
+		}
+		
+	}
+	
+	/** A dialog with a single image */
+	public static class ImageDialog extends Dialog {
+		
+		public Label label;
+		public Image image;
+		
+		public ImageDialog() {
+			super("@newconsole.image-preview");
+			closeOnBack();
+			
+			label = new Label("");
+			image = new Image();
+			
+			cont.add(label).row();
+			cont.add(image).row();
+			cont.button("newconsole.close", Styles.nodet, this::hide).fillX();
+		}
+		
+		public void showFor(Fi file) {
+			try {
+				label.setText(file.name());
+				image.setDrawable(new TextureRegion(new Texture(file)));
+				show();
+			} catch (ArcRuntimeException e) {
+				Vars.ui.showException("@newconsole.image-corrupt", e);
+			}
 		}
 		
 	}
