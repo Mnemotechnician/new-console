@@ -132,7 +132,7 @@ public class FileBrowser extends Dialog {
 							}
 						}
 					}
-				}).size(90, 50).update(button -> button.setChecked(movedFile != null));
+				}).size(90, 50).visible(() -> movedFile != null);
 			}).growX();
 		}).growX().row();
 		
@@ -274,7 +274,11 @@ public class FileBrowser extends Dialog {
 				image.setColor(file.name().startsWith(".") ? Color.gray : file.isDirectory() ? CStyles.accent : Color.white);
 				
 				//name
-				touchable.add(file.name()).width(200f).get().setEllipsis("...");
+				var name = touchable.add(file.name()).width(200f).get();
+				name.setEllipsis("...");
+				if (file.equals(movedFile)) {
+					name.setColor(isMoved ? Color.yellow : Color.green); //yellow = move, green = copy, white = none
+				}
 				
 				touchable.table(middle -> {
 					middle.right();

@@ -37,13 +37,17 @@ public class InputPrompt extends Dialog {
 	}
 	
 	/** Shows the dialog, runs the consumer when the done button is pressed */
-	public void prompt(String text, Cons<String> cons) {
+	public void prompt(String label, String defaultText, Cons<String> cons) {
 		this.onFinish = cons;
 		
-		label.setText(text == null ? "" : text);
-		field.setText("");
+		label.setText(label == null ? "" : label);
+		field.setText(defaultText);
 		
 		show();
+	}
+	
+	public void prompt(String label, Cons<String> cons) {
+		prompt(label, "", cons);
 	}
 	
 	protected void done() {
