@@ -17,6 +17,7 @@ import mindustry.ui.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 
+import newconsole.*;
 import newconsole.ui.*;
 
 public class FilePicker extends Dialog {
@@ -151,9 +152,9 @@ public class FilePicker extends Dialog {
 					openDirectory(it);
 				} else {
 					if (readableExtensions.contains(ext) || codeExtensions.contains(ext)) {
-						if (Vars.console != null) { //todo: is this check required?
+						if (ConsoleVars.console != null) { //todo: is this check required?
 							Vars.ui.showConfirm("newconsole.open-readable", () -> {
-								Vars.console.area.setText(it.rearString());
+								ConsoleVars.console.area.setText(it.readString());
 							});
 						}
 					} else if (imageExtensions.contains(ext)) {
