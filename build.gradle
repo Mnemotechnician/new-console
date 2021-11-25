@@ -32,7 +32,9 @@ dependencies{
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
     
-    implementation files('lib/Autoupdate-lib.jar')
+    implementation files('lib/Autoupdate-lib.jar') 
+    //i don't want to waste time on this shit but hhh
+    //implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.9.1'
 }
 
 task jarAndroid{

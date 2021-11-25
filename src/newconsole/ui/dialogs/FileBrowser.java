@@ -249,7 +249,11 @@ public class FileBrowser extends Dialog {
 		}
 		
 		if (!file.isDirectory()) {
-			currentDirectory = new ZipFi(file);
+			try {
+				currentDirectory = new ZipFi(file);
+			} catch (Exception e) {
+				Vars.ui.showException("@newconsole.zip-corrupt", e);
+			}
 		} else {
 			currentDirectory = file;
 		}

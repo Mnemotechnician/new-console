@@ -138,12 +138,6 @@ public class Spinner extends TextButton {
 		return super.getPrefWidth() + padH;
 	}
 	
-	@Override
-	public Element hit(float x, float y, boolean touchable) {
-		Element e = this;
-		return x >= e.translation.x && x < width + e.translation.x && y >= e.translation.y && y < height + e.translation.y ? this : null;
-	}
-	
 	/** Makes every unique spinner collapse */
 	public static void hideAllUnique() {
 		lastCollapser = null;

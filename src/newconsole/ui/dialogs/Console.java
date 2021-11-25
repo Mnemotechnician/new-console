@@ -26,7 +26,7 @@ public class Console extends BaseDialog {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuilder logBuffer = new StringBuilder(15000);
+	public static StringBuilder logBuffer = new StringBuilder(50000);
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
@@ -106,6 +106,7 @@ public class Console extends BaseDialog {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines() + 10);
+							area.invalidate();
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
