@@ -106,7 +106,6 @@ public class Console extends BaseDialog {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines() + 10);
-							area.invalidate();
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
@@ -115,6 +114,8 @@ public class Console extends BaseDialog {
 				
 				//me when no help
 				horizontal.update(() -> {
+					area.setHeight(are.getPrefHeight());
+					
 					float targetWidth = horizontal.getWidth() / 2f;
 					float targetHeight = horizontal.getHeight();
 					leftPane.setSize(targetWidth, targetHeight);
