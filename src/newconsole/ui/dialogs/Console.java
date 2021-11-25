@@ -114,7 +114,7 @@ public class Console extends BaseDialog {
 				
 				//me when no help
 				horizontal.update(() -> {
-					area.setHeight(are.getPrefHeight());
+					area.setHeight(area.getPrefHeight()); //it's y space is unlimited
 					
 					float targetWidth = horizontal.getWidth() / 2f;
 					float targetHeight = horizontal.getHeight();
