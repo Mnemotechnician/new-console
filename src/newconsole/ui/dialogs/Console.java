@@ -98,6 +98,10 @@ public class Console extends BaseDialog {
 							lower.button("@newconsole.files", Styles.nodet, () -> {
 								ConsoleVars.fileBrowser.show();
 							});
+							
+							lower.button("newconsole.autorun", Styles.nodet, () -> {
+								ConsoleVars.autorun.show();
+							});
 						}).growX();
 					}).row();
 					
@@ -106,7 +110,6 @@ public class Console extends BaseDialog {
 							history.set(0, text);
 							historyIndex = 0;
 							area.setPrefRows(area.getLines() + 10);
-							rightPane.invalidate();
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");

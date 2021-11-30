@@ -33,13 +33,13 @@ public class Spinner extends TextButton {
 	
 	Timer.Task hideTask;
 	
-	public Spinner(String header, Cons<Table> constructor) {
+	public Spinner(String header, boolean unique, Cons<Table> constructor) {
 		super(header, Styles.clearTogglet);
+		this.unique = unique;
+		
 		//todo: wtf is this and is this necessary?
 		add(image = new Image(Icon.downOpen)).size(Icon.downOpen.imageSize() * Scl.scl(1f)).padLeft(padW / 2f).left();
 		getCells().reverse();
-		
-		touchable = Touchable.enabled;
 		
 		col = new Collapser(base -> base.pane(t -> {
 			t.left();
@@ -91,6 +91,10 @@ public class Spinner extends TextButton {
 				}
 			}
 		});
+	}
+	
+	public Spinner(String header, Cons<Table> constructor) {
+		super(header, true, constructor);
 	}
 	
 	public void show(boolean animate) {

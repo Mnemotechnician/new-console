@@ -25,13 +25,15 @@ public class ConsoleVars {
 	public static Console console;
 	/** Dialog that allows the user to save & load scripts */
 	public static SavesDialog saves;
-	/** Copy / paste dialog, made exclusively for mobile devices (TextArea doesn't support that natively) */
+	/** Copy / paste dialog, made mostly for mobile devices (TextArea doesn't support that natively) */
 	public static CopypasteDialog copypaste;
 	/** File browser dialog */
 	public static FileBrowser fileBrowser;
+	/** Autorun dialog */
+	public static AutorunDialog autorun;
 	/** Whether the console ui is enabled */
 	public static boolean consoleEnabled = true;
-	/**Startup js script path*/
+	/** Startup js script path, relative to the asset tree */
 	public static String startup = "console/startup.js";
 	
 	
@@ -51,6 +53,7 @@ public class ConsoleVars {
 			saves = new SavesDialog();
 			copypaste = new CopypasteDialog();
 			fileBrowser = new FileBrowser();
+			autorun = new AutorunDialog();
 			
 			floatingWidget = new FloatingWidget();
 			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show());
@@ -58,7 +61,7 @@ public class ConsoleVars {
 			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
 			
 			ScriptsManager.init();
-			
+			AutorunManager.init();
 			executeStartup();
 		});
 	}
