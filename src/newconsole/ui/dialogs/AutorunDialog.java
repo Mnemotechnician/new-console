@@ -112,13 +112,13 @@ public class AutorunDialog extends BaseDialog {
 			table.table(actions -> {
 				actions.defaults().size(40f);
 				
-				TextButton toggle = null; //fuck java
-				
-				toggle = actions.button(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.cleart, () -> {
+				TextButton toggle = actions.button(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.cleart).width(80f).get();
+				//fuck java lambdas
+				toggle.clicked(() -> {
 					entry.enabled = !entry.enabled;
 					
 					toggle.setText(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled");
-				}).width(80f).get();
+				});
 				
 				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
 					Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
