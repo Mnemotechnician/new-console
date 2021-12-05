@@ -45,12 +45,12 @@ public class Spinner extends TextButton {
 		getCells().reverse();
 		
 		col = new Collapser(base -> {
-			pane = new Pane(t -> {
+			pane = new BetterPane(t -> {
 				t.left();
 				constructor.get(t);
 			});
 			base.add(pane).growX().scrollX(false);
-		}), true).setDuration(collapseTime);
+		}, true).setDuration(collapseTime);
 		
 		//todo: wtf why and why did i even do that
 		clicked(() -> {
