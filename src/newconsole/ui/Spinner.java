@@ -15,12 +15,15 @@ import arc.scene.utils.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
 
+import newconsole.ui.*;
+
 /** Inherited from my previous mod, newcontrols. */
 public class Spinner extends TextButton {
 	
 	public static Collapser lastCollapser;
 	
 	public Collapser col;
+	public BetterPane pane;
 	public TextButton button;
 	public Image image;
 	
@@ -41,9 +44,12 @@ public class Spinner extends TextButton {
 		add(image = new Image(Icon.downOpen)).size(Icon.downOpen.imageSize() * Scl.scl(1f)).padLeft(padW / 2f).left();
 		getCells().reverse();
 		
-		col = new Collapser(base -> base.pane(t -> {
-			t.left();
-			constructor.get(t);
+		col = new Collapser(base -> {
+			pane = new Pane(t -> {
+				t.left();
+				constructor.get(t);
+			});
+			base.add(pane);
 		}).growX().scrollX(false), true).setDuration(collapseTime);
 		
 		//todo: wtf why and why did i even do that
@@ -73,9 +79,15 @@ public class Spinner extends TextButton {
 				col.color.a = parentAlpha * color.a;
 				col.setSize(width, col.getPrefHeight());
 				
-				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, -col.getPrefHeight()));
-				if (point.y < getPrefHeight()) point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
+				Vec2 point = null;
+				if (point.y < Core.scene.getHeight() / 2) {
+					point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
+				} else {
+					point = localToStageCoordinates(Tmp.v1.set(0, -col.getPrefHeight()));
+				}
 				col.setPosition(point.x, point.y);
+				
+				pane.setHeight(Core.scene.getWidth() - point.y);
 			}
 			
 			if (autoHide && col.getScene() != null) {

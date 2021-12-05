@@ -29,6 +29,8 @@ public class AutorunDialog extends BaseDialog {
 		closeOnBack();
 		
 		cont.table(bar -> {
+			bar.left();
+			
 			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f);
 		}).growX().row();
 		
@@ -37,25 +39,23 @@ public class AutorunDialog extends BaseDialog {
 				addAutorun.top().left().setFillParent(true);
 				
 				addAutorun.add(new Spinner("@newconsole.add-event", false, panel -> {
-					addAutorun.label(() -> lastEvent.getName()).growX().row();
+					panel.label(() -> lastEvent.getName()).growX().row();
 					
-					addAutorun.add(new Spinner("@newconsole.select-event", events -> {
+					panel.add(new Spinner("@newconsole.select-event", false, events -> {
 						for (final var event : AutorunManager.allEvents) {
-							var button = events.button(event.getName(), Styles.nodet, () -> {
+							var button = events.button(event.getSimpleName(), Styles.nodet, () -> {
 								lastEvent = event;
 							}).growX().get();
-							
-							button.setColor(event.isEnum() ? Color.red : Color.blue);
 							
 							events.row();
 						}
 					})).growX().marginBottom(10f).row();
+					
+					panel.button("@newconsole.save", Styles.nodet, () -> {
+						AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
+						rebuild();
+					}).growX();
 				})).width(300f).row();
-				
-				addAutorun.button("@newconsole.save", Styles.nodet, () -> {
-					AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
-					rebuild();
-				});
 			}),
 			
 			new Table(listRoot -> {
