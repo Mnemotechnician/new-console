@@ -12,10 +12,10 @@ public class ScriptsManager {
 	public static final String save = "newconsole.save", def = "console/default.save";
 	public static final byte startScript = 3, endScript = 4, splitter = 17, eof = 127;
 	
+	public static Fi root;
 	public static StringMap scripts = new StringMap();
 	
 	protected static StringBuilder build = new StringBuilder();
-	protected static Fi root;
 	
 	public static void init() {
 		root = Vars.dataDirectory.child("saves");

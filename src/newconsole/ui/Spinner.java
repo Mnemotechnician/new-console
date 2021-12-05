@@ -80,11 +80,11 @@ public class Spinner extends TextButton {
 				col.setSize(width, col.getPrefHeight());
 				
 				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, -col.getPrefHeight()));
-				float height = Core.scene.getHeight() - point.y;
+				float height = point.y;
 				
-				if (point.y < pane.getWidget().getPrefHeight() && (point.y < Core.scene.getHeight() / 2)) {
+				if (point.y < Core.scene.getHeight() / 2) {
 					point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
-					height = point.y;
+					height = Core.scene.getHeight() - point.y;
 				}
 				col.setPosition(point.x, point.y);
 				
@@ -95,11 +95,12 @@ public class Spinner extends TextButton {
 				//find any invisible or not touchable ancestors, hide if found
 				Element current = this;
 				while (true) {
-					if (!current.visible || current.touchable == Touchable.disabled) {
+					if (current.parent == Core.scene.root) {
+						break;
+					} else if (!current.visible || current.touchable == Touchable.disabled || current.parent == null) {
 						hide(false);
 						break;
 					}
-					if (current.parent == null) break;
 					current = current.parent;
 				}
 			}

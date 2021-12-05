@@ -67,14 +67,19 @@ public class AutorunDialog extends BaseDialog {
 							events.row();
 						}
 					});
-					
 					panel.add(eventsSpinner).growX().marginBottom(10f).row();
 					
 					panel.button("@newconsole.save", Styles.nodet, () -> {
-						AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
-						rebuild();
+						String code = ConsoleVars.console.area.getText();
+						
+						if (!code.isEmpty()) {
+							AutorunManager.add(lastEvent, code);
+							rebuild();
+						} else {
+							Vars.ui.showInfo("@newconsole.empty-script");
+						}
 					}).growX();
-				})).margin(4f).width(300f).row();
+				})).margin(4f).width(350f).row();
 			})
 		).grow();
 	}
@@ -96,6 +101,8 @@ public class AutorunDialog extends BaseDialog {
 			
 			table.add("[accent]#" + list.getChildren().size).padRight(20f);
 			
+			table.add("[darkgrey]" + entry.event.getSimpleName() + "->");
+			
 			table.add(new Spinner("@newconsole.code-spinner", code -> {
 				code.setBackground(CStyles.scriptbg);
 				
@@ -104,6 +111,12 @@ public class AutorunDialog extends BaseDialog {
 			
 			table.table(actions -> {
 				actions.defaults().size(40f);
+				
+				var toggle = actions.button(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.cleart, () -> {
+					entry.enabled = !entry.enabled;
+					
+					toggle.setText(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled");
+				}).width(80f).get();
 				
 				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
 					Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
