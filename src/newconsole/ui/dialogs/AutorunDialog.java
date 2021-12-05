@@ -69,7 +69,7 @@ public class AutorunDialog extends BaseDialog {
 						AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
 						rebuild();
 					}).growX();
-				})).width(300f).row();
+				})).margin(4f).width(300f).row();
 			})
 		).grow();
 	}
@@ -89,13 +89,13 @@ public class AutorunDialog extends BaseDialog {
 		list.table(table -> {	
 			table.center().left().setBackground(CStyles.scriptbg);
 			
-			table.add("[accent]#" + list.getChildren().size).marginRight(10f);
+			table.add("[accent]#" + list.getChildren().size).padRight(20f);
 			
 			table.add(new Spinner("@newconsole.code-spinner", code -> {
 				code.setBackground(CStyles.scriptbg);
 				
 				code.add(entry.script);
-			})).growX().marginRight(20f);
+			})).growX();
 			
 			table.table(actions -> {
 				actions.defaults().size(40f);
@@ -106,7 +106,7 @@ public class AutorunDialog extends BaseDialog {
 						rebuild();
 					});
 				});
-			});
+			}).padLeft(20f);
 		}).growX().pad(4f).marginBottom(5f).row();
 	}
 	
