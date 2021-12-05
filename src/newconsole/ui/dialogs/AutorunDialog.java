@@ -67,7 +67,7 @@ public class AutorunDialog extends BaseDialog {
 							events.row();
 						}
 					});
-					events.add(eventsSpinner)).growX().marginBottom(10f).row();
+					events.add(eventsSpinner).growX().marginBottom(10f).row();
 					
 					panel.button("@newconsole.save", Styles.nodet, () -> {
 						AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
