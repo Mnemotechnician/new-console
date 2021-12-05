@@ -67,6 +67,7 @@ public class AutorunDialog extends BaseDialog {
 							events.row();
 						}
 					});
+					
 					panel.add(eventsSpinner).growX().marginBottom(10f).row();
 					
 					panel.button("@newconsole.save", Styles.nodet, () -> {
