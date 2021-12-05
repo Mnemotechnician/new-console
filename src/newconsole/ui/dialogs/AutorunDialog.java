@@ -18,7 +18,7 @@ import newconsole.io.*;
 /** Allows the user to run specific scripts upon specific game events. */
 public class AutorunDialog extends BaseDialog {
 	
-	public class<Object> lastEvent = EventTypes.ClientLoadEvent.class;
+	public Class<Object> lastEvent = EventTypes.ClientLoadEvent.class;
 	
 	public Table list;
 	
@@ -49,7 +49,7 @@ public class AutorunDialog extends BaseDialog {
 						}
 					})).growX().marginBottom(10f).row();
 					
-					addAutorun.button("newconsole.save", Styles.nodet)
+					addAutorun.button("newconsole.save", Styles.nodet);
 				})).width(300f);
 				
 				addAutorun.labelWrap("@newconsole.warn-trigger").visible(() -> lastEvent instanceof EventTypes.Trigger).growX().row();
@@ -66,7 +66,7 @@ public class AutorunDialog extends BaseDialog {
 				listRoot.add(new BetterPane(list -> {
 					this.list = list;
 				});
-			})
+			});
 		).grow();
 	}
 	
