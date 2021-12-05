@@ -11,7 +11,7 @@ import mindustry.game.*;
 public class AutorunManager {
 	
 	/** All default event classes */
-	public static Seq<Class>> allEvents = new Seq(50);
+	public static Seq<Class> allEvents = new Seq(50);
 	/** All current events */
 	public static Seq<AutorunEntry> events = new Seq(); 
 	
