@@ -65,8 +65,8 @@ public class AutorunDialog extends BaseDialog {
 				
 				listRoot.add(new BetterPane(list -> {
 					this.list = list;
-				});
-			});
+				}));
+			})
 		).grow();
 	}
 	
