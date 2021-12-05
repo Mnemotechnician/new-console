@@ -6,11 +6,12 @@ import arc.func.*;
 import arc.files.*;
 import arc.struct.*;
 import mindustry.*;
+import mindustry.game.*;
 
 public class AutorunManager {
 	
 	/** All default event classes */
-	public static Seq<Class<Object>> allEvents = new Seq(50);
+	public static Seq<Class> allEvents = new Seq(50);
 	/** All current events */
 	public static Seq<AutorunEntry> events = new Seq(); 
 	
@@ -19,19 +20,19 @@ public class AutorunManager {
 	}
 	
 	public static void init() {
-		load();
+		//load();
 	}
 	
-	public static void load(Fi file) {
-		
+	public static boolean load(Fi file) {
+		return false;
 	}
 	
 	public static void save() {
 		
 	}
 	
-	public static AutorunEntry add(Class<Object> event, final String script) {
-		Cons<Object> cons = () -> {
+	public static AutorunEntry add(Class event, final String script) {
+		Cons<Object> cons = event -> {
 			Log.info(Vars.mods.getScripts().runConsole(script));
 		};
 		
@@ -68,11 +69,11 @@ public class AutorunManager {
 	
 	public static class AutorunEntry {
 		
-		public Class<Object> event;
+		public Class event;
 		public String script;
 		public Cons<Object> cons;
 		
-		public AutorunEntry(String name, Class<Object> event, String script, Cons<Object> cons) {
+		public AutorunEntry(Class<Object> event, String script, Cons<Object> cons) {
 			this.event = event;
 			this.script = script;
 			this.cons = cons;

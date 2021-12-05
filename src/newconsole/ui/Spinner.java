@@ -94,7 +94,7 @@ public class Spinner extends TextButton {
 	}
 	
 	public Spinner(String header, Cons<Table> constructor) {
-		super(header, true, constructor);
+		this(header, true, constructor);
 	}
 	
 	public void show(boolean animate) {

@@ -7,6 +7,8 @@ import arc.graphics.g2d.*;
 import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
+import mindustry.*;
+import mindustry.gen.*;
 import mindustry.game.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
@@ -18,7 +20,7 @@ import newconsole.io.*;
 /** Allows the user to run specific scripts upon specific game events. */
 public class AutorunDialog extends BaseDialog {
 	
-	public Class<Object> lastEvent = EventTypes.ClientLoadEvent.class;
+	public Class<Object> lastEvent = EventType.ClientLoadEvent.class;
 	
 	public Table list;
 	
@@ -37,7 +39,7 @@ public class AutorunDialog extends BaseDialog {
 				addAutorun.add(new Spinner("@newconsole.add-event", false, panel -> {
 					addAutorun.label(() -> lastEvent.getName()).growX().row();
 					
-					addAutorun.add("@newconsole.select-event", new Spinner(events -> {
+					addAutorun.add(new Spinner("@newconsole.select-event", events -> {
 						for (final var event : AutorunManager.allEvents) {
 							var button = events.button(event.getName(), Styles.nodet, () -> {
 								lastEvent = event;
@@ -48,9 +50,7 @@ public class AutorunDialog extends BaseDialog {
 							events.row();
 						}
 					})).growX().marginBottom(10f).row();
-					
-					addAutorun.button("newconsole.save", Styles.nodet);
-				})).width(300f);
+				})).row().width(300f);
 				
 				addAutorun.labelWrap("@newconsole.warn-trigger").visible(() -> lastEvent instanceof EventTypes.Trigger).growX().row();
 				
