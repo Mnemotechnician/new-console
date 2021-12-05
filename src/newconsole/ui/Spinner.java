@@ -49,8 +49,8 @@ public class Spinner extends TextButton {
 				t.left();
 				constructor.get(t);
 			});
-			base.add(pane);
-		}).growX().scrollX(false), true).setDuration(collapseTime);
+			base.add(pane).growX().scrollX(false);
+		}), true).setDuration(collapseTime);
 		
 		//todo: wtf why and why did i even do that
 		clicked(() -> {

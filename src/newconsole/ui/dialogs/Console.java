@@ -99,7 +99,7 @@ public class Console extends BaseDialog {
 								ConsoleVars.fileBrowser.show();
 							});
 							
-							lower.button("newconsole.autorun", Styles.nodet, () -> {
+							lower.button("@newconsole.autorun", Styles.nodet, () -> {
 								ConsoleVars.autorun.show();
 							});
 						}).growX();
