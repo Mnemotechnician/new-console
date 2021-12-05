@@ -24,6 +24,7 @@ public class AutorunDialog extends BaseDialog {
 	public Class lastEvent = EventType.ClientLoadEvent.class;
 	
 	public Table list;
+	public Spinner eventsSpinner;
 	
 	public AutorunDialog() {
 		super("@newconsole.autorun-header");
@@ -55,15 +56,18 @@ public class AutorunDialog extends BaseDialog {
 					panel.label(() -> lastEvent.getSimpleName()).growX().get().setColor(Pal.accent);
 					panel.row();
 					
-					panel.add(new Spinner("@newconsole.select-event", false, events -> {
+					eventsSpinner = new Spinner("@newconsole.select-event", false, events -> {
 						for (final var event : AutorunManager.allEvents) {
 							var button = events.button(event.getSimpleName(), Styles.nodet, () -> {
 								lastEvent = event;
+								
+								eventsSpinner.hide(false);
 							}).growX().get();
 							
 							events.row();
 						}
-					})).growX().marginBottom(10f).row();
+					});
+					events.add(eventsSpinner)).growX().marginBottom(10f).row();
 					
 					panel.button("@newconsole.save", Styles.nodet, () -> {
 						AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
