@@ -12,6 +12,7 @@ import mindustry.gen.*;
 import mindustry.game.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
+import mindustry.graphics.*;
 
 import newconsole.*;
 import newconsole.ui.*;
@@ -35,11 +36,24 @@ public class AutorunDialog extends BaseDialog {
 		}).growX().row();
 		
 		cont.stack(
+			new Table(listRoot -> {
+				listRoot.top().left().setFillParent(true);
+				
+				listRoot.add(new BetterPane(list -> {
+					list.setBackground(CStyles.scriptbg);
+					
+					this.list = list;
+				})).grow();
+			}),
+			
 			new Table(addAutorun -> {
 				addAutorun.top().left().setFillParent(true);
 				
 				addAutorun.add(new Spinner("@newconsole.add-event", false, panel -> {
-					panel.label(() -> lastEvent.getName()).growX().row();
+					panel.setBackground(CStyles.scriptbg);
+					
+					panel.label(() -> lastEvent.getSimpleName()).growX().get().setColor(Pal.accent);
+					panel.row();
 					
 					panel.add(new Spinner("@newconsole.select-event", false, events -> {
 						for (final var event : AutorunManager.allEvents) {
@@ -56,14 +70,6 @@ public class AutorunDialog extends BaseDialog {
 						rebuild();
 					}).growX();
 				})).width(300f).row();
-			}),
-			
-			new Table(listRoot -> {
-				listRoot.top().left().setFillParent(true);
-				
-				listRoot.add(new BetterPane(list -> {
-					this.list = list;
-				}));
 			})
 		).grow();
 	}
@@ -83,9 +89,11 @@ public class AutorunDialog extends BaseDialog {
 		list.table(table -> {	
 			table.center().left().setBackground(CStyles.scriptbg);
 			
-			table.add(String.valueOf(list.getChildren().size)).marginRight(10f);
+			table.add("[accent]#" + list.getChildren().size).marginRight(10f);
 			
 			table.add(new Spinner("@newconsole.code-spinner", code -> {
+				code.setBackground(CStyles.scriptbg);
+				
 				code.add(entry.script);
 			})).growX().marginRight(20f);
 			

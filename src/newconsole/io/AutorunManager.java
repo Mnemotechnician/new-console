@@ -23,8 +23,11 @@ public class AutorunManager {
 		//load();
 	}
 	
+	/** Loads events from the providen file. Returns whether the load was successful. */
 	public static boolean load(Fi file) {
-		return false;
+		if (file == null || !file.exists()) return false;
+		
+		return true;
 	}
 	
 	public static void save() {
