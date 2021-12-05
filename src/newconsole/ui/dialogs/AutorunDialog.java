@@ -52,8 +52,6 @@ public class AutorunDialog extends BaseDialog {
 					})).growX().marginBottom(10f).row();
 				})).width(300f).row();
 				
-				addAutorun.labelWrap("@newconsole.warn-trigger").visible(() -> lastEvent instanceof EventType.Trigger).growX().row();
-				
 				addAutorun.button("@newconsole.save", Styles.nodet, () -> {
 					AutorunManager.add(lastEvent, ConsoleVars.console.area.getText());
 					rebuild();

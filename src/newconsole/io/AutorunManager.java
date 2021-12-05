@@ -60,11 +60,6 @@ public class AutorunManager {
 				allEvents.add(event);
 			}
 		}
-		
-		var triggers = EventType.Trigger.class.getEnumConstants();
-		for (var trigger : triggers) {
-			allEvents.add(trigger.getClass());
-		}
 	}
 	
 	public static class AutorunEntry {
