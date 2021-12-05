@@ -112,7 +112,7 @@ public class AutorunDialog extends BaseDialog {
 			table.table(actions -> {
 				actions.defaults().size(40f);
 				
-				var toggle = actions.button(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.cleart, () -> {
+				TextButton toggle = actions.button(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.cleart, () -> {
 					entry.enabled = !entry.enabled;
 					
 					toggle.setText(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled");
