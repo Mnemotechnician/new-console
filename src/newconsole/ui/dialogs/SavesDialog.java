@@ -75,6 +75,12 @@ public class SavesDialog extends BaseDialog {
 			entry.center().left().setBackground(CStyles.scriptbg);
 			entry.labelWrap(name).width(250).marginLeft(20);
 			
+			entry.add(new Spinner("@newconsole.code-spinner", code -> {
+				code.setBackground(CStyles.scriptbg);
+				
+				code.add(script);
+			})).growX();
+			
 			entry.table(actions -> {
 				actions.center().right().defaults().center().size(50);
 				
@@ -93,7 +99,7 @@ public class SavesDialog extends BaseDialog {
 						scriptsTable.removeChild(entry);
 					});
 				});
-			}).center().growX();
+			});
 		}).growX().pad(2f).marginBottom(20).row();
 	}
 	
