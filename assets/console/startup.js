@@ -25,9 +25,9 @@ function NCHelp() {
 	let help = readString("console/startup.js-help");
 
 	let b = new StringBuilder();
-	for (i in _interface) {
-		if (!_nativeContains(_defaultMethods, i)) {
-			b.append("NewConsole.[blue]").append(i).append("[];\n");
+	for (method in _interface) {
+		if (!_nativeContains(_defaultMethods, method)) {
+			b.append("NewConsole.[blue]").append(method).append("[];\n");
 		}
 		
 	}

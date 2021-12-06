@@ -15,7 +15,7 @@ You can make the mod execute some code upon specific events.
 In order to do that, open the autorun menu by pressing the "events" button.
 
 You can browse the filesystem by opening the file browser ("files" button).
-[white]Note that on android [blue]10+[], you are unable to access the shared storage (sdcard).
+[red]Note that on android [blue]10+[], you are unable to access the shared storage (sdcard).
 There's several limitations and Arc doesn't deal with them, unlike other frameworks.[]
 
 []
