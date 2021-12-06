@@ -12,6 +12,7 @@ import mindustry.game.*;
 public class AutorunManager {
 	
 	public static final String save = "newconsole.autorun";
+	public static final byte startScript = 3, endScript = 4, splitter = 17, eof = 127;
 	
 	public static Fi root;
 	/** All default event classes */
@@ -49,12 +50,73 @@ public class AutorunManager {
 		if (file == null || !file.exists()) return false;
 		if (root == null) throw new IllegalStateException("AutorunManager hasn't been initialized yet");
 		
+		try (var reads = file.reads) {
+			int b;
+			
+			outer:
+			while ((b = reads.b()) != eof) {
+				//find sos
+				if (b != startScript) {
+					if (b == splitter || b == endScript) {
+						Log.warn("unexpected character " + b + ", ignoring.");
+					}
+					continue;
+				}
+				
+				//read class
+				String className = reads.str();
+				Class clazz = null;
+				try {
+					clazz = Class.forName(className, true, Vars.mods.mainLoader());
+				} catch (ClassNotFoundException e) {
+					Log.warn("Unknown class " + className + ". Skipping.");
+					continue;
+				}
+				
+				//find splitter
+				while ((b = reads.b()) != splitter) {
+					if (b == startScript || b == endScript) {
+						Log.warn("unexpected character " + b + ", ignoring this entry.");
+						continue;
+					}
+					if (b == eof) break outer;
+				}
+				
+				//read script
+				String script = reads.str();
+				
+				//construct the entry
+				var entry = add(clazz, script);
+				entry.enabled = false; //you wouldn't want mindustry to fall into a bootloop, would you?
+				
+				//find eos, just in case
+				while ((b = reads.b()) != endScript) {
+					if (b == eof) break outer;
+				}
+			}
+		} catch (Exception e) {
+			Log.err("Couldn't read events file (" + file.getAbsolutePath() + "). illegal modification?", e);
+			return false;
+		}
+		
 		return true;
 	}
 	
 	/** Saves the events into a file and creates a backup of the previous save */
 	public static void save() {
+		if (root.child(save).exists) {
+			root.child(save).moveTo(root.chile(save + ".backup"));
+		}
 		
+		var writes = root.child(save).writes();
+		events.each(entry -> {
+			writes.b(startScript);
+			writes.str(entry.event.getCanonicalName());
+			writes.b(splitter);
+			writes.str(entry.script);
+			writes.b(endScript);
+		});
+		writes.b(eof);
 	}
 	
 	public static AutorunEntry add(Class event, final String script) {

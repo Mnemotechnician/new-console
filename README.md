@@ -50,3 +50,20 @@ The full list of features:
 * Create new directories
 * Rename, copy, move and delete existing files
 * More will be added in the next updates (let me rest qwq)
+
+# Events menu
+Allows you to make the console run scripts upon specific events.
+
+Events are saved after exit, but you have to enable them manually after a restart. You don't want to hardlock yourself, do you?
+
+todo: inflate this ehh Aaaa em i forgor 💀
+
+#
+
+---
+
+<p style="text-align: center; font-size: 100pt;">Java is pain</p>
+
+---
+
+#
