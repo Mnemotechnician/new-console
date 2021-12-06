@@ -94,9 +94,6 @@ public class AutorunManager {
 					if (b == eof) break outer;
 				}
 			}
-		} catch (EOFException e) {
-			Log.warn("Unexpected eof, assuming the loading was successful");
-			return true; //whatsoever
 		} catch (Exception e) {
 			Log.err("Couldn't read events file (" + file.absolutePath() + "). illegal modification?", e);
 			return false;
