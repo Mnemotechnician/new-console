@@ -46,8 +46,7 @@ public class ScriptsManager {
 		
 		//yeah, i did all the funny code just in case of unexpected modifications
 		//also this thing will not break if I'll add something else. and I'll definitely do.
-		var reads = save.reads();
-		try {
+		try (var reads = save.reads()) {
 			byte b;
 			scripts:
 			do {
@@ -61,7 +60,6 @@ public class ScriptsManager {
 							continue scripts;
 						} else if (b == eof) {
 							Log.warn("Illegal end of file: splitter and script body expected");
-							reads.close();
 							return false;
 						}
 					}
@@ -78,12 +76,13 @@ public class ScriptsManager {
 					}
 				}
 			} while (b != eof);
+		} catch (EOFException e) {
+			Log.warn("Unexpected eof, assuming the loading was successful")
+			return true; //whatsoever
 		} catch (Exception e) {
 			Log.warn("Failed to read existing save file. Illegal modification?");
-			reads.close();
 			return false;
 		}
-		reads.close();
 		return true;
 	}
 	

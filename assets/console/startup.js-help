@@ -26,6 +26,6 @@ Available methods of NewConsole object (self-explanatory):
 
 [blue]Default functions:[]
 NCHelp() — show this help
-append(Any value) — append value directly to the log.
+append(Any value) — append value directly to the log. [red]Does not print to last_log.txt![]
 println(Any value) — same as append() but adds a newline
 backread() — reads last_log.txt and overrides the output;
