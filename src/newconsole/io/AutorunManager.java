@@ -50,7 +50,7 @@ public class AutorunManager {
 		if (file == null || !file.exists()) return false;
 		if (root == null) throw new IllegalStateException("AutorunManager hasn't been initialized yet");
 		
-		try (var reads = file.reads) {
+		try (var reads = file.reads()) {
 			int b;
 			
 			outer:
@@ -95,7 +95,7 @@ public class AutorunManager {
 				}
 			}
 		} catch (Exception e) {
-			Log.err("Couldn't read events file (" + file.getAbsolutePath() + "). illegal modification?", e);
+			Log.err("Couldn't read events file (" + file.absolutePath() + "). illegal modification?", e);
 			return false;
 		}
 		
@@ -104,8 +104,8 @@ public class AutorunManager {
 	
 	/** Saves the events into a file and creates a backup of the previous save */
 	public static void save() {
-		if (root.child(save).exists) {
-			root.child(save).moveTo(root.chile(save + ".backup"));
+		if (root.child(save).exists()) {
+			root.child(save).moveTo(root.child(save + ".backup"));
 		}
 		
 		var writes = root.child(save).writes();
