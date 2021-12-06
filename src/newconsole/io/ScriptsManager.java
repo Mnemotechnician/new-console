@@ -77,7 +77,7 @@ public class ScriptsManager {
 				}
 			} while (b != eof);
 		} catch (EOFException e) {
-			Log.warn("Unexpected eof, assuming the loading was successful")
+			Log.warn("Unexpected eof, assuming the loading was successful");
 			return true; //whatsoever
 		} catch (Exception e) {
 			Log.warn("Failed to read existing save file. Illegal modification?");
