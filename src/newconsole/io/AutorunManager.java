@@ -111,7 +111,7 @@ public class AutorunManager {
 		var writes = root.child(save).writes();
 		events.each(entry -> {
 			writes.b(startScript);
-			writes.str(entry.event.getCanonicalName());
+			writes.str(entry.event.getName());
 			writes.b(splitter);
 			writes.str(entry.script);
 			writes.b(endScript);

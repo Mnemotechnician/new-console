@@ -73,7 +73,7 @@ public class SavesDialog extends BaseDialog {
 	public void add(String name, String script) {
 		scriptsTable.table(entry -> {
 			entry.center().left().setBackground(CStyles.scriptbg);
-			entry.add(name).width(250).marginLeft(20).get().setWrap(true);
+			entry.labelWrap(name).width(250).marginLeft(20);
 			
 			entry.table(actions -> {
 				actions.center().right().defaults().center().size(50);

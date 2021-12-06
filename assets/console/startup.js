@@ -32,7 +32,7 @@ function NCHelp() {
 		
 	}
 	
-	append(Strings.format(help, b.toString()));
+	println(Strings.format(help, b.toString()));
 }
 
 const append = text => {

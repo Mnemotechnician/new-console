@@ -102,7 +102,7 @@ public class AutorunDialog extends BaseDialog {
 			
 			table.add("[accent]#" + list.getChildren().size).padRight(20f);
 			
-			table.add("[darkgrey]" + entry.event.getSimpleName() + "->");
+			table.labelWrap("[darkgrey]" + entry.event.getSimpleName() + "->").width(250f);
 			
 			table.add(new Spinner("@newconsole.code-spinner", code -> {
 				code.setBackground(CStyles.scriptbg);
