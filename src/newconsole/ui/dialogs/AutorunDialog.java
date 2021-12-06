@@ -74,6 +74,7 @@ public class AutorunDialog extends BaseDialog {
 						
 						if (!code.isEmpty()) {
 							AutorunManager.add(lastEvent, code);
+							AutorunManager.save();
 							rebuild();
 						} else {
 							Vars.ui.showInfo("@newconsole.empty-script");
@@ -110,7 +111,7 @@ public class AutorunDialog extends BaseDialog {
 			})).growX();
 			
 			table.table(actions -> {
-				actions.defaults().size(40f);
+				actions.defaults().size(50f);
 				
 				TextButton toggle = new TextButton(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.nodet);
 				actions.add(toggle).width(80f);
@@ -124,6 +125,7 @@ public class AutorunDialog extends BaseDialog {
 				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
 					Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
 						AutorunManager.remove(entry);
+						AutorunManager.save();
 						rebuild();
 					});
 				});

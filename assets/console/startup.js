@@ -13,7 +13,7 @@ function classForName(name) {
 
 const _interface = classForName("newconsole.js.JSInterface").newInstance();
 const _buffer = _interface.getConsole().logBuffer;
-const _defaultMethods = Object.keys(new Object());
+const _defaultMethods = new java.lang.Object();
 const _nativeContains = (array, name) => {
 	for (i in array) {
 		if (i.equals(name)) return true;
@@ -22,30 +22,17 @@ const _nativeContains = (array, name) => {
 }
 
 function NCHelp() {
-	//todo: create a separate file? these .append()s are killing me
-	
-	_buffer.append("\n\n[green]")
-	.append("####################\n")
-	.append("# New Console Help #\n")
-	.append("####################[]\n\n")
-	.append("[white]You can use [blue]NewConsole[] object to access newconsole stuff.\n")
-	.append("Available methods of NewConsole object (self-explanatory):\n")
+	let help = readString("console/startup.js-help");
+
+	let b = new StringBuilder();
 	for (i in _interface) {
 		if (!_nativeContains(_defaultMethods, i)) {
-			_buffer.append("NewConsole.[blue]").append(i).append("[];\n");
+			b.append("NewConsole.[blue]").append(i).append("[];\n");
 		}
+		
 	}
-	_buffer.append("\n\n")
-	.append("You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.\n")
-	.append("The current input is saved to history whenever you run it or press 'next'/'prev'\n\n")
-	.append("You can save, load and edit scripts by opening the scripts dialog.\n")
-	.append("In order to do that, press the 'scripts' button in bottom right panel.\n\n")
-	.append("\n\n\n")
-	.append("[blue]Default functions:[]\n")
-	.append("NCHelp() — show this help\n")
-	.append("append(Any value) — append value directly to the log.\n")
-	.append("println(Any value) — same as append() but adds a newline\n")
-	.append("backread() — reads last_log.txt and overrides the output\n");
+	
+	append(Strings.format(help, b.toString()));
 }
 
 const append = text => {

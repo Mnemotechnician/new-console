@@ -1,0 +1,31 @@
+[green]
+#################
+# New Console Help #
+#################
+
+Newconsole is a mindustry mod that adds a better console ui. Since you're viewing this help from console, i assume you already know the basics.
+
+You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.
+The current input is saved to history whenever you run it or press 'next'/'prev'
+
+You can save, load and edit scripts by opening the scripts dialog.
+In order to do that, press the 'scripts' button in bottom right panel.
+
+You can make the mod execute some code upon specific events.
+In order to do that, open the autorun menu by pressing the "events" button.
+
+You can browse the filesystem by opening the file browser ("files" button).
+[white]Note that on android [blue]10+[], you are unable to access the shared storage (sdcard).
+There's several limitations and Arc doesn't deal with them, unlike other frameworks.[]
+
+[]
+[white]You can use [blue]NewConsole[] object to access newconsole stuff.
+Available methods of NewConsole object (self-explanatory):
+
+@
+
+[blue]Default functions:[]
+NCHelp() — show this help
+append(Any value) — append value directly to the log.
+println(Any value) — same as append() but adds a newline
+backread() — reads last_log.txt and overrides the output;
