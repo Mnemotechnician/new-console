@@ -1,6 +1,3 @@
-## Important notice
-The mod is currently in development. Anything currently present in this mod is a subject for change or deletion.
-
 ## New Console
 Mindustry mod that adds a better console ui
 
@@ -59,11 +56,4 @@ Events are saved after exit, but you have to enable them manually after a restar
 todo: inflate this ehh Aaaa em i forgor 💀
 
 #
-
----
-
-<p style="text-align: center; font-size: 100pt;">Java is pain</p>
-
----
-
-#
+# Java is pain
