@@ -26,6 +26,7 @@ public class CodeSpinner extends Spinner {
 	@Override
 	public void show(boolean animate) {
 		codeLabel.setText(code);
+		super.show(animate);
 	}
 	
 }
