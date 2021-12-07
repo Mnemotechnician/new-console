@@ -2,6 +2,7 @@ package newconsole.ui;
 
 import arc.util.*;
 import arc.scene.ui.*;
+import arc.scene.ui.layout.*;
 import mindustry.ui.*;
 import newconsole.ui.*;
 
@@ -9,16 +10,17 @@ import newconsole.ui.*;
 public class CodeSpinner extends Spinner {
 	
 	public String code;
-	public Table sourceTable;
 	public Label codeLabel;
 	
-	public CodeSpinner(String code) {
-		super("@newconsole.code-spinner", Styles.togglet, source -> {
-			source.setBackground(CStyles.scriptbg);
-			sourceTable = source;
-		});
+	/** fuck java lambdas */
+	public final constructor = (Table source) -> {
+		source.setBackground(CStyles.scriptbg);
 		
-		codeLabel = sourceTable.add("").get();
+		codeLabel = source.add("").get();
+	});
+	
+	public CodeSpinner(String code) {
+		super("@newconsole.code-spinner", Styles.togglet, constructor);
 		
 		this.code = Strings.stripColors(code);
 	}
