@@ -13,17 +13,16 @@ public class CodeSpinner extends Spinner {
 	public String code;
 	public Label codeLabel;
 	
-	/** fuck java lambdas */
-	public final Cons<Table> constructor = (Table source) -> {
+	public CodeSpinner(String code) {
+		super("@newconsole.code-spinner", Styles.togglet, this::fuckJava);
+		
+		this.code = Strings.stripColors(code);
+	}
+	
+	protected void fuckJava(Table source) {
 		source.setBackground(CStyles.scriptbg);
 		
 		codeLabel = source.add("").get();
-	};
-	
-	public CodeSpinner(String code) {
-		super("@newconsole.code-spinner", Styles.togglet, constructor);
-		
-		this.code = Strings.stripColors(code);
 	}
 	
 	@Override
