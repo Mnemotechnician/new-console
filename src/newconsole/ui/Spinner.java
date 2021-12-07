@@ -76,17 +76,17 @@ public class Spinner extends TextButton {
 			
 			if (col.getScene() != null) {
 				col.visible = true;
-				toFront();
+				col.toFront();
 				col.color.a = parentAlpha * color.a;
 				col.setSize(width, col.getPrefHeight());
 				
 				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, -table.getPrefHeight()));
 				float height = point.y;
 				
-				if (point.y < Core.scene.getHeight() / 2) {
+				/*if (point.y < Core.scene.getHeight() / 2) {
 					point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
 					height = Core.scene.getHeight() - point.y;
-				}
+				}*/
 				col.setPosition(point.x, point.y);
 				
 				pane.setHeight(Math.min(table.getPrefHeight(), height));

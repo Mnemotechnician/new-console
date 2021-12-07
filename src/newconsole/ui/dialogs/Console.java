@@ -109,8 +109,12 @@ public class Console extends BaseDialog {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
+							
 							area.setPrefRows(area.getLines());
+							area.invalidate();
+							rightPane.invalidate();
 						}).bottom().left().grow().get();
+						
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
 					})).grow().get();
