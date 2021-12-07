@@ -9,14 +9,16 @@ import newconsole.ui.*;
 public class CodeSpinner extends Spinner {
 	
 	public String code;
+	public Table sourceTable;
 	public Label codeLabel;
 	
 	public CodeSpinner(String code) {
 		super("@newconsole.code-spinner", Styles.togglet, source -> {
 			source.setBackground(CStyles.scriptbg);
-			
-			codeLabel = source.add("").get();
+			sourceTable = source;
 		});
+		
+		codeLabel = sourceTable.add("").get();
 		
 		this.code = Strings.stripColors(code);
 	}
