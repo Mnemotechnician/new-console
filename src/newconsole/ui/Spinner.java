@@ -76,7 +76,7 @@ public class Spinner extends TextButton {
 			
 			if (col.getScene() != null) {
 				col.visible = true;
-				col.toFront();
+				//col.toFront(); TODO: causes more harm than sudden disappearing of spinners
 				col.color.a = parentAlpha * color.a;
 				col.setSize(width, col.getPrefHeight());
 				

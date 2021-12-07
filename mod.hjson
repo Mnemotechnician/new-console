@@ -1,6 +1,7 @@
-#!VERSION 1.4
+#!VERSION 1.41
 #!REPO "MHeMoTexHuK/New-console"
 #!BRANCH "master"
+#!NO_UPDATE
 
 #Reminder for myself: THINK TWICE BEFORE MODIFYING THE VALUES ABOVE
 
@@ -8,7 +9,7 @@ displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"
 description: "Adds a much better console ui.\n\nAlso includes a file browser, a scripts menu, an events menu and much much more!\n\nSee README.md for more info."
-version: 1.4
+version: 1.41
 minGameVersion: 135
 hidden: true
 
