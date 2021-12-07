@@ -80,8 +80,9 @@ public class Spinner extends TextButton {
 				col.color.a = parentAlpha * color.a;
 				col.setSize(width, col.getPrefHeight());
 				
-				float height = Math.min(parent.getX(), table.getPrefHeight());
-				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, -height));
+				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, 0));
+				float height = Math.min(point.x, table.getPrefHeight());
+				point = localToStageCoordinates(Tmp.v1.set(0, -height));
 				
 				/*if (point.y < Core.scene.getHeight() / 2) {
 					point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
