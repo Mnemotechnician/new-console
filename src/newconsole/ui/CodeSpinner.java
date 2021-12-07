@@ -12,10 +12,10 @@ public class CodeSpinner extends Spinner {
 	public Label codeLabel;
 	
 	public CodeSpinner(String code) {
-		super("@newconsole.code-spinner", Styles.togglet, code -> {
-			code.setBackground(CStyles.scriptbg);
+		super("@newconsole.code-spinner", Styles.togglet, source -> {
+			source.setBackground(CStyles.scriptbg);
 			
-			code = code.add("").get();
+			codeLabel = source.add("").get();
 		});
 		
 		this.code = Strings.stripColors(code);

@@ -119,7 +119,7 @@ public class AutorunDialog extends BaseDialog {
 				});
 				
 				actions.button(CStyles.editIcon, Styles.nodei, () -> {
-					ConsoleVars.console.setCode(script);
+					ConsoleVars.console.setCode(entry.script);
 					hide();
 				});
 				

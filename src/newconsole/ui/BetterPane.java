@@ -28,8 +28,13 @@ public class BetterPane extends ScrollPane {
 		return height;
 	}
 	
-	/** Returns the real preferred height of a pane */
-	public float getRealHeight() {
+	/** Returns the original preferred width of a pane */
+	public float getAbstractWidth() {
+		return super.getPrefWidth();
+	}
+	
+	/** Returns the original preferred height of a pane */
+	public float getAbstractHeight() {
 		return super.getPrefHeight();
 	}
 	

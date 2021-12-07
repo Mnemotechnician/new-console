@@ -87,7 +87,7 @@ public class Spinner extends TextButton {
 				}
 				col.setPosition(point.x, point.y);
 				
-				pane.setHeight(Math.min(pane.getWidget().getRealHeight(), height));
+				pane.setHeight(Math.min(pane.getAbstractHeight(), height));
 			}
 			
 			if (autoHide && col.getScene() != null) {
