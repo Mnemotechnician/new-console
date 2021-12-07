@@ -89,8 +89,6 @@ public class Spinner extends TextButton {
 					height = Core.scene.getHeight() - point.y;
 				}*/
 				pane.setHeight(height);
-				
-				point = localToStageCoordinates(Tmp.v1.set(0, height));
 				col.setPosition(point.x, point.y);
 			}
 			
