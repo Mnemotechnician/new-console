@@ -80,7 +80,7 @@ public class AutorunDialog extends BaseDialog {
 							Vars.ui.showInfo("@newconsole.empty-script");
 						}
 					}).growX();
-				})).margin(4f).width(350f).with(it -> ((Spinner) it).setBackground(Styles.togglet)).row();
+				})).margin(4f).width(350f).with(it -> ((Spinner) it).setStyle(Styles.togglet)).row();
 			})
 		).grow();
 	}
