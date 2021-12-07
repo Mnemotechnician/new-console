@@ -104,11 +104,7 @@ public class AutorunDialog extends BaseDialog {
 			
 			table.labelWrap("[darkgrey]" + entry.event.getSimpleName() + "->").width(250f);
 			
-			table.add(new Spinner("@newconsole.code-spinner", code -> {
-				code.setBackground(CStyles.scriptbg);
-				
-				code.add(entry.script);
-			})).growX();
+			table.add(new CodeSpinner(entry.script)).growX();
 			
 			table.table(actions -> {
 				actions.defaults().size(50f);
@@ -120,6 +116,11 @@ public class AutorunDialog extends BaseDialog {
 					entry.enabled = !entry.enabled;
 					
 					toggle.setText(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled");
+				});
+				
+				actions.button(CStyles.editIcon, Styles.nodei, () -> {
+					ConsoleVars.console.setCode(script);
+					hide();
 				});
 				
 				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {

@@ -24,7 +24,6 @@ public class Spinner extends TextButton {
 	
 	public Collapser col;
 	public BetterPane pane;
-	public TextButton button;
 	public Image image;
 	
 	/** Whether to remove collapser if any of ancestors are invisible / untouchable */
@@ -36,8 +35,8 @@ public class Spinner extends TextButton {
 	
 	Timer.Task hideTask;
 	
-	public Spinner(String header, boolean unique, Cons<Table> constructor) {
-		super(header, Styles.clearTogglet);
+	public Spinner(String header, TextButton.TextButtonStyle style, boolean unique, Cons<Table> constructor) {
+		super(header, style);
 		this.unique = unique;
 		
 		//todo: wtf is this and is this necessary?
@@ -88,7 +87,7 @@ public class Spinner extends TextButton {
 				}
 				col.setPosition(point.x, point.y);
 				
-				pane.setHeight(Math.min(pane.getWidget().getPrefHeight(), height));
+				pane.setHeight(Math.min(pane.getWidget().getRealHeight(), height));
 			}
 			
 			if (autoHide && col.getScene() != null) {
@@ -107,8 +106,16 @@ public class Spinner extends TextButton {
 		});
 	}
 	
+	public Spinner(String header, TextButton.TextButtonStyle style, Cons<Table> constructor) {
+		this(header, style, true, constructor);
+	}
+	
+	public Spinner(String header, boolean unique, Cons<Table> constructor) {
+		this(header, Styles.clearTogglet, unique, constructor);
+	}
+	
 	public Spinner(String header, Cons<Table> constructor) {
-		this(header, true, constructor);
+		this(header, Styles.clearTogglet, true, constructor);
 	}
 	
 	public void show(boolean animate) {

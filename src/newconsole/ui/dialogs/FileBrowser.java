@@ -227,14 +227,17 @@ public class FileBrowser extends Dialog {
 					if (readableExtensions.contains(ext) || codeExtensions.contains(ext)) {
 						if (ConsoleVars.console != null) { //todo: is this check required?
 							Vars.ui.showConfirm("@newconsole.open-readable", () -> {
-								ConsoleVars.console.area.setText(it.readString());
+								ConsoleVars.console.setCode(it.readString());
 								hide();
 							});
 						}
 					} else if (imageExtensions.contains(ext)) {
 						imageDialog.showFor(it);
 					} else {
-						Vars.ui.showInfo("@newconsole.unknown-format");
+						Vars.ui.showConfirm("@newconsole.unknown-format", () -> {
+							ConsoleVars.console.setCode(it.readString());
+							hide();
+						});
 					}
 				}
 			}

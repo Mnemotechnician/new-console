@@ -75,11 +75,7 @@ public class SavesDialog extends BaseDialog {
 			entry.center().left().setBackground(CStyles.scriptbg);
 			entry.labelWrap(name).width(250).marginLeft(20);
 			
-			entry.add(new Spinner("@newconsole.code-spinner", code -> {
-				code.setBackground(CStyles.scriptbg);
-				
-				code.add(script);
-			})).growX();
+			entry.add(new CodeSpinner(script)).growX();
 			
 			entry.table(actions -> {
 				actions.center().right().defaults().center().size(50);
@@ -89,7 +85,7 @@ public class SavesDialog extends BaseDialog {
 				});
 				
 				actions.button(CStyles.editIcon, Styles.nodei, () -> {
-					ConsoleVars.console.area.setText(script);
+					ConsoleVars.console.setCode(script);
 					hide();
 				});
 				

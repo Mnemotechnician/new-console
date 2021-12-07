@@ -109,11 +109,13 @@ public class Console extends BaseDialog {
 						area = input.area("", text -> {
 							history.set(0, text);
 							historyIndex = 0;
-							area.setPrefRows(area.getLines() + 10);
+							area.setPrefRows(area.getLines());
 						}).bottom().left().grow().get();
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
 					})).grow().get();
+					
+					rightPane.setForceScroll(false, true);
 				}).bottom().get();
 				
 				//me when no help
@@ -223,6 +225,10 @@ public class Console extends BaseDialog {
 			return;
 		}
 		area.setText(history.get(historyIndex));
+	}
+	
+	public void setCode(String code) {
+		area.setText(code);
 	}
 	
 }
