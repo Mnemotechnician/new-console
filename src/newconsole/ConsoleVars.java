@@ -56,7 +56,10 @@ public class ConsoleVars {
 			autorun = new AutorunDialog();
 			
 			floatingWidget = new FloatingWidget();
-			floatingWidget.button(Icon.terminal, Styles.nodei, () -> console.show()).size(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
+			
+			floatingWidget.button(Icon.terminal, Styles.nodei, console::show).get()
+			.setSize(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
+			
 			group.addChild(floatingWidget);
 			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
 			

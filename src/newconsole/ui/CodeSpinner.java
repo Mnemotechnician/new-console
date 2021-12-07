@@ -18,7 +18,7 @@ public class CodeSpinner extends Spinner {
 		
 		table.setBackground(CStyles.scriptbg);
 		
-		codeLabel = table.add("").get();
+		codeLabel = table.labelWrap("").get();
 		
 		this.code = Strings.stripColors(code);
 	}
