@@ -1,6 +1,7 @@
 package newconsole.ui;
 
 import arc.util.*;
+import arc.func.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import mindustry.ui.*;
@@ -13,11 +14,11 @@ public class CodeSpinner extends Spinner {
 	public Label codeLabel;
 	
 	/** fuck java lambdas */
-	public final constructor = (Table source) -> {
+	public final Cons<Table> constructor = (Table source) -> {
 		source.setBackground(CStyles.scriptbg);
 		
 		codeLabel = source.add("").get();
-	});
+	};
 	
 	public CodeSpinner(String code) {
 		super("@newconsole.code-spinner", Styles.togglet, constructor);
