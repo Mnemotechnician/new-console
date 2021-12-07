@@ -24,6 +24,7 @@ public class Spinner extends TextButton {
 	
 	public Collapser col;
 	public BetterPane pane;
+	public Table table;
 	public Image image;
 	
 	/** Whether to remove collapser if any of ancestors are invisible / untouchable */
@@ -46,7 +47,8 @@ public class Spinner extends TextButton {
 		col = new Collapser(base -> {
 			pane = new BetterPane(t -> {
 				t.left();
-				constructor.get(t);
+				this.table = t;
+				if (constructor != null) constructor.get(t);
 			});
 			base.add(pane).growX().scrollX(false);
 		}, true).setDuration(collapseTime);

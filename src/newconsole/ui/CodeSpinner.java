@@ -14,15 +14,13 @@ public class CodeSpinner extends Spinner {
 	public Label codeLabel;
 	
 	public CodeSpinner(String code) {
-		super("@newconsole.code-spinner", Styles.togglet, this::fuckJava);
+		super("@newconsole.code-spinner", Styles.togglet, null);
+		
+		table.setBackground(CStyles.scriptbg);
+				
+		codeLabel = table.add("").get()
 		
 		this.code = Strings.stripColors(code);
-	}
-	
-	protected void fuckJava(Table source) {
-		source.setBackground(CStyles.scriptbg);
-		
-		codeLabel = source.add("").get();
 	}
 	
 	@Override
