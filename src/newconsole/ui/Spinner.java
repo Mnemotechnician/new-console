@@ -42,7 +42,10 @@ public class Spinner extends TextButton {
 		
 		//todo: wtf is this and is this necessary?
 		add(image = new Image(Icon.downOpen)).size(Icon.downOpen.imageSize() * Scl.scl(1f)).padLeft(padW / 2f).left();
-		getCells().reverse();
+		//workaround: anuke likes to change signatures of functions to blow up the mods that use them
+		var temp = getCells().get(0);
+		getCells().set(0, getCells().get(1));
+		getCells().set(1, temp);
 		
 		col = new Collapser(base -> {
 			pane = new BetterPane(t -> {
