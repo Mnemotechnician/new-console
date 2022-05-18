@@ -58,7 +58,7 @@ public class AutorunDialog extends BaseDialog {
 					
 					eventsSpinner = new Spinner("@newconsole.select-event", false, events -> {
 						for (final var event : AutorunManager.allEvents) {
-							var button = events.button(event.getSimpleName(), Styles.squareTogglei, () -> {
+							var button = events.button(event.getSimpleName(), Styles.togglet, () -> {
 								lastEvent = event;
 								
 								eventsSpinner.hide(false);
@@ -69,7 +69,7 @@ public class AutorunDialog extends BaseDialog {
 					});
 					panel.add(eventsSpinner).growX().marginBottom(10f).row();
 					
-					panel.button("@newconsole.save", Styles.squareTogglei, () -> {
+					panel.button("@newconsole.save", Styles.togglet, () -> {
 						String code = ConsoleVars.console.area.getText();
 						
 						if (!code.isEmpty()) {
@@ -109,7 +109,7 @@ public class AutorunDialog extends BaseDialog {
 			table.table(actions -> {
 				actions.defaults().size(50f);
 				
-				TextButton toggle = new TextButton(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.squareTogglei);
+				TextButton toggle = new TextButton(entry.enabled ? "@newconsole.enabled" : "@newconsole.disabled", Styles.togglet);
 				actions.add(toggle).width(80f);
 				//fuck java lambdas
 				toggle.clicked(() -> {

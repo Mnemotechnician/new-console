@@ -69,7 +69,7 @@ public class FileBrowser extends Dialog {
 			
 			bar.button(Icon.exit, Styles.nodei, this::hide).size(50f);
 			
-			bar.button("@newconsole.files.save-script", Styles.squareTogglei, () -> {
+			bar.button("@newconsole.files.save-script", Styles.togglet, () -> {
 				ifNotZip(() -> {
 					inputPrompt.prompt("@newconsole.file-name", name -> {
 						if (name.indexOf(".") == -1) {
@@ -91,7 +91,7 @@ public class FileBrowser extends Dialog {
 				});
 			}).width(250);
 			
-			bar.button("@newconsole.files.new-folder", Styles.squareTogglei, () -> {
+			bar.button("@newconsole.files.new-folder", Styles.togglet, () -> {
 				ifNotZip(() -> {
 					inputPrompt.prompt("@newconsole.folder-name", name -> {
 						var dir = currentDirectory.child(name);
@@ -108,7 +108,7 @@ public class FileBrowser extends Dialog {
 			bar.table(right -> {
 				right.right();
 				
-				right.button("@newconsole.files-paste", Styles.squareTogglei, () -> {
+				right.button("@newconsole.files-paste", Styles.togglet, () -> {
 					if (movedFile != null) {
 						var target = currentDirectory.child(movedFile.name());
 						if (target.equals(movedFile)) {
@@ -400,7 +400,7 @@ public class FileBrowser extends Dialog {
 			cont.center();
 			cont.add(label).row();
 			cont.add(image).row();
-			cont.button("@newconsole.close", Styles.squareTogglei, this::hide).fillX();
+			cont.button("@newconsole.close", Styles.togglet, this::hide).fillX();
 		}
 		
 		/** Loads the providen image and shows it. Shows an error if the file isn't an image */
