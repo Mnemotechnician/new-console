@@ -61,24 +61,24 @@ public class Console extends BaseDialog {
 							twoRows.table(history -> {
 								history.defaults().height(40).width(100);
 								
-								history.button("@newconsole.prev", Styles.nodet, () -> {
+								history.button("@newconsole.prev", Styles.squareTogglei, () -> {
 									historyShift(1);
 								});
 								
-								history.button("@newconsole.next", Styles.nodet, () -> {
+								history.button("@newconsole.next", Styles.squareTogglei, () -> {
 									historyShift(-1);
 								}).row();
 								
-								history.button("@newconsole.clear", Styles.nodet, () -> {
+								history.button("@newconsole.clear", Styles.squareTogglei, () -> {
 									logBuffer.setLength(0);
 								});
 								
-								history.button("@newconsole.clipboard", Styles.nodet, () -> {
+								history.button("@newconsole.clipboard", Styles.squareTogglei, () -> {
 									ConsoleVars.copypaste.setTarget(area).show();
 								});
 							});
 							
-							twoRows.button("@newconsole.run", Styles.nodet, () -> {
+							twoRows.button("@newconsole.run", Styles.squareTogglei, () -> {
 								String code = area.getText();
 								
 								historyIndex = 0;
@@ -91,15 +91,15 @@ public class Console extends BaseDialog {
 							lower.defaults().width(100).height(40);
 							lower.left();
 							
-							lower.button("@newconsole.scripts", Styles.nodet, () -> {
+							lower.button("@newconsole.scripts", Styles.squareTogglei, () -> {
 								ConsoleVars.saves.show();
 							});
 							
-							lower.button("@newconsole.files", Styles.nodet, () -> {
+							lower.button("@newconsole.files", Styles.squareTogglei, () -> {
 								ConsoleVars.fileBrowser.show();
 							});
 							
-							lower.button("@newconsole.autorun", Styles.nodet, () -> {
+							lower.button("@newconsole.autorun", Styles.squareTogglei, () -> {
 								ConsoleVars.autorun.show();
 							});
 						}).growX();
@@ -137,7 +137,7 @@ public class Console extends BaseDialog {
 				});
 			}).grow().row();
 			
-			main.button("@newconsole.close", Styles.nodet, () -> {
+			main.button("@newconsole.close", Styles.squareTogglei, () -> {
 				hide();
 			}).fillX();
 		}).grow().row();

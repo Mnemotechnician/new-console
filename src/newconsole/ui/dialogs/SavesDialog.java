@@ -23,7 +23,7 @@ public class SavesDialog extends BaseDialog {
 		closeOnBack();
 		
 		cont.table(save -> {
-			save.button("@newconsole.save", Styles.nodet, () -> {
+			save.button("@newconsole.save", Styles.squareTogglei, () -> {
 				String name = saveName.getText();
 				if (name.replaceAll("\\s", "").equals("")) {
 					Vars.ui.showInfo("@newconsole.empty-name");
@@ -56,7 +56,7 @@ public class SavesDialog extends BaseDialog {
 			scriptsTable = table;
 		})).grow().row();
 		
-		cont.button("@newconsole.close", Styles.nodet, () -> hide()).growX();
+		cont.button("@newconsole.close", Styles.squareTogglei, () -> hide()).growX();
 	}
 	
 	public void rebuild() {
