@@ -116,11 +116,11 @@ public class Spinner extends TextButton {
 	}
 	
 	public Spinner(String header, boolean unique, Cons<Table> constructor) {
-		this(header, Styles.clearTogglet, unique, constructor);
+		this(header, Styles.flatTogglet, unique, constructor);
 	}
 	
 	public Spinner(String header, Cons<Table> constructor) {
-		this(header, Styles.clearTogglet, true, constructor);
+		this(header, Styles.flatTogglet, true, constructor);
 	}
 	
 	public void show(boolean animate) {
