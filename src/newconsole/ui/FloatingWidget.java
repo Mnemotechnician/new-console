@@ -25,7 +25,7 @@ public class FloatingWidget extends Table {
 	public boolean isDragging = false;
 	
 	public FloatingWidget() {
-		dragger = new ImageButton(Icon.move, Styles.nodei);
+		dragger = new ImageButton(Icon.move, Styles.defaulti);
 		add(dragger);
 		
 		dragger.addListener(new InputListener() {

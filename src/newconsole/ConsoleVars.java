@@ -57,7 +57,7 @@ public class ConsoleVars {
 			
 			floatingWidget = new FloatingWidget();
 			
-			floatingWidget.button(Icon.terminal, Styles.nodei, console::show).get()
+			floatingWidget.button(Icon.terminal, Styles.defaulti, console::show).get()
 			.setSize(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
 			
 			group.addChild(floatingWidget);

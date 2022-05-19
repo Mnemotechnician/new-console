@@ -61,24 +61,24 @@ public class Console extends BaseDialog {
 							twoRows.table(history -> {
 								history.defaults().height(40).width(100);
 								
-								history.button("@newconsole.prev", Styles.logict, () -> {
+								history.button("@newconsole.prev", Styles.defaultt, () -> {
 									historyShift(1);
 								});
 								
-								history.button("@newconsole.next", Styles.logict, () -> {
+								history.button("@newconsole.next", Styles.defaultt, () -> {
 									historyShift(-1);
 								}).row();
 								
-								history.button("@newconsole.clear", Styles.logict, () -> {
+								history.button("@newconsole.clear", Styles.defaultt, () -> {
 									logBuffer.setLength(0);
 								});
 								
-								history.button("@newconsole.clipboard", Styles.logict, () -> {
+								history.button("@newconsole.clipboard", Styles.defaultt, () -> {
 									ConsoleVars.copypaste.setTarget(area).show();
 								});
 							});
 							
-							twoRows.button("@newconsole.run", Styles.logict, () -> {
+							twoRows.button("@newconsole.run", Styles.defaultt, () -> {
 								String code = area.getText();
 								
 								historyIndex = 0;
@@ -91,15 +91,15 @@ public class Console extends BaseDialog {
 							lower.defaults().width(100).height(40);
 							lower.left();
 							
-							lower.button("@newconsole.scripts", Styles.logict, () -> {
+							lower.button("@newconsole.scripts", Styles.defaultt, () -> {
 								ConsoleVars.saves.show();
 							});
 							
-							lower.button("@newconsole.files", Styles.logict, () -> {
+							lower.button("@newconsole.files", Styles.defaultt, () -> {
 								ConsoleVars.fileBrowser.show();
 							});
 							
-							lower.button("@newconsole.autorun", Styles.logict, () -> {
+							lower.button("@newconsole.autorun", Styles.defaultt, () -> {
 								ConsoleVars.autorun.show();
 							});
 						}).growX();
@@ -137,7 +137,7 @@ public class Console extends BaseDialog {
 				});
 			}).grow().row();
 			
-			main.button("@newconsole.close", Styles.logict, () -> {
+			main.button("@newconsole.close", Styles.defaultt, () -> {
 				hide();
 			}).fillX();
 		}).grow().row();
