@@ -2,7 +2,7 @@
 Mindustry mod that adds a better console ui
 
 ## V7
-This mod supports the unofficial v7 builds, you can get one at the [actions](https://github.com/mnemotechnician/new-console/actions) page.
+This mod supports the unofficial v7 builds, you can get a compatible build at the [actions](https://github.com/mnemotechnician/new-console/actions) page.
 
 ## Features
 The mod adds a floating window with two buttons: one opens the console ui and the other allows you to drag the window across the screen.
