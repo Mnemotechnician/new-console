@@ -21,7 +21,7 @@ public class CopypasteDialog extends BaseDialog {
 		cont.center();
 		cont.table(main -> {
 			main.defaults().height(50f);
-			main.button("@newconsole.copy", Styles.nodet, () -> {
+			main.button("@newconsole.copy", Styles.togglet, () -> {
 				if (target == null) {
 					Log.warn("No target text area specified for CopypasteDialog");
 					return;
@@ -32,7 +32,7 @@ public class CopypasteDialog extends BaseDialog {
 				hide();
 			}).width(150);
 			
-			main.button("@newconsole.paste", Styles.nodet, () -> {
+			main.button("@newconsole.paste", Styles.togglet, () -> {
 				if (target == null) {
 					Log.warn("No target text area specified for CopypasteDialog");
 					return;
@@ -47,7 +47,7 @@ public class CopypasteDialog extends BaseDialog {
 				hide();
 			}).width(150).row();
 			
-			main.button("@newconsole.close", Styles.nodet, this::hide).colspan(2).growX();
+			main.button("@newconsole.close", Styles.togglet, this::hide).colspan(2).growX();
 		});
 	}
 	
