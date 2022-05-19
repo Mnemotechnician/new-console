@@ -31,9 +31,9 @@ public class InputPrompt extends Dialog {
 		}, text -> {}).width(200f).get();
 		field.removeInputDialog();
 		
-		cont.button("@newconsole.done", Styles.togglet, this::done).width(80f).row();
+		cont.button("@newconsole.done", Styles.defaultt, this::done).width(80f).row();
 		
-		cont.button("@newconsole.close", Styles.togglet, this::hide).colspan(2).growX();
+		cont.button("@newconsole.close", Styles.defaultt, this::hide).colspan(2).growX();
 	}
 	
 	/** Shows the dialog, runs the consumer when the done button is pressed */

@@ -9,7 +9,7 @@ name: "newconsole"
 author: "Мнемотехник"
 description: "Adds a much better console ui.\n\nAlso includes a file browser, a scripts menu, an events menu and much much more!\n\nSee README.md for more info."
 version: 1.41
-subtitle: "amk"
+subtitle: "Adds a much better console UI."
 minGameVersion: 136
 hidden: true
 
