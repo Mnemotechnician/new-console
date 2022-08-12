@@ -8,7 +8,9 @@ import arc.freetype.*;
 import arc.freetype.FreeTypeFontGenerator.*;
 import arc.freetype.FreetypeFontLoader.*;
 import arc.scene.style.*;
+import arc.scene.ui.Label.LabelStyle;
 import arc.scene.ui.TextField.TextFieldStyle;
+import mindustry.Vars;
 import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.graphics.*;
@@ -27,11 +29,18 @@ public class CStyles {
 		fileZip, fileJar;
 
 	public static Font mono;
+	public static LabelStyle monoLabel;
 	public static TextFieldStyle monoArea;
 	
 	public static Color accent = Color.valueOf("2244ff");
-	
-	public static void load() {
+
+	public static void loadSync() {
+		mono = new FreeTypeFontGenerator(Vars.tree.get("fonts/JetBrainsMono-medium.ttf")).generateFont(new FreeTypeFontParameter() {{
+			size = 15;
+			incremental = true;
+		}});
+		mono.getData().markupEnabled = true;
+
 		scriptbg = Tex.buttonOver;
 		
 		playIcon = Icon.play.tint(Color.green);
@@ -49,15 +58,11 @@ public class CStyles {
 		fileCode = atlas.find("newconsole-file-code");
 		fileImage = atlas.find("newconsole-file-image");
 
-		Core.assets.load("mono", Font.class, new FreeTypeFontLoaderParameter("fonts/JetBrainsMono.ttf", new FreeTypeFontParameter() {{
-			size = 30;
-			incremental = true;
-		}})).loaded = (f) -> {
-			mono = f;
-
-			monoArea = TextFieldStyle(Styles.defaultField) {{
-				font = mono;
-			}};
-		};
+		monoLabel = new LabelStyle(Styles.defaultLabel) {{
+			font = mono;
+		}};
+		monoArea = new TextFieldStyle(Styles.defaultField) {{
+			font = mono;
+		}};
 	}
 }

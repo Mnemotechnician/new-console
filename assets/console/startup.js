@@ -11,6 +11,10 @@ function classForName(name) {
 	}
 }
 
+function importCls(name) {
+	return importClass(new Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, Class.forName(name, true, Vars.mods.mainLoader())))
+}
+
 const _interface = classForName("newconsole.js.JSInterface").newInstance();
 const _buffer = _interface.getConsole().logBuffer;
 const _defaultMethods = new java.lang.Object();

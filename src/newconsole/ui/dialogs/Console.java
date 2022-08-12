@@ -43,21 +43,26 @@ public class Console extends BaseDialog {
 	public Console() {
 		super("@newconsole.console-header");
 		closeOnBack();
+
 		cont.center().margin(0).fill();
 		cont.table(main -> {
 			main.left().bottom();
 			
 			main.table(horizontal -> {
 				horizontal.left().bottom();
-				
-				leftPane = new BetterPane(logLabel = new Label(() -> logBuffer));
-				horizontal.add(leftPane);
+
+				horizontal.table(left -> {
+					logLabel = new Label(logBuffer, CStyles.monoLabel) {{
+						update(() -> setText(logBuffer));
+					}};
+					left.add(leftPane = new BetterPane(logLabel)).grow();
+				}).grow().uniformX();
 				
 				var rightTable = horizontal.table(script -> {
 					script.bottom().defaults().bottom().left();
 					
 					script.table(buttons -> {
-						buttons.table(twoRows -> {
+						buttons.left().table(twoRows -> {
 							twoRows.table(history -> {
 								history.defaults().height(40).width(100);
 								
@@ -102,39 +107,26 @@ public class Console extends BaseDialog {
 							lower.button("@newconsole.autorun", Styles.defaultt, () -> {
 								ConsoleVars.autorun.show();
 							});
-						}).growX();
-					}).row();
+						});
+					}).growX().row();
 					
-					rightPane = script.add(new BetterPane(input -> {
+					script.add(new BetterPane(input -> {
 						area = input.area("", CStyles.monoArea, text -> {
 							history.set(0, text);
 							historyIndex = 0;
 							
 							area.setPrefRows(area.getLines());
 							rightPane.layout();
-						}).bottom().left().grow().get();
+						}).bottom().left().grow().padRight(5f).get();
 						
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
-					})).grow().get();
-					
-					rightPane.setForceScroll(false, true);
-				}).bottom().get();
-				
-				//me when no help
-				horizontal.update(() -> {
-					float targetWidth = horizontal.getWidth() / 2f;
-					float targetHeight = horizontal.getHeight();
-					leftPane.setSize(targetWidth, targetHeight);
-					rightTable.setSize(targetWidth, targetHeight);
-					
-					if (targetWidth != lastWidth || targetHeight != lastHeight) {
-						rightTable.invalidateHierarchy();
-						leftPane.invalidateHierarchy();
-						lastWidth = targetWidth;
-						lastHeight = targetHeight;
-					}
-				});
+					})).grow().with(it -> {
+						it.setForceScroll(false, true);
+						it.setScrollingDisabledX(true);
+						rightPane = it;
+					});
+				}).bottom().grow().uniformX().get();
 			}).grow().row();
 			
 			main.button("@newconsole.close", Styles.defaultt, () -> {
@@ -149,7 +141,7 @@ public class Console extends BaseDialog {
 		if (!needsInit) return;
 		needsInit = false;
 		
-		//register a new log handler that retranslates logs to the custom console
+		// register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
 			if (!message.startsWith(dontResendStr)) {
@@ -167,6 +159,16 @@ public class Console extends BaseDialog {
 		
 		backread();
 	}
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		// long buffer causes the console to lag. so we just trim it.
+		if (logBuffer.length() > 20000) {
+			var start = logBuffer.length() - 20000;
+			logBuffer.delete(0, start);
+		}
+	}
 	
 	/** Scroll to the bottom of the log */
 	public void scrollDown() {
@@ -181,7 +183,7 @@ public class Console extends BaseDialog {
 				logBuffer.setLength(0);
 				logBuffer.append(log.readString());
 				Time.run(4, () -> {
-					if (ConsoleVars.console != null) { //I'll just keep it here cus this method is static
+					if (ConsoleVars.console != null) {
 						ConsoleVars.console.scrollDown();
 					}
 				});
@@ -194,22 +196,16 @@ public class Console extends BaseDialog {
 	}
 	
 	public void addLog(String newlog) {
-		info(newlog);
+		info(dontResendStr + newlog);
 		logBuffer.append(newlog);
 		Time.run(4, () -> scrollDown());
-
-		// long buffer causes the console to lag. so we just trim it.
-		if (logBuffer.length() > 10000) {
-			var start = logBuffer.length() - 10000
-			logBuffer.delete(0, start)
-		}
 	}
 	
 	public void runConsole(String code) {
 		//messages starting with \u0019 aren't re-sent
-		addLog(dontResend + "[blue]JS $ [grey]" + Strings.stripColors(code) + "\n");
+		addLog("[blue]JS $ [grey]" + Strings.stripColors(code) + "\n");
 		String log = Vars.mods.getScripts().runConsole(code);
-		addLog(dontResend + "[yellow]> [lightgrey]" + Strings.stripColors(log) + "\n");
+		addLog("[yellow]> [lightgrey]" + Strings.stripColors(log) + "\n");
 	}
 	
 	public void addHistory(String command) {
@@ -239,5 +235,4 @@ public class Console extends BaseDialog {
 	public void setCode(String code) {
 		area.setText(code);
 	}
-	
 }

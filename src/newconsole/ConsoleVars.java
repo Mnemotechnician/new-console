@@ -9,6 +9,7 @@ import arc.scene.ui.layout.*;
 import mindustry.*;
 import mindustry.gen.*;
 import mindustry.game.*;
+import mindustry.game.EventType.*;
 import mindustry.ui.*;
 
 import newconsole.io.*;
@@ -35,19 +36,18 @@ public class ConsoleVars {
 	public static boolean consoleEnabled = true;
 	/** Startup js script path, relative to the asset tree */
 	public static String startup = "console/startup.js";
-	
-	
+		
 	public static void init() {
 		Vars.loadLogger();
-		
-		Events.on(EventType.ClientLoadEvent.class, a -> {
-			CStyles.load(); //for some reason mindustry.gen.Tex fields are null during mod loading
-			
+
+		Events.on(ClientLoadEvent.class, event -> {
+			CStyles.loadSync();
+
 			group = new WidgetGroup();
 			group.setFillParent(true);
 			group.touchable = Touchable.childrenOnly;
 			group.visible(() -> consoleEnabled);
-			Core.scene.add(group); //haha, anukus ඞ
+			Core.scene.add(group);
 			console = new Console();
 			
 			saves = new SavesDialog();
@@ -58,7 +58,7 @@ public class ConsoleVars {
 			floatingWidget = new FloatingWidget();
 			
 			floatingWidget.button(Icon.terminal, Styles.defaulti, console::show).get()
-			.setSize(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
+				.setSize(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
 			
 			group.addChild(floatingWidget);
 			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
