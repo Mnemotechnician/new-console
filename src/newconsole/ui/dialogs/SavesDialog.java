@@ -23,7 +23,7 @@ public class SavesDialog extends BaseDialog {
 		closeOnBack();
 		
 		cont.table(save -> {
-			save.button("@newconsole.save", Styles.nodet, () -> {
+			save.button("@newconsole.save", Styles.defaultt, () -> {
 				String name = saveName.getText();
 				if (name.replaceAll("\\s", "").equals("")) {
 					Vars.ui.showInfo("@newconsole.empty-name");
@@ -56,7 +56,7 @@ public class SavesDialog extends BaseDialog {
 			scriptsTable = table;
 		})).grow().row();
 		
-		cont.button("@newconsole.close", Styles.nodet, () -> hide()).growX();
+		cont.button("@newconsole.close", Styles.defaultt, () -> hide()).growX();
 	}
 	
 	public void rebuild() {
@@ -80,16 +80,16 @@ public class SavesDialog extends BaseDialog {
 			entry.table(actions -> {
 				actions.center().right().defaults().center().size(50);
 				
-				actions.button(CStyles.playIcon, Styles.nodei, () -> {
+				actions.button(CStyles.playIcon, Styles.defaulti, () -> {
 					ConsoleVars.console.runConsole(script);
 				});
 				
-				actions.button(CStyles.editIcon, Styles.nodei, () -> {
+				actions.button(CStyles.editIcon, Styles.defaulti, () -> {
 					ConsoleVars.console.setCode(script);
 					hide();
 				});
 				
-				actions.button(CStyles.deleteIcon, Styles.nodei, () -> {
+				actions.button(CStyles.deleteIcon, Styles.defaulti, () -> {
 					Vars.ui.showConfirm("@newconsole.delete-confirm", () -> {
 						ScriptsManager.deleteScript(name);
 						scriptsTable.removeChild(entry);
