@@ -26,7 +26,7 @@ public class Console extends BaseDialog {
 	protected static final String dontResendStr = String.valueOf(dontResend);
 	
 	/** Input & output log */
-	public static StringBuilder logBuffer = new StringBuilder(50000);
+	public static StringBuilder logBuffer = new StringBuilder(5000);
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
@@ -106,7 +106,7 @@ public class Console extends BaseDialog {
 					}).row();
 					
 					rightPane = script.add(new BetterPane(input -> {
-						area = input.area("", text -> {
+						area = input.area("", CStyles.monoArea, text -> {
 							history.set(0, text);
 							historyIndex = 0;
 							
@@ -197,6 +197,12 @@ public class Console extends BaseDialog {
 		info(newlog);
 		logBuffer.append(newlog);
 		Time.run(4, () -> scrollDown());
+
+		// long buffer causes the console to lag. so we just trim it.
+		if (logBuffer.length() > 10000) {
+			var start = logBuffer.length() - 10000
+			logBuffer.delete(0, start)
+		}
 	}
 	
 	public void runConsole(String code) {
