@@ -34,7 +34,7 @@ public class Console extends BaseDialog {
 	
 	protected static boolean needsInit = true;
 	
-	public TextArea area;
+	public FixedTextArea area;
 	public Label logLabel;
 	public BetterPane leftPane, rightPane;
 	
@@ -111,14 +111,14 @@ public class Console extends BaseDialog {
 					}).growX().row();
 					
 					script.add(new BetterPane(input -> {
-						area = input.area("", CStyles.monoArea, text -> {
+						input.add(area = new FixedTextArea("", CStyles.monoArea)).bottom().left().grow().get();
+
+						area.changed(text -> {
 							history.set(0, text);
 							historyIndex = 0;
-							
-							area.setPrefRows(area.getLines());
-							rightPane.layout();
-						}).bottom().left().grow().padRight(5f).get();
+						});
 						
+						area.setFocusTraversal(false);
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
 					})).grow().with(it -> {

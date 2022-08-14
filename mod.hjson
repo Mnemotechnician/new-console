@@ -1,3 +1,4 @@
+# this is not to be changed until v7 gets released.
 #!VERSION 1.41
 #!REPO "Mnemotechnician/New-console"
 #!BRANCH "master"
@@ -8,7 +9,7 @@ displayName: "New Console"
 name: "newconsole"
 author: "Мнемотехник"
 description: "Adds a much better console ui.\n\nAlso includes a file browser, a scripts menu, an events menu and much much more!\n\nSee README.md for more info."
-version: 1.41
+version: 1.5
 subtitle: "Adds a much better console UI."
 minGameVersion: 136
 hidden: true

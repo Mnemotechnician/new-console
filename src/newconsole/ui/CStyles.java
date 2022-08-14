@@ -63,6 +63,7 @@ public class CStyles {
 		}};
 		monoArea = new TextFieldStyle(Styles.defaultField) {{
 			font = mono;
+			messageFont = mono;
 		}};
 	}
 }
