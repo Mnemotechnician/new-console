@@ -1,13 +1,16 @@
 package newconsole.ui.dialogs;
 
+import arc.struct.*;
 import arc.graphics.*;
 import arc.scene.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
+import arc.util.*;
 import mindustry.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
+import java.util.Comparator;
 
 import newconsole.*;
 import newconsole.io.*;
@@ -61,7 +64,16 @@ public class SavesDialog extends BaseDialog {
 	
 	public void rebuild() {
 		scriptsTable.clearChildren();
-		ScriptsManager.eachScript((name, script) -> add(name, script));
+
+		// copy to a seq, then sort by name - fuck java.
+		Seq<Pair<String, String>> seq = new Seq<>(ScriptsManager.scripts.size);
+		ScriptsManager.eachScript((name, script) -> {
+			seq.add(new Pair(name, script));
+		});
+
+		seq.sort(new EntryComparator());
+
+		seq.each(it -> add(it.first, it.second));
 	}
 	
 	@Override
@@ -98,5 +110,37 @@ public class SavesDialog extends BaseDialog {
 			});
 		}).growX().pad(2f).marginBottom(20).row();
 	}
-	
+
+	/** Same as kotlin.Pair. */
+	public static class Pair<A, B> {
+		final A first;
+		final B second;
+
+		public Pair(A first, B second) {
+			this.first = first;
+			this.second = second;
+		}
+	}
+
+	public class EntryComparator implements Comparator<Pair<String, String>> {
+		@Override
+		public int compare(Pair<String, String> o1, Pair<String, String> o2) {
+			if (o1 == o2) return 0;
+
+			var left = Strings.stripColors(o1.first);
+			var right = Strings.stripColors(o2.first);
+
+			for (int i = 0; i < Math.min(left.length(), right.length()); i++) {
+				var diff = Character.toLowerCase(left.charAt(i)) - Character.toLowerCase(right.charAt(i));
+				if (diff != 0) return diff;
+			}
+
+			if (left.length() > right.length()) return -1;
+			return 1;
+		}
+
+		@Override
+		public boolean equals(Object o) { return o == this; }
+	}
+
 }

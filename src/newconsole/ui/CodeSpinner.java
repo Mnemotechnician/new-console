@@ -7,7 +7,7 @@ import arc.scene.ui.layout.*;
 import mindustry.ui.*;
 import newconsole.ui.*;
 
-/** Displays arbitrary code in a code block. Provides some optimisations. */
+/** Displays arbitrary code in a code block. */
 public class CodeSpinner extends Spinner {
 	
 	public String code;
@@ -18,7 +18,7 @@ public class CodeSpinner extends Spinner {
 		
 		table.setBackground(CStyles.scriptbg);
 		
-		codeLabel = table.labelWrap("").grow().get();
+		codeLabel = table.add("", CStyles.monoLabel).with(it -> it.setWrap(true)).grow().get();
 		
 		this.code = Strings.stripColors(code);
 	}

@@ -7,9 +7,20 @@
 
 displayName: "New Console"
 name: "newconsole"
-author: "Мнемотехник"
-description: "Adds a much better console ui.\n\nAlso includes a file browser, a scripts menu, an events menu and much much more!\n\nSee README.md for more info."
-version: 1.5
+author: "Mnemotechnician"
+
+description: '''
+Adds a console ui superiour to the built-in one and the ones provided by any other mods.
+User-friendly interface, a good log panel, execution history, monospace font - all that is included in this mod.
+
+In addiction to the console, this mod offers:
+- An ability to save as many scripts as you want, execute them or copy to the console
+- An ability to execute scripts when certain events get fired
+- A full-blown file browser (be careful, you can cause real harm with that!)
+
+See README.md for more info.
+'''
+version: 1.6
 subtitle: "Adds a much better console UI."
 minGameVersion: 136
 hidden: true

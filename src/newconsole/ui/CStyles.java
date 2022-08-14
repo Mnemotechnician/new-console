@@ -41,7 +41,7 @@ public class CStyles {
 		}});
 		mono.getData().markupEnabled = true;
 
-		scriptbg = Tex.buttonOver;
+		scriptbg = Tex.button;
 		
 		playIcon = Icon.play.tint(Color.green);
 		editIcon = Icon.edit.tint(Color.yellow);

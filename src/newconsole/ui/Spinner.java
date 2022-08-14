@@ -79,20 +79,25 @@ public class Spinner extends TextButton {
 			
 			if (col.getScene() != null) {
 				col.visible = true;
-				//col.toFront(); TODO: causes more harm than sudden disappearing of spinners
+				col.toFront();
 				col.color.a = parentAlpha * color.a;
-				col.setSize(width, col.getPrefHeight());
 				
-				Vec2 point = localToStageCoordinates(Tmp.v1.set(0, 0));
-				float height = Math.min(point.y, table.getPrefHeight());
-				point = localToStageCoordinates(Tmp.v1.set(0, -height));
-				
-				/*if (point.y < Core.scene.getHeight() / 2) {
-					point = localToStageCoordinates(Tmp.v1.set(0, getPrefHeight()));
-					height = Core.scene.getHeight() - point.y;
-				}*/
-				pane.setHeight(height);
-				col.setPosition(point.x, point.y);
+				var reverse = false;
+				var pos = localToStageCoordinates(Tmp.v1.set(0, -table.getPrefHeight()));
+				if (pos.y <= 0 && pos.y + table.getPrefHeight() * 2 + height < Core.scene.getHeight()) {
+					pos.y += table.getPrefHeight() + height;
+					reverse = true;
+				}
+
+				var freeHeight = reverse
+					? Core.scene.getHeight() - localToStageCoordinates(Tmp.v2.set(0, height)).y
+					: localToStageCoordinates(Tmp.v2.setZero()).y;
+
+				col.setSize(width, Math.min(freeHeight, table.getPrefHeight()));
+				pane.setSize(width, Math.min(freeHeight, table.getPrefHeight()));
+				table.setSize(width, Math.min(freeHeight, table.getPrefHeight()));
+				col.setPosition(pos.x, pos.y);
+				col.validate();
 			}
 			
 			if (autoHide && col.getScene() != null) {
