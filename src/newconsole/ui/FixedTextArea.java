@@ -1,84 +1,126 @@
 package newconsole.ui;
 
-import arc.Core;
-import arc.struct.IntSeq;
+import arc.func.Cons;
 import arc.graphics.g2d.Font;
-import arc.graphics.g2d.GlyphLayout;
-import arc.func.*;
-import arc.input.KeyCode;
-import arc.math.*;
-import arc.scene.Scene;
 import arc.scene.event.InputEvent;
-import arc.scene.event.InputListener;
 import arc.scene.style.Drawable;
-import arc.scene.ui.*;
-import arc.util.*;
-import arc.util.pooling.Pools;
+import arc.scene.ui.TextArea;
+import arc.scene.ui.TextField;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /*
- * todo remove if my PR geta merged.
- *
- * or, alternatively, turn into a code-assisting text area.
+ * Was created to fix an arc-level bug that didn't allow to use custom fonts.
+ * Will be made into a code-assisting text area.
  */
 public class FixedTextArea extends TextArea {
-    public FixedTextArea(String text) {
-        super(text);
-    }
+	private static Method insertMethod;
 
-    public FixedTextArea(String text, TextFieldStyle style) {
-        super(text, style);
-    }
+	static {
+		try {
+			insertMethod = TextField.class.getDeclaredMethod("insert", Integer.TYPE, CharSequence.class, String.class);
+			insertMethod.setAccessible(true);
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException("java fucking sucks. use kotlin or groovy, folks!", e);
+		}
+	}
 
-    public void changed(Cons<String> listener) {
-        changed(() -> listener.get(getText()));
-    };
+	public FixedTextArea(String text) {
+		super(text);
+	}
 
-    @Override
-    protected void updateDisplayText() {
-        super.updateDisplayText();
 
-        glyphPositions.clear();
-        layout.setText(style.font, displayText.toString().replace('\n', ' ').replace('\r', ' '));
-        var runs = layout.runs;
+	public FixedTextArea(String text, TextFieldStyle style) {
+		super(text, style);
+	}
 
-        if (runs.size > 0) {
-            var xAdvances = runs.first().xAdvances;
-            float x = 0;
-            for(int j = 1; j < xAdvances.size; j++){
-                glyphPositions.add(x);
-                x += xAdvances.get(j);
-            }
-            glyphPositions.add(x);
-        }
-    }
+	public void insertAtCursor(CharSequence newText) {
+		try {
+			insertMethod.invoke(this, cursor, newText, text);
+			cursor += newText.length();
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException("FUCK YOU", e);
+		}
+	}
 
-    @Override
-    protected void drawSelection(Drawable selection, Font font, float x, float y){
-        int i = firstLineShowing * 2;
-        float offsetY = 0;
-        int minIndex = Math.min(cursor, selectionStart);
-        int maxIndex = Math.max(cursor, selectionStart);
-        while(i + 1 < linesBreak.size && i < (firstLineShowing + linesShowing) * 2){
+	public void changed(Cons<String> listener) {
+		changed(() -> listener.get(getText()));
+	}
 
-            int lineStart = linesBreak.get(i);
-            int lineEnd = linesBreak.get(i + 1);
+	@Override
+	protected void updateDisplayText() {
+		super.updateDisplayText();
 
-            if(!((minIndex < lineStart && minIndex < lineEnd && maxIndex < lineStart && maxIndex < lineEnd)
-            || (minIndex > lineStart && minIndex > lineEnd && maxIndex > lineStart && maxIndex > lineEnd))){
+		glyphPositions.clear();
+		layout.setText(style.font, displayText.toString().replace('\n', ' ').replace('\r', ' '));
+		var runs = layout.runs;
 
-                int start = Math.min(Math.max(linesBreak.get(i), minIndex), glyphPositions.size - 1);
-                int end = Math.min(Math.min(linesBreak.get(i + 1), maxIndex), glyphPositions.size - 1);
+		if (runs.size > 0) {
+			var xAdvances = runs.first().xAdvances;
+			float x = 0;
+			for (int j = 1; j < xAdvances.size; j++) {
+				glyphPositions.add(x);
+				x += xAdvances.get(j);
+			}
+			glyphPositions.add(x);
+		}
+	}
 
-                float selectionX = glyphPositions.get(start) - glyphPositions.get(Math.min(linesBreak.get(i), glyphPositions.size));
-                float selectionWidth = glyphPositions.get(end) - glyphPositions.get(start);
+	@Override
+	protected void drawSelection(Drawable selection, Font font, float x, float y) {
+		int i = firstLineShowing * 2;
+		float offsetY = 0;
+		int minIndex = Math.min(cursor, selectionStart);
+		int maxIndex = Math.max(cursor, selectionStart);
+		while (i + 1 < linesBreak.size && i < (firstLineShowing + linesShowing) * 2) {
 
-                selection.draw(x + selectionX + fontOffset, y - textHeight - font.getDescent() - offsetY, selectionWidth,
-                font.getLineHeight());
-            }
+			int lineStart = linesBreak.get(i);
+			int lineEnd = linesBreak.get(i + 1);
 
-            offsetY += font.getLineHeight();
-            i += 2;
-        }
-    }
+			if (!((minIndex < lineStart && minIndex < lineEnd && maxIndex < lineStart && maxIndex < lineEnd)
+				|| (minIndex > lineStart && minIndex > lineEnd && maxIndex > lineStart && maxIndex > lineEnd))) {
+
+				int start = Math.min(Math.max(linesBreak.get(i), minIndex), glyphPositions.size - 1);
+				int end = Math.min(Math.min(linesBreak.get(i + 1), maxIndex), glyphPositions.size - 1);
+
+				float selectionX = glyphPositions.get(start) - glyphPositions.get(Math.min(linesBreak.get(i), glyphPositions.size));
+				float selectionWidth = glyphPositions.get(end) - glyphPositions.get(start);
+
+				selection.draw(x + selectionX + fontOffset, y - textHeight - font.getDescent() - offsetY, selectionWidth,
+					font.getLineHeight());
+			}
+
+			offsetY += font.getLineHeight();
+			i += 2;
+		}
+	}
+
+	class AssistingInputListener extends TextAreaListener {
+		@Override
+		public boolean keyTyped(InputEvent event, char character) {
+			if (character == '\t') {
+				insertAtCursor("    ");
+				updateDisplayText();
+				return true;
+			} else if (character == '\n') {
+				var oldText = text;
+				var oldLine = cursorLine;
+
+				if (super.keyTyped(event, character) && cursorLine > 0) {
+					// determine how many spaces the previous line has had
+					var i = linesBreak.get(oldLine * 2);
+					var leadingSpace = 0;
+					while (i < oldText.length() && oldText.charAt(i++) == ' ') leadingSpace++;
+					// insert the same amount of spaces
+					insertAtCursor(" ".repeat(leadingSpace));
+					updateDisplayText();
+				}
+				return true;
+			}
+
+			return super.keyTyped(event, character);
+		}
+	}
 }
 
