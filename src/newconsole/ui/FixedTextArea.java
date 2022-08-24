@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  * Will be made into a code-assisting text area.
  */
 public class FixedTextArea extends TextArea {
-	private static Method insertMethod;
+	private static final Method insertMethod;
 
 	static {
 		try {
@@ -117,7 +117,8 @@ public class FixedTextArea extends TextArea {
 					// determine how many spaces the previous line has had
 					var i = linesBreak.get(oldLine * 2);
 					var leadingSpace = new StringBuilder();
-					while (i < oldText.length() && oldText.charAt(i++) == ' ') leadingSpace.append(" ");
+					while (i < oldText.length() && oldText.charAt(i++) == ' ')
+						leadingSpace.append(" ");
 					// insert the same amount of spaces
 					insertAtCursor(leadingSpace);
 					updateDisplayText();

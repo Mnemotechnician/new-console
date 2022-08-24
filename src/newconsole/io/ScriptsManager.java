@@ -1,31 +1,30 @@
 package newconsole.io;
 
-import java.io.*;
-import arc.func.*;
-import arc.struct.*;
-import arc.files.*;
-import arc.util.*;
-import mindustry.*;
+import arc.files.Fi;
+import arc.func.Cons2;
+import arc.struct.StringMap;
+import arc.util.Log;
+import mindustry.Vars;
 
 public class ScriptsManager {
-	
+
 	public static final String save = "newconsole.save", def = "console/default.save";
 	public static final byte startScript = 3, endScript = 4, splitter = 17, eof = 127;
-	
+
 	public static Fi root;
 	public static StringMap scripts = new StringMap();
-	
+
 	protected static StringBuilder build = new StringBuilder();
-	
+
 	public static void init() {
 		root = Vars.dataDirectory.child("saves");
 		root.mkdirs();
-		
+
 		if (!root.exists() || !root.isDirectory()) {
 			Log.err("Scripts manager failed to init");
 			return;
 		}
-		
+
 		if (loadSave(root.child(save))) {
 			//loaded normal save
 		} else if (loadSave(root.child(save + ".backup"))) {
@@ -39,11 +38,11 @@ public class ScriptsManager {
 			Log.err("Couldn't load saved nor default scripts!");
 		}
 	}
-	
+
 	public static boolean loadSave(Fi save) {
 		if (!save.exists() || save.isDirectory()) return false;
 		if (root == null) throw new IllegalStateException("ScriptsManager hasn't been initialized yet");
-		
+
 		//yeah, i did all the funny code just in case of unexpected modifications
 		//also this thing will not break if I'll add something else. and I'll definitely do.
 		try (var reads = save.reads()) {
@@ -63,10 +62,10 @@ public class ScriptsManager {
 							return false;
 						}
 					}
-					
+
 					String script = reads.str();
 					scripts.put(name, script);
-					
+
 					//find end of script, just in case
 					while ((b = reads.b()) != endScript) {
 						if (b == eof) {
@@ -82,8 +81,10 @@ public class ScriptsManager {
 		}
 		return true;
 	}
-	
-	/** Save scripts & create a backup */
+
+	/**
+	 * Save scripts & create a backup
+	 */
 	public static void save() {
 		//backup
 		Fi savef = root.child(save);
@@ -102,19 +103,19 @@ public class ScriptsManager {
 		writes.b(eof);
 		writes.close();
 	}
-	
+
 	public static void eachScript(Cons2<String, String> cons) {
 		scripts.each(cons);
 	}
-	
+
 	public static void saveScript(String name, String script) {
 		scripts.put(name, script);
 		save();
 	}
-	
+
 	public static void deleteScript(String name) {
 		scripts.remove(name);
 		save();
 	}
-	
+
 }

@@ -1,28 +1,27 @@
 package newconsole.ui;
 
-import arc.*;
-import arc.util.*;
-import arc.graphics.*;
-import arc.graphics.g2d.*;
-import arc.freetype.*;
-import arc.freetype.FreeTypeFontGenerator.*;
-import arc.freetype.FreetypeFontLoader.*;
-import arc.scene.style.*;
+import arc.freetype.FreeTypeFontGenerator;
+import arc.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import arc.graphics.Color;
+import arc.graphics.g2d.Font;
+import arc.graphics.g2d.TextureRegion;
+import arc.scene.style.Drawable;
+import arc.scene.style.ScaledNinePatchDrawable;
 import arc.scene.ui.Label.LabelStyle;
 import arc.scene.ui.TextField.TextFieldStyle;
 import mindustry.Vars;
-import mindustry.gen.*;
-import mindustry.ui.*;
-import mindustry.graphics.*;
+import mindustry.gen.Icon;
+import mindustry.gen.Tex;
+import mindustry.ui.Styles;
 
-import static arc.Core.*;
+import static arc.Core.atlas;
 
 public class CStyles {
-	public static Drawable 
+	public static Drawable
 		scriptbg, filebg,
 		playIcon, editIcon, deleteIcon;
-	
-	public static TextureRegion 
+
+	public static TextureRegion
 		directory,
 		fileAny,
 		fileText, fileJs, fileCode, fileImage,
@@ -31,7 +30,7 @@ public class CStyles {
 	public static Font mono;
 	public static LabelStyle monoLabel;
 	public static TextFieldStyle monoArea;
-	
+
 	public static Color accent = Color.valueOf("2244ff");
 
 	public static void loadSync() {
@@ -42,13 +41,13 @@ public class CStyles {
 		mono.getData().markupEnabled = true;
 
 		scriptbg = Tex.button;
-		
+
 		playIcon = Icon.play.tint(Color.green);
 		editIcon = Icon.edit.tint(Color.yellow);
 		deleteIcon = Icon.trash.tint(Color.red);
-		
+
 		filebg = ((ScaledNinePatchDrawable) Styles.flatDown).tint(accent);
-		
+
 		directory = atlas.find("newconsole-folder");
 		fileAny = atlas.find("newconsole-file-unknown");
 		fileText = atlas.find("newconsole-file-text");

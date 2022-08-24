@@ -1,15 +1,16 @@
 package newconsole;
 
+import arc.Core;
+import arc.Events;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Log;
 import arc.util.Time;
-import com.github.mnemotechnician.autoupdater.*;
-import arc.*;
+import com.github.mnemotechnician.autoupdater.Updater;
 import mindustry.Vars;
-import mindustry.game.*;
+import mindustry.game.EventType;
 import mindustry.gen.Icon;
-import mindustry.mod.*;
+import mindustry.mod.Mod;
 import mindustry.ui.Styles;
 import newconsole.io.AutorunManager;
 import newconsole.io.ScriptsManager;
@@ -18,7 +19,7 @@ import newconsole.ui.FloatingWidget;
 import newconsole.ui.dialogs.*;
 
 public class NewConsoleMod extends Mod {
-	
+
 	public NewConsoleMod() {
 		Vars.loadLogger();
 
