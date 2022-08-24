@@ -1,6 +1,7 @@
 package newconsole.ui.dialogs;
 
 import arc.*;
+import arc.files.Fi;
 import arc.func.*;
 import arc.util.*;
 import arc.math.*;
@@ -23,14 +24,15 @@ public class Console extends BaseDialog {
 	
 	/** Logs starting with this char aren't retranslated to the console */
 	public static final char dontResend = '\u0019';
-	protected static final String dontResendStr = String.valueOf(dontResend);
+	public static final String dontResendStr = String.valueOf(dontResend);
+	public static Fi historySaveFile;
 	
 	/** Input & output log */
 	public static StringBuilder logBuffer = new StringBuilder(5000);
 	/** Input history, used to allow the user to redo/undo last inputs. #0 is the current input */
 	public static Seq<String> history = Seq.with("", "");
 	/** Current command. -1 means that the input is empty */
-	public static int historyIndex = -1;
+	public int historyIndex = -1;
 	
 	protected static boolean needsInit = true;
 	
@@ -140,7 +142,14 @@ public class Console extends BaseDialog {
 	public static void init() {
 		if (!needsInit) return;
 		needsInit = false;
-		
+
+		historySaveFile = Vars.dataDirectory.child("saves").child("newconsole.history");
+		// celete the save if it's a directory
+		if (historySaveFile.exists() && historySaveFile.isDirectory()) historySaveFile.deleteDirectory();
+		var backup = historySaveFile.sibling(historySaveFile.name() + ".backup");
+		if (backup.exists() && backup.isDirectory()) backup.deleteDirectory();
+
+
 		// register a new log handler that retranslates logs to the custom console
 		var defaultLogger = logger;
 		logger = (level, message) -> {
@@ -158,6 +167,7 @@ public class Console extends BaseDialog {
 		};
 		
 		backread();
+		readHistory();
 	}
 
 	@Override
@@ -198,7 +208,7 @@ public class Console extends BaseDialog {
 	public void addLog(String newlog) {
 		info(dontResendStr + newlog);
 		logBuffer.append(newlog);
-		Time.run(4, () -> scrollDown());
+		Time.run(4, this::scrollDown);
 	}
 	
 	public void runConsole(String code) {
@@ -208,7 +218,7 @@ public class Console extends BaseDialog {
 		addLog("[yellow]> [lightgrey]" + Strings.stripColors(log) + "\n");
 	}
 	
-	public void addHistory(String command) {
+	public static void addHistory(String command) {
 		if (history.size < 1) {
 			history.add("");
 		}
@@ -216,12 +226,59 @@ public class Console extends BaseDialog {
 		if (command.equals(history.get(1)) || command.replaceAll("\\s", "").equals("")) {
 			return; //no need to add the same script twice
 		}
-		if (history.size >= 50) {
+		if (history.size >= 100) {
 			history.remove(history.size - 1);
 		} 
 		history.insert(1, command);
+		writeHistory();
 	}
-	
+
+	/** Writes the script history to historySaveFile. */
+	public static void writeHistory() {
+		var backup = historySaveFile.sibling(historySaveFile.name() + ".backup");
+		if (historySaveFile.exists()) {
+			historySaveFile.copyTo(backup);
+		}
+
+		try (var writes = historySaveFile.writes()) {
+			writes.i(history.size);
+			history.each(writes::str);
+		} catch (Exception e) {
+			Log.err("Failed to save console history", e);
+
+			if (backup.exists()) {
+				Log.err("Restoring the old save.");
+				backup.copyTo(historySaveFile);
+			}
+		}
+	}
+
+	/** Reads the script history from historySaveFile and overrides the current history with it. */
+	public static void readHistory() {
+		var backup = historySaveFile.sibling(historySaveFile.name() + ".backup");
+		Func<Fi, Boolean> readFrom = (file) -> {
+			try (var reads = file.reads()) {
+				var count = reads.i();
+				if (count < 0 || count > 1000) throw new RuntimeException(file.absolutePath() + " is not a history save file.");
+
+				history.clear();
+				for (var i = 0; i < count; i++) {
+					history.add(reads.str());
+				}
+				return true;
+			} catch (Exception e) {
+				Log.err("Failed to read the script history from " + file.absolutePath(), e);
+				return false;
+			}
+		};
+
+		if (historySaveFile.exists() && readFrom.get(historySaveFile)) return;
+		if (backup.exists() && readFrom.get(backup)) return;
+
+		Log.warn("Attempted to read the script history, but the save and backup files either don't exist or couldn't be loaded.");
+	}
+
+	/** Shifts the current history index and overrides the current script with the script under the new index. */
 	public void historyShift(int shift) {
 		historyIndex = Mathf.clamp(historyIndex + shift, -1, history.size - 1);
 		if (historyIndex < 0) {

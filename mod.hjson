@@ -10,7 +10,7 @@ name: "newconsole"
 author: "Mnemotechnician"
 
 description: '''
-Adds a console ui superiour to the built-in one and the ones provided by any other mods.
+Adds a console ui superior to the built-in one and the ones provided by any other mods.
 User-friendly interface, a good log panel, execution history, monospace font - all that is included in this mod.
 
 In addiction to the console, this mod offers:
@@ -20,7 +20,7 @@ In addiction to the console, this mod offers:
 
 See README.md for more info.
 '''
-version: 1.6
+version: 1.7
 subtitle: "Adds a much better console UI."
 minGameVersion: 136
 hidden: true

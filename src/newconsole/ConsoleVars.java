@@ -1,18 +1,7 @@
 package newconsole;
 
-import arc.*;
-import arc.util.*;
-import arc.scene.*;
-import arc.scene.event.*;
-import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
-import mindustry.*;
-import mindustry.gen.*;
-import mindustry.game.*;
-import mindustry.game.EventType.*;
-import mindustry.ui.*;
 
-import newconsole.io.*;
 import newconsole.ui.*;
 import newconsole.ui.dialogs.*;
 
@@ -36,54 +25,5 @@ public class ConsoleVars {
 	public static boolean consoleEnabled = true;
 	/** Startup js script path, relative to the asset tree */
 	public static String startup = "console/startup.js";
-		
-	public static void init() {
-		Vars.loadLogger();
 
-		Events.on(ClientLoadEvent.class, event -> {
-			CStyles.loadSync();
-
-			group = new WidgetGroup();
-			group.setFillParent(true);
-			group.touchable = Touchable.childrenOnly;
-			group.visible(() -> consoleEnabled);
-			Core.scene.add(group);
-			console = new Console();
-			
-			saves = new SavesDialog();
-			copypaste = new CopypasteDialog();
-			fileBrowser = new FileBrowser();
-			autorun = new AutorunDialog();
-			
-			floatingWidget = new FloatingWidget();
-			
-			floatingWidget.button(Icon.terminal, Styles.defaulti, console::show).get()
-				.setSize(floatingWidget.dragger.getWidth(), floatingWidget.dragger.getHeight());
-			
-			group.addChild(floatingWidget);
-			Time.run(10, () -> floatingWidget.setPosition(group.getWidth() / 2, group.getHeight() / 1.5f));
-			
-			ScriptsManager.init();
-			AutorunManager.init();
-			executeStartup();
-		});
-	}
-	
-	public static void executeStartup() {
-		try {
-			var file = Vars.tree.get(startup);
-			if (!file.exists()) {
-				Log.warn("Startup script not found.");
-				return;
-			}
-			
-			Log.info("Executing startup script...");
-			Time.mark();
-			Log.info(Vars.mods.getScripts().runConsole(file.readString()));
-			Log.info("Startup script executed in [blue]" + Time.elapsed() + "[] ms.");
-		} catch (Throwable e) {
-			Log.err("Failed to execute startup script!", e);
-		}
-	}
-	
 }

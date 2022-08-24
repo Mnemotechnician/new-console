@@ -26,6 +26,9 @@ Available methods of NewConsole object (self-explanatory):
 
 [blue]Default functions:[]
 NCHelp() — show this help
-append(Any value) — append value directly to the log. [red]Does not print to last_log.txt![]
-println(Any value) — same as append() but adds a newline
-backread() — reads last_log.txt and overrides the output;
+append(value) — append a value directly to the log. [red]Does not print to last_log.txt![]
+println(value) — same as append() but add a newline at the end
+backread() — read last_log.txt and override the output;
+---
+importCls(name) - import any (even modded) class by its fully-qualified name.
+importAll(modName) - attempt to import all classes from a mod. Dangerous and not guaranteed to work.
