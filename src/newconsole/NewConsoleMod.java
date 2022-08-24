@@ -4,7 +4,7 @@ import arc.scene.event.Touchable;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Log;
 import arc.util.Time;
-import io.mnemotechnician.autoupdater.*;
+import com.github.mnemotechnician.autoupdater.*;
 import arc.*;
 import mindustry.Vars;
 import mindustry.game.*;
@@ -24,9 +24,8 @@ public class NewConsoleMod extends Mod {
 
 		Events.on(EventType.ClientLoadEvent.class, event -> {
 			CStyles.loadSync();
-			init();
+			initConsole();
 		});
-		NewConsoleMod.class.getClassLoader();
 
 		Events.on(EventType.ClientLoadEvent.class, a -> checkUpdates());
 	}
@@ -52,7 +51,7 @@ public class NewConsoleMod extends Mod {
 		Updater.checkUpdates(this);
 	}
 
-	public void init() {
+	public void initConsole() {
 		ConsoleVars.group = new WidgetGroup();
 		ConsoleVars.group.setFillParent(true);
 		ConsoleVars.group.touchable = Touchable.childrenOnly;

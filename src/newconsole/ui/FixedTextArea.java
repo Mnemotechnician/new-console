@@ -3,6 +3,7 @@ package newconsole.ui;
 import arc.func.Cons;
 import arc.graphics.g2d.Font;
 import arc.scene.event.InputEvent;
+import arc.scene.event.InputListener;
 import arc.scene.style.Drawable;
 import arc.scene.ui.TextArea;
 import arc.scene.ui.TextField;
@@ -46,6 +47,11 @@ public class FixedTextArea extends TextArea {
 
 	public void changed(Cons<String> listener) {
 		changed(() -> listener.get(getText()));
+	}
+
+	@Override
+	protected InputListener createInputListener() {
+		return new AssistingInputListener();
 	}
 
 	@Override
@@ -110,10 +116,10 @@ public class FixedTextArea extends TextArea {
 				if (super.keyTyped(event, character) && cursorLine > 0) {
 					// determine how many spaces the previous line has had
 					var i = linesBreak.get(oldLine * 2);
-					var leadingSpace = 0;
-					while (i < oldText.length() && oldText.charAt(i++) == ' ') leadingSpace++;
+					var leadingSpace = new StringBuilder();
+					while (i < oldText.length() && oldText.charAt(i++) == ' ') leadingSpace.append(" ");
 					// insert the same amount of spaces
-					insertAtCursor(" ".repeat(leadingSpace));
+					insertAtCursor(leadingSpace);
 					updateDisplayText();
 				}
 				return true;
