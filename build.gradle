@@ -33,7 +33,7 @@ dependencies{
 
 	annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 	
-	implementation files('lib/Autoupdate-lib.jar') 
+	implementation "com.github.mnemotechnician:autoupdate-lib:-SNAPSHOT"
 }
 
 task jarAndroid{
