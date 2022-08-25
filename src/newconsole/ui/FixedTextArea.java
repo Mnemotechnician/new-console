@@ -45,6 +45,11 @@ public class FixedTextArea extends TextArea {
 	}
 
 	@Override
+	public void paste(String content, boolean fireChangeEvent) {
+		super.paste(content.replace("\t", "    "), fireChangeEvent);
+	}
+
+	@Override
 	protected void updateDisplayText() {
 		super.updateDisplayText();
 
