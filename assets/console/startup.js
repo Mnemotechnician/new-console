@@ -15,19 +15,6 @@ function importCls(name) {
 	return importClass(new Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, Class.forName(name, true, Vars.mods.mainLoader())))
 }
 
-function importAll(modName) {
-	let cl = Vars.mods.getMod(modName).loader
-	let classes = Reflect.get(cl, "classes").toArray()
-
-	for (class of classes) {
-		try {
-			importClass(new Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, class))
-		} catch (e) {
-			println("Failed to import class " + class.name + ": " + e)
-		}
-	}
-}
-
 const _interface = classForName("newconsole.js.JSInterface").newInstance();
 const _buffer = _interface.getConsole().logBuffer;
 const _defaultMethods = new java.lang.Object();
