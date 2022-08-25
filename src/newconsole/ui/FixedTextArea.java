@@ -16,17 +16,6 @@ import java.lang.reflect.Method;
  * Will be made into a code-assisting text area.
  */
 public class FixedTextArea extends TextArea {
-	private static final Method insertMethod;
-
-	static {
-		try {
-			insertMethod = TextField.class.getDeclaredMethod("insert", Integer.TYPE, CharSequence.class, String.class);
-			insertMethod.setAccessible(true);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("java fucking sucks. use kotlin or groovy, folks!", e);
-		}
-	}
-
 	public FixedTextArea(String text) {
 		super(text);
 	}
@@ -37,12 +26,13 @@ public class FixedTextArea extends TextArea {
 	}
 
 	public void insertAtCursor(CharSequence newText) {
-		try {
-			insertMethod.invoke(this, cursor, newText, text);
-			cursor += newText.length();
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException("FUCK YOU", e);
-		}
+		insertAt(cursor, newText);
+	}
+
+	public void insertAt(int pos, CharSequence newText) {
+		text = text.substring(0, pos) + newText + text.substring(pos);
+		if (pos <= cursor) cursor += newText.length();
+		updateDisplayText();
 	}
 
 	public void changed(Cons<String> listener) {
@@ -107,13 +97,12 @@ public class FixedTextArea extends TextArea {
 		public boolean keyTyped(InputEvent event, char character) {
 			if (character == '\t') {
 				insertAtCursor("    ");
-				updateDisplayText();
 				return true;
 			} else if (character == '\n') {
 				var oldText = text;
 				var oldLine = cursorLine;
 
-				if (super.keyTyped(event, character) && cursorLine > 0) {
+				if (super.keyTyped(event, character) && cursorLine > 0 && oldLine * 2 < linesBreak.size) {
 					// determine how many spaces the previous line has had
 					var i = linesBreak.get(oldLine * 2);
 					var leadingSpace = new StringBuilder();
@@ -121,7 +110,6 @@ public class FixedTextArea extends TextArea {
 						leadingSpace.append(" ");
 					// insert the same amount of spaces
 					insertAtCursor(leadingSpace);
-					updateDisplayText();
 				}
 				return true;
 			}
