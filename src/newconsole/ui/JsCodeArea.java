@@ -126,7 +126,7 @@ public class JsCodeArea extends TextArea {
 				} else if (c == '"' || c == '\'' || c == '`') {
 					// STRING
 					kind = STRING;
-					var beginChar = c;
+					final var beginChar = c;
 					while (++pos < text.length() && (c = text.charAt(pos)) != beginChar && c != '\n' && c != '\r') {
 						if (c == beginChar) break;
 						symbolb.append(c);
@@ -214,15 +214,26 @@ public class JsCodeArea extends TextArea {
 
 			var pos = 0; 
 			var l = 0;
+			var lastGuide = 0;
+
 			for (var line : lines) {
 				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing) {
 					// render indentation guides
-					var c = 0;
-					while (c < line.length() && line.charAt(c++) == ' ') {
-						var offX = x + (c / 4 - 1) * space.width * 4;
-						var offY = y - l * style.font.getLineHeight() + style.font.getAscent();
+					var c = -1;
+					while (++c < line.length() && line.charAt(c) == ' ') {};
 
-						if (c % 4 == 0) Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
+					if (c >= line.length()) {
+						// nothing here, inherit the previous indentation guide level, as that looks better
+						c = lastGuide;
+					} else {
+						lastGuide = c;
+					}
+
+					for (var i = 1; i <= c; i++) {
+						var offX = x + ((i - 1) / 4) * space.width * 4;
+						var offY = y - (l - firstLineShowing) * style.font.getLineHeight() + style.font.getAscent();
+					
+						if (i % 4 == 0) Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
 					}
 
 					// render the line
