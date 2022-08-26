@@ -39,7 +39,7 @@ public class FloatingWidget extends Table {
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				positionParent(x + dragx, y + dragy);
+				positionParent(x, y);
 			}
 
 			@Override

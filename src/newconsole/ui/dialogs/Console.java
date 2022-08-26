@@ -14,7 +14,7 @@ import mindustry.ui.dialogs.BaseDialog;
 import newconsole.ConsoleVars;
 import newconsole.ui.BetterPane;
 import newconsole.ui.CStyles;
-import newconsole.ui.FixedTextArea;
+import newconsole.ui.JsCodeArea;
 
 import static arc.util.Log.*;
 
@@ -40,7 +40,7 @@ public class Console extends BaseDialog {
 	 * Current command. -1 means that the input is empty
 	 */
 	public int historyIndex = -1;
-	public FixedTextArea area;
+	public JsCodeArea area;
 	public Label logLabel;
 	public BetterPane leftPane, rightPane;
 
@@ -117,7 +117,7 @@ public class Console extends BaseDialog {
 					}).growX().row();
 
 					script.add(new BetterPane(input -> {
-						input.add(area = new FixedTextArea("", CStyles.monoArea)).bottom().left().grow().get();
+						input.add(area = new JsCodeArea("", CStyles.monoArea)).bottom().left().grow().get();
 
 						area.changed(text -> {
 							history.set(0, text);
@@ -280,7 +280,7 @@ public class Console extends BaseDialog {
 
 	public void addLog(String newlog) {
 		info(dontResendStr + newlog);
-		logBuffer.append(newlog);
+		logBuffer.append(newlog.replace("\t", "    "));
 		Time.run(4, this::scrollDown);
 	}
 
