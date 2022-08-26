@@ -18,17 +18,25 @@ import static newconsole.ui.JsCodeArea.SymbolKind.*;
  */
 public class JsCodeArea extends TextArea {
 	protected FontCache cache;
+	protected String realText;
 	protected String[] lines;
 
 	public boolean syntaxHighlighting = true;
 
-	static Seq<String> keywords = Seq.with("function", "class", "const", "let", "var", "delete");
-	static Seq<String> knownRefs = Seq.with("importClass", "importPackage", "importCls", "extend");
-	static Seq<String> statements = Seq.with("if", "else", "do", "while", "switch", "return", "break", "continue");
+	static Seq<String> 
+		keywords = Seq.with("function", "class", "const", "let", "var", "delete"),
+		statements = Seq.with("if", "else", "do", "while", "for", "switch", "return", "break", "continue"),
+		literals = Seq.with("this", "this$super", "super", "true", "false");
 
-	static Color bracketColor = Color.valueOf("4c4cff");
-	static Color stringColor = Color.valueOf("4fb467");
-	static Color commentColor = Color.valueOf("4c4e5b");
+	static Color
+		baseColor = Color.valueOf("f8f8f2"), // darcula base
+		literalColor = Color.valueOf("bd93f9"), // darcula purple
+		keywordColor = Color.valueOf("ff79c6"), // darcula pink
+		specialColor = Color.valueOf("aaeeff"),
+		classColor = Color.valueOf("8be9fd"), // darcula cyan
+		stringColor = Color.valueOf("f1fa8c"), // darcula yellow
+		commentColor = Color.valueOf("6272a4"); // darcula comment
+		
 
 	public JsCodeArea(String text) {
 		super(text);
@@ -159,25 +167,22 @@ public class JsCodeArea extends TextArea {
 
 	/** Highlights the providen symbol in the text cache. */
 	protected void highlightSymbol(String symbol, SymbolKind kind, int start, int end) {
-		if (kind == OTHER || symbol.length() == 0) return;
+		if (symbol.length() == 0) return;
 
 		cache.setColors(switch (kind) {
 			case IDENTIFIER -> {
-				if (keywords.contains(symbol)) yield Color.cyan;
-				if (knownRefs.contains(symbol)) yield Color.orange;
-				if (statements.contains(symbol)) yield Color.blue;
-				if (Character.isUpperCase(symbol.charAt(0))) yield Pal.heal;
-				yield Color.white;
+				if (keywords.contains(symbol)) yield keywordColor;
+				if (statements.contains(symbol)) yield specialColor;
+				if (literals.contains(symbol)) yield literalColor;
+				if (Character.isUpperCase(symbol.charAt(0))) yield classColor;
+				yield baseColor;
 			}
-			case NUMBER -> {
-				if (symbol.contains("\\.")) yield Pal.lighterOrange;
-				yield Color.orange;
-			}
+			case NUMBER -> literalColor;
 			case COMMENT -> commentColor;
 			case STRING -> stringColor;
-			case BRACKET -> bracketColor;
-			case OPERATOR -> Color.blue;
-			default -> Color.white;
+			case BRACKET -> specialColor;
+			case OPERATOR -> specialColor;
+			default -> baseColor;
 		}, start, end);
 	}
 
@@ -200,7 +205,8 @@ public class JsCodeArea extends TextArea {
 	@Override
 	protected void drawText(Font font, float x, float y) {
 		try {
-			var space = style.font.getData().getGlyph(' ');
+			var data = style.font.getData();
+			var space = data.getGlyph(' ');
 				
 			cache.setPosition(x, y + firstLineShowing * style.font.getLineHeight());
 			Draw.color(Pal.lightishGray);
@@ -214,13 +220,13 @@ public class JsCodeArea extends TextArea {
 					var c = 0;
 					while (c < line.length() && line.charAt(c++) == ' ') {
 						var offX = x + (c / 4 - 1) * space.width * 4;
-						var offY = y - l * style.font.getLineHeight();
+						var offY = y - l * style.font.getLineHeight() + style.font.getAscent();
 
 						if (c % 4 == 0) Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
 					}
 
 					// render the line
-					cache.draw(pos, pos + line.length());
+					cache.draw(pos, Math.min(pos + line.length(), text.length()));
 				}
 				pos += line.length();
 				l++;
