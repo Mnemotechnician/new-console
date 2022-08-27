@@ -12,6 +12,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.Styles;
+import newconsole.game.ConsoleSettings;
 import newconsole.io.AutorunManager;
 import newconsole.io.ScriptsManager;
 import newconsole.ui.CStyles;
@@ -75,6 +76,7 @@ public class NewConsoleMod extends Mod {
 
 		ScriptsManager.init();
 		AutorunManager.init();
+		ConsoleSettings.init();
 		executeStartup();
 	}
 }
