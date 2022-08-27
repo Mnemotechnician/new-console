@@ -13,6 +13,7 @@ import mindustry.Vars;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.ui.Styles;
+import newconsole.game.ConsoleSettings;
 
 import static arc.Core.atlas;
 
@@ -35,7 +36,7 @@ public class CStyles {
 
 	public static void loadSync() {
 		mono = new FreeTypeFontGenerator(Vars.tree.get("fonts/JetBrainsMono-medium.ttf")).generateFont(new FreeTypeFontParameter() {{
-			size = 15;
+			size = ConsoleSettings.fontSize();
 			incremental = true;
 		}});
 		mono.getData().markupEnabled = true;

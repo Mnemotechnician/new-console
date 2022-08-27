@@ -1,6 +1,6 @@
 ## New Console
-A mimdustry mod adding a new console ui,
-which is superiour to that provided by the vanilla game
+A Mindustry mod adding a new console ui,
+which is superior to that provided by the vanilla game
 or any other mod.
 
 ## V7

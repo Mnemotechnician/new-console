@@ -18,21 +18,23 @@ import static newconsole.ui.JsCodeArea.SymbolKind.*;
  */
 public class JsCodeArea extends TextArea {
 	protected FontCache cache;
-	protected String realText;
 	protected String[] lines;
 
 	public boolean syntaxHighlighting = true;
 
-	static Seq<String> 
+	protected int tabSize = 4;
+	protected String tab = "    ";
+
+	public static Seq<String>
 		keywords = Seq.with("function", "class", "const", "let", "var", "delete"),
 		statements = Seq.with("if", "else", "do", "while", "for", "switch", "return", "break", "continue"),
 		literals = Seq.with("this", "this$super", "super", "true", "false");
 
-	static Color
+	public static Color
 		baseColor = Color.valueOf("f8f8f2"), // darcula base
 		literalColor = Color.valueOf("bd93f9"), // darcula purple
 		keywordColor = Color.valueOf("ff79c6"), // darcula pink
-		specialColor = Color.valueOf("aaeeff"),
+		specialColor = Color.valueOf("ccfcff"),
 		classColor = Color.valueOf("8be9fd"), // darcula cyan
 		stringColor = Color.valueOf("f1fa8c"), // darcula yellow
 		commentColor = Color.valueOf("6272a4"); // darcula comment
@@ -44,6 +46,11 @@ public class JsCodeArea extends TextArea {
 
 	public JsCodeArea(String text, TextFieldStyle style) {
 		super(text, style);
+	}
+
+	public void insertAfterCursor(CharSequence newText) {
+		insertAt(cursor, newText);
+		cursor -= newText.length();
 	}
 
 	public void insertAtCursor(CharSequence newText) {
@@ -67,31 +74,52 @@ public class JsCodeArea extends TextArea {
 
 	@Override
 	public void paste(String content, boolean fireChangeEvent) {
-		super.paste(content.replace("\t", "    "), fireChangeEvent);
+		super.paste(content.replace("\t", tab == null ? "    " : tab), fireChangeEvent);
+	}
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		// if the cursor is outside the visible area, scroll the pane.
+		if (getLines() > linesShowing) {
+			if (cursorLine < firstLineShowing) {
+				moveCursorLine(Math.max(cursorLine - 1, 0));
+			} else if (cursorLine > firstLineShowing + linesShowing) {
+				moveCursorLine(Math.min(cursorLine + 1, (linesBreak.size - 1) / 2 - 1));
+			}
+		}
 	}
 
 	@Override
 	protected void updateDisplayText() {
 		super.updateDisplayText();
 
-		glyphPositions.clear();
-		layout.setText(style.font, displayText.toString().replace('\n', ' ').replace('\r', ' '));
-		var runs = layout.runs;
-
-		if (runs.size > 0) {
-			var xAdvances = runs.first().xAdvances;
-			float x = 0;
-			for (int j = 1; j < xAdvances.size; j++) {
-				glyphPositions.add(x);
-				x += xAdvances.get(j);
-			}
-			glyphPositions.add(x);
-		}
-		
 		lines = text.split("\n");
 
 		if (cache == null) cache = new FontCache(style.font);
-		cache.setText(text, 0, 0, width, Align.left, false);
+		cache.setText(text, 0, 0, width, Align.left, true);
+
+		glyphPositions.clear();
+		cache.getLayouts().each(layout -> {
+			layout.runs.each(run -> {
+				if (run.xAdvances.size < 1) return;
+
+				float x = run.xAdvances.first();
+				if (run.xAdvances.size <= 2) {
+					// 2 advances is an exception
+					glyphPositions.add(x);
+					if (run.xAdvances.size == 2) glyphPositions.add(x + run.xAdvances.get(1));
+				} else {
+					float lastAdv = 0;
+					for (int i = 1; i < run.xAdvances.size - 1; i++) {
+						glyphPositions.add(x);
+						x += (lastAdv = run.xAdvances.get(i));
+					}
+					glyphPositions.add(x); // add the last one
+					glyphPositions.add(x + lastAdv); // duplicate the last advance - this will break a little with non-monospace fonts
+				}
+			});
+		});
 
 		// update syntax highlighting
 		if (syntaxHighlighting) try {
@@ -126,11 +154,12 @@ public class JsCodeArea extends TextArea {
 				} else if (c == '"' || c == '\'' || c == '`') {
 					// STRING
 					kind = STRING;
-					final var beginChar = c;
+					var beginChar = c;
 					while (++pos < text.length() && (c = text.charAt(pos)) != beginChar && c != '\n' && c != '\r') {
 						if (c == beginChar) break;
 						symbolb.append(c);
 					}
+					pos++; // skip the closing one
 				} else if (pos < text.length() - 1 && c == '/' && text.charAt(pos + 1) == '/') {
 					// COMMENT
 					kind = COMMENT;
@@ -144,7 +173,7 @@ public class JsCodeArea extends TextArea {
 					while (++pos < text.length() && ((c = text.charAt(pos)) != '/' || prevChar != '*')) {
 						symbolb.append(prevChar = c);
 					}
-				} else if (c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']') {
+				} else if (isLeftBracket(c) || isRightBracket(c)) {
 					// BRACKET
 					kind = BRACKET;
 					pos++;
@@ -180,21 +209,61 @@ public class JsCodeArea extends TextArea {
 			case NUMBER -> literalColor;
 			case COMMENT -> commentColor;
 			case STRING -> stringColor;
-			case BRACKET -> specialColor;
-			case OPERATOR -> specialColor;
+			case BRACKET, OPERATOR -> specialColor;
 			default -> baseColor;
 		}, start, end);
 	}
 
-	protected boolean isOperator(char c) {
+	protected static boolean isOperator(char c) {
 		return c == '=' || c == '<' || c == '>' // comparison
 			|| c == '+' || c == '-' || c == '*' || c == '/' || c == '%' // math
 			|| c == '&' || c == '|' || c == '^' || c == '!'; // boolean logic
 	}
 
+	protected static boolean isLeftBracket(char c) {
+		return c == '(' || c == '[' || c == '{';
+	}
+
+	protected static boolean isRightBracket(char c) {
+		return c == ')' || c == ']' || c == '}';
+	}
+	
+	/** Returns 0 if there's none. */
+	protected static char getPairedCharacter(char c) {
+		return switch (c) {
+			case '(' -> ')';
+			case '[' -> ']';
+			case '{' -> '}';
+			case '"', '\'' -> c;
+			default -> 0;
+		};
+	}
+	
+	protected static boolean isPairedCharacter(char c) {
+		return getPairedCharacter(c) != 0;
+	}
+
+	/** Gets the first non-space character in the text before or after the specified position, or 0 if it doesn't exist. */
+	public char getNotSpace(int position, boolean before) {
+		var inc = before ? -1 : 1;
+		for (; position >= 0 && position < text.length(); position += inc) {
+			if (text.charAt(position) != ' ') return text.charAt(position);
+		}
+
+		return 0;
+	}
+
+	public void setTabSize(int spaces) {
+		tabSize = spaces;
+
+		var sb = new StringBuilder();
+		for (var i = 0; i < spaces; i++) sb.append(' ');
+		tab = sb.toString();
+	}
+
 	@Override
 	public void setText(String str) {
-		super.setText(str.replace("\t", "    "));
+		super.setText(str.replace("\t", tab == null ? "    " : tab));
 	}
 
 	@Override
@@ -276,11 +345,25 @@ public class JsCodeArea extends TextArea {
 		}
 	}
 
+	@Override
+	protected void calculateOffsets() {
+		try {
+			super.calculateOffsets();
+		} catch (Exception e) {
+			Log.info(e);
+		}
+
+		//todo
+		//if (!text.equals(lastText)) {
+		//	linesBreak.clear();
+		//}
+	}
+
 	class AssistingInputListener extends TextAreaListener {
 		@Override
 		public boolean keyTyped(InputEvent event, char character) {
 			if (character == '\t') {
-				insertAtCursor("    ");
+				insertAtCursor(tab);
 				return true;
 			} else if (character == '\n') {
 				var oldText = text;
@@ -292,9 +375,34 @@ public class JsCodeArea extends TextArea {
 					var leadingSpace = new StringBuilder();
 					while (i < oldText.length() && oldText.charAt(i++) == ' ')
 						leadingSpace.append(" ");
+
+					if (cursor > 0 && cursor < text.length()) {
+						var left = getNotSpace(cursor - 1, true);
+						var right = getNotSpace(cursor, false);
+
+						// if the cursor was surrounded by two matching brackets, add another line after the cursor and increment indentation
+						if (left == right && isLeftBracket(left) && isRightBracket(right)) {
+							insertAfterCursor(leadingSpace);
+							insertAfterCursor("\n");
+							leadingSpace.append(tab);
+						}
+					}
+					// if the last char was a closing bracket, decrement indentation
+					if (cursor > 0 && isRightBracket(getNotSpace(cursor - 1, true))) {
+						for (var j = 0; j < tabSize && leadingSpace.length() > 0; j++) {
+							leadingSpace.deleteCharAt(leadingSpace.length() - 1);
+						}
+					}
+
 					// insert the same amount of spaces
 					insertAtCursor(leadingSpace);
 				}
+				return true;
+			} else if (isPairedCharacter(character) && (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor))) && super.keyTyped(event, character)) {
+				insertAfterCursor(String.valueOf(getPairedCharacter(character)));
+				return true;
+			} else if (cursor < text.length() && isRightBracket(character) && character == text.charAt(cursor)) {
+				cursor++;
 				return true;
 			}
 
@@ -302,7 +410,7 @@ public class JsCodeArea extends TextArea {
 		}
 	}
 
-	enum SymbolKind {
+	public enum SymbolKind {
 		IDENTIFIER,
 		NUMBER,
 		STRING,

@@ -127,8 +127,9 @@ public class Console extends BaseDialog {
 						area.setFocusTraversal(false);
 						area.removeInputDialog();
 						area.setMessageText("@newconsole.input-script");
+						// area.setTabSize(NCSetting.tabSize());
 					})).grow().with(it -> {
-						it.setForceScroll(false, true);
+						// it.setForceScroll(false, true);
 						it.setScrollingDisabledX(true);
 						rightPane = it;
 					});

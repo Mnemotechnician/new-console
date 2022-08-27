@@ -5,20 +5,25 @@
 #  advanced JS console.  #
 ##########################
 
-Newconsole is a mindustry mod that adds a better console ui. Since you're viewing this help from console, i assume you already know the basics.
+NewConsole is a mindustry mod adding a new console ui,
+superior to that of the vanilla game.
 
-You can use [blue]prev[] and [blue]next[] buttons to navigate in console history.
-The current input is saved to history whenever you run it or press 'next'/'prev'
+Here, on the left side, is an output log.
+Everything the game logs appears here. Additionally,
+every executed script and its output i also sent here.
+The scrollback is limited to 30000 characters
+for performance reasons.
 
-You can save, load and edit scripts by opening the scripts dialog.
-In order to do that, press the 'scripts' button in bottom right panel.
+On the right side is a console input. The buttons above it
+enable you to do the following things:
 
-You can make the mod execute some code upon specific events.
-In order to do that, open the autorun menu by pressing the "events" button.
-
-You can browse the filesystem by opening the file browser ("files" button).
-[red]Note that on android [blue]10+[], you are unable to access the shared storage (sdcard).
-There's several limitations and Arc doesn't deal with them, unlike other frameworks.[]
+"run" -> execute the current script
+"prev" -> view the previous script in the history
+"next" -> view the next one or clear the input area
+(scripts are saved to history when you run them or navigate in the history)
+"scripts" -> view/run saved scripts or save the current one
+"files" -> open the file browser
+"events" -> view the script autorun menu
 
 []
 [white]You can use [blue]NewConsole[] object to access newconsole stuff.
