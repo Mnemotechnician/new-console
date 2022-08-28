@@ -85,8 +85,28 @@ public class JsCodeArea extends TextArea {
 			if (cursorLine < firstLineShowing) {
 				moveCursorLine(Math.max(cursorLine - 1, 0));
 			} else if (cursorLine > firstLineShowing + linesShowing) {
-				moveCursorLine(Math.min(cursorLine + 1, (linesBreak.size - 1) / 2 - 1));
+				try {
+					moveCursorLine(Math.min(cursorLine + 1, getLines() - 2));
+				} catch (Exception e) {}
 			}
+		}
+	}
+
+	@Override
+	protected void calculateOffsets() {
+		try {
+			super.calculateOffsets();
+
+			// TODO this gets called once per frame
+			// not an issue in my case, but it's better to find a way not to.
+			lines = new String[linesBreak.size / 2];
+			for (var l = 0; l < linesBreak.size - 1; l += 2) {
+				var begin = linesBreak.items[l];
+				var end = Math.min(linesBreak.items[l + 1] + 1, text.length());
+				lines[l / 2] = text.substring(begin, end);
+			}
+		} catch (Exception e) {
+			Log.err("failed to calculate offsets", e);
 		}
 	}
 
@@ -94,32 +114,23 @@ public class JsCodeArea extends TextArea {
 	protected void updateDisplayText() {
 		super.updateDisplayText();
 
-		lines = text.split("\n");
-
+		layout.setText(style.font, displayText);
 		if (cache == null) cache = new FontCache(style.font);
-		cache.setText(text, 0, 0, width, Align.left, true);
+		cache.setText(layout, 0, 0);
 
+		layout.setText(style.font, displayText.toString().replace('\n', ' ').replace('\r', ' '));
 		glyphPositions.clear();
-		cache.getLayouts().each(layout -> {
-			layout.runs.each(run -> {
-				if (run.xAdvances.size < 1) return;
-
-				float x = run.xAdvances.first();
-				if (run.xAdvances.size <= 2) {
-					// 2 advances is an exception
-					glyphPositions.add(x);
-					if (run.xAdvances.size == 2) glyphPositions.add(x + run.xAdvances.get(1));
-				} else {
-					float lastAdv = 0;
-					for (int i = 1; i < run.xAdvances.size - 1; i++) {
-						glyphPositions.add(x);
-						x += (lastAdv = run.xAdvances.get(i));
-					}
-					glyphPositions.add(x); // add the last one
-					glyphPositions.add(x + lastAdv); // duplicate the last advance - this will break a little with non-monospace fonts
-				}
-			});
-		});
+		float x = 0;
+		if(layout.runs.size > 0){
+			var run = layout.runs.first();
+			var xAdvances = run.xAdvances;
+			fontOffset = xAdvances.first();
+			for(int i = 1, n = xAdvances.size; i < n; i++){
+				glyphPositions.add(x);
+				x += xAdvances.get(i);
+			}
+			glyphPositions.add(x);
+		}
 
 		// update syntax highlighting
 		if (syntaxHighlighting) try {
@@ -216,8 +227,9 @@ public class JsCodeArea extends TextArea {
 
 	protected static boolean isOperator(char c) {
 		return c == '=' || c == '<' || c == '>' // comparison
-			|| c == '+' || c == '-' || c == '*' || c == '/' || c == '%' // math
-			|| c == '&' || c == '|' || c == '^' || c == '!'; // boolean logic
+			|| c == '+' || c == '-' || c == '*' || c == '/' || c == '%' // arithmetics
+			|| c == '&' || c == '|' || c == '^' || c == '!' // boolean logic
+			|| c == '.'; // dot-qualified access
 	}
 
 	protected static boolean isLeftBracket(char c) {
@@ -276,16 +288,21 @@ public class JsCodeArea extends TextArea {
 		try {
 			var data = style.font.getData();
 			var space = data.getGlyph(' ');
+			var maxWidthLine = this.getWidth() 
+				- (style.background != null ? style.background.getLeftWidth() + style.background.getRightWidth() : 0);
 				
-			cache.setPosition(x, y + firstLineShowing * style.font.getLineHeight());
 			Draw.color(Pal.lightishGray);
 			Lines.stroke(1f);
 
 			var pos = 0; 
+			var textOffX = 0f;
+			var textOffY = 0f;
 			var l = 0;
 			var lastGuide = 0;
 
 			for (var line : lines) {
+				var lineLength = line.endsWith("\n") ? line.length() - 1 : line.length();
+				
 				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing) {
 					// render indentation guides
 					var c = -1;
@@ -306,9 +323,18 @@ public class JsCodeArea extends TextArea {
 					}
 
 					// render the line
-					cache.draw(pos, Math.min(pos + line.length(), text.length()));
+					cache.setPosition(x + textOffX, y + firstLineShowing * style.font.getLineHeight() + textOffY);
+					cache.draw(Math.min(pos, text.length()), Math.min(pos + lineLength, text.length()));
+
+					if (!line.endsWith("\n")) {
+						// if there's no linefeed at the end, the line was wrapped - this needs to be handled manually
+						textOffX = -glyphPositions.items[Math.min(pos + lineLength - 1, glyphPositions.size - 1)];
+						textOffY -= style.font.getLineHeight();
+					} else {
+						textOffX = 0;
+					}
 				}
-				pos += line.length();
+				pos += lineLength;
 				l++;
 			}
 		} catch (Exception e) {
@@ -324,8 +350,8 @@ public class JsCodeArea extends TextArea {
 		int maxIndex = Math.max(cursor, selectionStart);
 		while (i + 1 < linesBreak.size && i < (firstLineShowing + linesShowing) * 2) {
 
-			int lineStart = linesBreak.get(i);
-			int lineEnd = linesBreak.get(i + 1);
+			int lineStart = linesBreak.items[i];
+			int lineEnd = linesBreak.items[i + 1];
 
 			if (!((minIndex < lineStart && minIndex < lineEnd && maxIndex < lineStart && maxIndex < lineEnd)
 				|| (minIndex > lineStart && minIndex > lineEnd && maxIndex > lineStart && maxIndex > lineEnd))) {
@@ -345,20 +371,6 @@ public class JsCodeArea extends TextArea {
 		}
 	}
 
-	@Override
-	protected void calculateOffsets() {
-		try {
-			super.calculateOffsets();
-		} catch (Exception e) {
-			Log.info(e);
-		}
-
-		//todo
-		//if (!text.equals(lastText)) {
-		//	linesBreak.clear();
-		//}
-	}
-
 	class AssistingInputListener extends TextAreaListener {
 		@Override
 		public boolean keyTyped(InputEvent event, char character) {
@@ -369,6 +381,9 @@ public class JsCodeArea extends TextArea {
 				var oldText = text;
 				var oldLine = cursorLine;
 
+				var left = getNotSpace(cursor - 1, true);
+				var right = getNotSpace(cursor, false);
+
 				if (super.keyTyped(event, character) && cursorLine > 0 && oldLine * 2 < linesBreak.size) {
 					// determine how many spaces the previous line has had
 					var i = linesBreak.get(oldLine * 2);
@@ -376,21 +391,17 @@ public class JsCodeArea extends TextArea {
 					while (i < oldText.length() && oldText.charAt(i++) == ' ')
 						leadingSpace.append(" ");
 
-					if (cursor > 0 && cursor < text.length()) {
-						var left = getNotSpace(cursor - 1, true);
-						var right = getNotSpace(cursor, false);
-
 						// if the cursor was surrounded by two matching brackets, add another line after the cursor and increment indentation
-						if (left == right && isLeftBracket(left) && isRightBracket(right)) {
-							insertAfterCursor(leadingSpace);
-							insertAfterCursor("\n");
-							leadingSpace.append(tab);
-						}
+					if (isLeftBracket(left) && getPairedCharacter(left) == right) {
+						insertAfterCursor(leadingSpace);
+						insertAfterCursor("\n");
+						leadingSpace.append(tab);
 					}
+
 					// if the last char was a closing bracket, decrement indentation
-					if (cursor > 0 && isRightBracket(getNotSpace(cursor - 1, true))) {
+					if (cursor > 0 && isRightBracket(left)) {
 						for (var j = 0; j < tabSize && leadingSpace.length() > 0; j++) {
-							leadingSpace.deleteCharAt(leadingSpace.length() - 1);
+							leadingSpace.deleteCharAt(0);
 						}
 					}
 
