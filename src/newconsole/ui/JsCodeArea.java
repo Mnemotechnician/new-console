@@ -384,7 +384,7 @@ public class JsCodeArea extends TextArea {
 				var left = getNotSpace(cursor - 1, true);
 				var right = getNotSpace(cursor, false);
 
-				if (super.keyTyped(event, character) && cursorLine > 0 && oldLine * 2 < linesBreak.size) {
+				if (super.keyTyped(event, character)) {
 					// determine how many spaces the previous line has had
 					var i = linesBreak.get(oldLine * 2);
 					var leadingSpace = new StringBuilder();
