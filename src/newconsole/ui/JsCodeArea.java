@@ -379,19 +379,26 @@ public class JsCodeArea extends TextArea {
 				return true;
 			} else if (character == '\n') {
 				var oldText = text;
-				var oldLine = cursorLine;
+				var oldCursor = cursor;
 
 				var left = getNotSpace(cursor - 1, true);
 				var right = getNotSpace(cursor, false);
+				//Log.info("left, right: " + (int) left + ", " + (int) right);
 
 				if (super.keyTyped(event, character)) {
+					// determine where the old line begins - lineBreak is invalid at tnis point
+					var i = Math.max(oldCursor - 1, 0);
+					while (i > 0 && (i >= oldText.length() || oldText.charAt(i) != '\n')) {
+						i--;
+					}
+					if (i < oldText.length() && oldText.charAt(i) == '\n') i++;
+					//Log.info("at char " + i);
 					// determine how many spaces the previous line has had
-					var i = linesBreak.get(oldLine * 2);
 					var leadingSpace = new StringBuilder();
 					while (i < oldText.length() && oldText.charAt(i++) == ' ')
 						leadingSpace.append(" ");
 
-						// if the cursor was surrounded by two matching brackets, add another line after the cursor and increment indentation
+					// if the cursor was surrounded by two matching brackets, add another line after the cursor and increment indentation
 					if (isLeftBracket(left) && getPairedCharacter(left) == right) {
 						insertAfterCursor(leadingSpace);
 						insertAfterCursor("\n");
@@ -401,7 +408,7 @@ public class JsCodeArea extends TextArea {
 					// if the last char was a closing bracket, decrement indentation
 					if (cursor > 0 && isRightBracket(left)) {
 						for (var j = 0; j < tabSize && leadingSpace.length() > 0; j++) {
-							leadingSpace.deleteCharAt(0);
+							leadingSpace.deleteCharAt(leadingSpace.length() - 1);
 						}
 					}
 
@@ -409,10 +416,14 @@ public class JsCodeArea extends TextArea {
 					insertAtCursor(leadingSpace);
 				}
 				return true;
-			} else if (isPairedCharacter(character) && (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor))) && super.keyTyped(event, character)) {
+			} else if (
+				isPairedCharacter(character)
+				&& (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor)) || isRightBracket(text.charAt(cursor)))
+				&& super.keyTyped(event, character
+			)) {
 				insertAfterCursor(String.valueOf(getPairedCharacter(character)));
 				return true;
-			} else if (cursor < text.length() && isRightBracket(character) && character == text.charAt(cursor)) {
+			} else if (cursor < text.length() && isPairedCharacter(character) && !isLeftBracket(character) && character == text.charAt(cursor)) {
 				cursor++;
 				return true;
 			}
