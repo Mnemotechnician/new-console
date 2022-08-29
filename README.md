@@ -11,6 +11,16 @@ which are compatible with that version.
 This mod __does not__ support v6. v126 is outdated by several years,
 get real!
 
+# Why NewConsole?
+Why prefer NewConsole over other console mods or the built-in one? Well, there are several reasons:
+* NC 1.8+ has syntax highlighting, indentation guides, indentation assistance and other code editor features,
+  __not__ provided by any other console mod (as of today), let alone the vanilla console.
+* NC has a multi-line scrollable input field and a scrollable log, which also intercepts all logs
+  and reads last_log.txt when the game launches, allowing you to know everything.
+* NC has a script history, which enables you to view the scripts you've ran or edited before,
+  and a menu that enables you to permamently save your scripts and view/edit the saved ones,
+  meaning it will never leave you worrying that you will lose "that one useful script".
+
 ## Main features
 * A new console ui, consisting of 3 main elements:
     * A scrollable log output on the left, which also includes the scripts you've run and their outputs, and which can be cleared.
@@ -46,9 +56,11 @@ Using the "prev" and "next" buttons, you can view older and newer entries of the
 If you press "next" while already being at the newest history entry, your current input is cleared. 
 You can always press "prev" to return to whatever you've been writing.
 
-# Stale development
-Since this mod is written in java, and I'm using kotlin, I can't really develop this mod due to my hate towards java.
-Things that take 1 line in kotlin sometimes take 50 in java, I can't stand writing megabytes of boilerplate code for simple things.
+# Rewrite ahead
+NewConsole 1.8 will be the last version of NewConsole written in java.
+Later it will be rewritten from scratch in kotlin using mkui and everything will be changed.
+I already have a plan about that, but I'm not sure when I will be able to begin.
+Not telling any dates yet, it will probably happen somewhere in 2023.
 
-However, I can't just switch this mod to kotlin as that would require me to include the kotlin stdlib, which takes 2 mb in the compressed size.
-That would increase the size of the mod from 200 kb to 2500 and would worsen the loading times, which is not something I want to do with this mod.
+NeoConsole, or NewConsole 2.0, will include both the old and the new version of the mod,
+allowing you to choose what you want to use, so it will not be a rough change.

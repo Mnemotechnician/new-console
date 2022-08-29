@@ -10,6 +10,7 @@ import arc.scene.ui.TextArea;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.graphics.Pal;
+import java.util.regex.*;
 
 import static newconsole.ui.JsCodeArea.SymbolKind.*;
 
@@ -24,6 +25,9 @@ public class JsCodeArea extends TextArea {
 
 	protected int tabSize = 4;
 	protected String tab = "    ";
+	protected int lastLines = 0;
+	protected int cacheLength = 0;
+	protected String oldText;
 
 	public static Seq<String>
 		keywords = Seq.with("function", "class", "const", "let", "var", "delete"),
@@ -38,8 +42,7 @@ public class JsCodeArea extends TextArea {
 		classColor = Color.valueOf("8be9fd"), // darcula cyan
 		stringColor = Color.valueOf("f1fa8c"), // darcula yellow
 		commentColor = Color.valueOf("6272a4"); // darcula comment
-		
-
+	
 	public JsCodeArea(String text) {
 		super(text);
 	}
@@ -80,7 +83,9 @@ public class JsCodeArea extends TextArea {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		// if the cursor is outside the visible area, scroll the pane.
+
+		// if the cursor is outside the visible area, scroll the area. 
+		// todo: useless since i discovered that i just needed to invalidate hierarchy to update the height
 		if (getLines() > linesShowing) {
 			if (cursorLine < firstLineShowing) {
 				moveCursorLine(Math.max(cursorLine - 1, 0));
@@ -90,6 +95,12 @@ public class JsCodeArea extends TextArea {
 				} catch (Exception e) {}
 			}
 		}
+		
+		// invalidate hierarchy if the count of lines has changed.
+		if (getLines() != lastLines) {
+			invalidateHierarchy();
+			lastLines = getLines();
+		}
 	}
 
 	@Override
@@ -97,13 +108,22 @@ public class JsCodeArea extends TextArea {
 		try {
 			super.calculateOffsets();
 
-			// TODO this gets called once per frame
-			// not an issue in my case, but it's better to find a way not to.
-			lines = new String[linesBreak.size / 2];
-			for (var l = 0; l < linesBreak.size - 1; l += 2) {
-				var begin = linesBreak.items[l];
-				var end = Math.min(linesBreak.items[l + 1] + 1, text.length());
-				lines[l / 2] = text.substring(begin, end);
+			if (text != oldText) {
+				cacheLength = 0;
+
+				lines = new String[linesBreak.size / 2];
+				for (var l = 0; l < linesBreak.size; l += 2) {
+					var lastLine = l + 2 >= linesBreak.size; // last char must be included.
+
+					var begin = linesBreak.items[l];
+					var end = lastLine ? text.length() : Math.min(linesBreak.items[l + 1] + 1, text.length());
+					var line = text.substring(begin, end);
+					lines[l / 2] = line;
+
+					cacheLength += line.length() - (line.endsWith("\n") ? 1 : 0);
+				}
+				if (!text.endsWith("\n")) cacheLength += 1; // i don't know.
+				oldText = text;
 			}
 		} catch (Exception e) {
 			Log.err("failed to calculate offsets", e);
@@ -118,19 +138,28 @@ public class JsCodeArea extends TextArea {
 		if (cache == null) cache = new FontCache(style.font);
 		cache.setText(layout, 0, 0);
 
-		layout.setText(style.font, displayText.toString().replace('\n', ' ').replace('\r', ' '));
+		// GlyphLayout ignores empty lines, so we replace them with zero-width spaces.
+		// Their positions will be invalid, but we only need glyph positions for line wraps, so it doesn't matter...
+		// Man, i want to laugh as a mad vilian while writing this
+		layout.setText(style.font, displayText.toString().replaceAll("(?<=\n|^|\u200b)\n", "\u200b"));	
+
 		glyphPositions.clear();
-		float x = 0;
-		if(layout.runs.size > 0){
-			var run = layout.runs.first();
-			var xAdvances = run.xAdvances;
-			fontOffset = xAdvances.first();
-			for(int i = 1, n = xAdvances.size; i < n; i++){
+		float x = 0f;
+		float lastAdv = style.font.getData().getGlyph(' ').width;
+
+		for (var r = 0; r < layout.runs.size; r++) {
+			var run = layout.runs.get(r);
+			if (run.xAdvances.size < 1) return;
+
+			x = run.xAdvances.first();
+			for (int i = 1; i < run.xAdvances.size - 1; i++) {
 				glyphPositions.add(x);
-				x += xAdvances.get(i);
+				x += (lastAdv = run.xAdvances.get(i));
 			}
-			glyphPositions.add(x);
-		}
+			glyphPositions.add(x); // add the skipped one
+			glyphPositions.add(x += lastAdv); // add the last one by duplicating the last advance
+		};
+		glyphPositions.add(x + lastAdv); // h
 
 		// update syntax highlighting
 		if (syntaxHighlighting) try {
@@ -160,14 +189,15 @@ public class JsCodeArea extends TextArea {
 					}
 				} else if (Character.isWhitespace(c)) {
 					pos++; // can't highlight
-					if (c == '\n' || c == '\r') posOffset -= 1; // i don't know why, i don't know anything. but it breaks elsewise
+					if (c == '\n' || c == '\r') posOffset -= 1; // fucking font cache doesn't count line breaks as glyphs.
 					continue;
 				} else if (c == '"' || c == '\'' || c == '`') {
 					// STRING
 					kind = STRING;
 					var beginChar = c;
-					while (++pos < text.length() && (c = text.charAt(pos)) != beginChar && c != '\n' && c != '\r') {
-						if (c == beginChar) break;
+					var prevChar = beginChar;
+					while (++pos < text.length() && ((c = text.charAt(pos)) != beginChar || prevChar == '\\') && c != '\n' && c != '\r') {
+						prevChar = prevChar == '\\' ? beginChar : c; // double backward slash is a literal backward slash, not double escape
 						symbolb.append(c);
 					}
 					pos++; // skip the closing one
@@ -182,8 +212,13 @@ public class JsCodeArea extends TextArea {
 					kind = COMMENT;
 					var prevChar = '/';
 					while (++pos < text.length() && ((c = text.charAt(pos)) != '/' || prevChar != '*')) {
+						if (c == '\n' || c == '\r') {
+							posOffset--;
+							begin++; // workaround - decreasing posOffset also decreases begin
+						}
 						symbolb.append(prevChar = c);
 					}
+					pos++;
 				} else if (isLeftBracket(c) || isRightBracket(c)) {
 					// BRACKET
 					kind = BRACKET;
@@ -198,7 +233,7 @@ public class JsCodeArea extends TextArea {
 					pos++; // need to increment the position to avoid an infinite loop
 				}
 				if (kind == null) kind = OTHER;
-				highlightSymbol(symbolb.toString(), kind, begin + posOffset, Math.min(pos, text.length()) + posOffset); // jit should optimise this heavily
+				highlightSymbol(symbolb.toString(), kind, begin + posOffset, Math.min(pos + posOffset, cacheLength)); // jit should optimise this heavily
 			}
 		} catch (Exception e) {
 			Log.err("failed to update syntax highlighting", e);
@@ -288,27 +323,28 @@ public class JsCodeArea extends TextArea {
 		try {
 			var data = style.font.getData();
 			var space = data.getGlyph(' ');
-			var maxWidthLine = this.getWidth() 
-				- (style.background != null ? style.background.getLeftWidth() + style.background.getRightWidth() : 0);
 				
 			Draw.color(Pal.lightishGray);
 			Lines.stroke(1f);
 
-			var pos = 0; 
+			var pos = 0; // position in TextCache - doesn't include line breaks
+			var charPos = 0; // position in text - includes line breaks
+			// line wrap offsets
 			var textOffX = 0f;
 			var textOffY = 0f;
-			var l = 0;
-			var lastGuide = 0;
+			var l = 0; // line index, including wrapped lines
+			var lastGuide = 0; // last indentation guide level
 
 			for (var line : lines) {
-				var lineLength = line.endsWith("\n") ? line.length() - 1 : line.length();
+				var lineLength = line.length() - 1;
+				var wrappedLine = !line.endsWith("\n");
 				
-				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing) {
+				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing && !line.isEmpty() && !line.equals("\n")) {
 					// render indentation guides
 					var c = -1;
 					while (++c < line.length() && line.charAt(c) == ' ') {};
 
-					if (c >= line.length()) {
+					if (c >= line.length() - (wrappedLine ? 1 : 0)) {
 						// nothing here, inherit the previous indentation guide level, as that looks better
 						c = lastGuide;
 					} else {
@@ -323,27 +359,35 @@ public class JsCodeArea extends TextArea {
 					}
 
 					// render the line
-					cache.setPosition(x + textOffX, y + firstLineShowing * style.font.getLineHeight() + textOffY);
-					cache.draw(Math.min(pos, text.length()), Math.min(pos + lineLength, text.length()));
+					var begin = Math.min(pos, cacheLength);
+					var end = Math.min(pos + lineLength, cacheLength)
+						+ (l == lines.length - 1 && !line.endsWith("\n") ? 1 : 0); // i just don't care anymore, if it works, i'm fine
 
-					if (!line.endsWith("\n")) {
+					if (end > begin) {
+						cache.setPosition(x + textOffX, y + firstLineShowing * style.font.getLineHeight() + textOffY);
+						cache.draw(begin, end);
+					}
+
+					if (wrappedLine) {
 						// if there's no linefeed at the end, the line was wrapped - this needs to be handled manually
-						textOffX = -glyphPositions.items[Math.min(pos + lineLength - 1, glyphPositions.size - 1)];
+						textOffX = -glyphPositions.items[Math.min(charPos + lineLength, glyphPositions.size - 1)];
 						textOffY -= style.font.getLineHeight();
 					} else {
+						//pos -= posOffset;
 						textOffX = 0;
 					}
 				}
 				pos += lineLength;
+				charPos += lineLength + (wrappedLine ? 0 : 1);
 				l++;
 			}
 		} catch (Exception e) {
-			Log.err("failed to render the code area", e);
+			Log.err("failed to render the code area", e); // this has got called thousands of times during development. seriously.
 		}
 	}
 
 	@Override
-	protected void drawSelection(Drawable selection, Font font, float x, float y) {
+	protected void drawSelection(Drawable selection, Font font, float x, float y) { 
 		int i = firstLineShowing * 2;
 		float offsetY = 0;
 		int minIndex = Math.min(cursor, selectionStart);
