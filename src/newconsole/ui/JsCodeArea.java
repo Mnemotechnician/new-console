@@ -30,7 +30,7 @@ public class JsCodeArea extends TextArea {
 	protected String oldText;
 
 	public static Seq<String>
-		keywords = Seq.with("function", "class", "const", "let", "var", "delete"),
+		keywords = Seq.with("function", "class", "const", "let", "var", "delete", "in", "of"),
 		statements = Seq.with("if", "else", "do", "while", "for", "switch", "return", "break", "continue"),
 		literals = Seq.with("this", "this$super", "super", "true", "false");
 
