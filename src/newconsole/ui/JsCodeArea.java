@@ -126,7 +126,7 @@ public class JsCodeArea extends TextArea {
 				oldText = text;
 			}
 		} catch (Exception e) {
-			Log.err("failed to calculate offsets", e);
+//			Log.err("failed to calculate offsets", e);
 		}
 	}
 
@@ -236,7 +236,7 @@ public class JsCodeArea extends TextArea {
 				highlightSymbol(symbolb.toString(), kind, begin + posOffset, Math.min(pos + posOffset, cacheLength)); // jit should optimise this heavily
 			}
 		} catch (Exception e) {
-			Log.err("failed to update syntax highlighting", e);
+//			Log.err("failed to update syntax highlighting", e);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class JsCodeArea extends TextArea {
 				l++;
 			}
 		} catch (Exception e) {
-			Log.err("failed to render the code area", e); // this has got called thousands of times during development. seriously.
+//			Log.err("failed to render the code area", e); // this has got called thousands of times during development. seriously.
 		}
 	}
 
