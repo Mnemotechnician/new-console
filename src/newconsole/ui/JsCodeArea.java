@@ -351,8 +351,9 @@ public class JsCodeArea extends TextArea {
 			var wrapl = 0; // if the current line is wrapped, stores which wrap the current line represents
 			var lastGuide = 0; // last indentation guide level
 
-			// rare case - code starts with exactly 1 newline, the glyph layout and the fixing regex ignore it, everything goes wrong.
-			if (text.startsWith("\n") && !text.startsWith("\n\n")) charPos--;
+			// rare case - code starts with exactly 1 newline, the glyph layout and the fixing regex ignore it, glyph positions are generated incorrectly.
+			var brokenLine = text.startsWith("\n") && !text.startsWith("\n\n");
+			if (brokenLine) charPos--;
 
 			for (var line : lines) {
 				var lineLength = line.length() - 1;
@@ -372,9 +373,9 @@ public class JsCodeArea extends TextArea {
 						}
 
 						for (var i = 1; i <= c; i++) {
-							if (i % 4 != 0) continue;
+							if (i % tabSize != 0) continue;
 
-							var offX = x + ((i - 1 + tabSize - 1) / tabSize) * space.width * tabSize;
+							var offX = x + ((i - 1) / tabSize) * space.width * tabSize;
 							var offY = y - (l - firstLineShowing) * style.font.getLineHeight() + style.font.getAscent();
 
 							Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
@@ -399,6 +400,8 @@ public class JsCodeArea extends TextArea {
 					} else {
 						wrapl = 0;
 						textOffX = 0;
+						// see above
+						if (brokenLine && l == 1) charPos++;
 					}
 				}
 				pos += lineLength;
@@ -487,7 +490,7 @@ public class JsCodeArea extends TextArea {
 				return true;
 			} else if (
 				pairedChars && isPairedCharacter(character)
-				&& (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor)) || isRightBracket(text.charAt(cursor)))
+				&& (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor)) || (isLeftBracket(character) && isRightBracket(text.charAt(cursor))))
 				&& super.keyTyped(event, character
 			)) {
 				insertAfterCursor(String.valueOf(getPairedCharacter(character)));
