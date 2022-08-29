@@ -143,7 +143,7 @@ public class JsCodeArea extends TextArea {
 		// GlyphLayout ignores empty lines, so we replace them with zero-width spaces.
 		// Their positions will be invalid, but we only need glyph positions for line wraps, so it doesn't matter...
 		// Man, i want to laugh as a mad vilian while writing this
-		layout.setText(style.font, displayText.toString().replaceAll("(?<=\n|^|\u200b)\n", "\u200b"));	
+		layout.setText(style.font, displayText.toString().replaceAll("(\n(?=\n)|^\n|\n$)", "\u200b"));	
 
 		glyphPositions.clear();
 		float x = 0f;
@@ -319,6 +319,12 @@ public class JsCodeArea extends TextArea {
 	@Override
 	public float getPrefHeight() {
 		return textHeight * getLines();
+	}
+
+	@Override
+	public void layout() {
+		oldText = null;
+		super.layout();
 	}
 
 	@Override
