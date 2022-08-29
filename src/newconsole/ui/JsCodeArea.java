@@ -124,6 +124,8 @@ public class JsCodeArea extends TextArea {
 				}
 				if (!text.endsWith("\n")) cacheLength += 1; // i don't know.
 				oldText = text;
+
+				updateSyntaxHighlighting();
 			}
 		} catch (Exception e) {
 //			Log.err("failed to calculate offsets", e);
@@ -160,8 +162,9 @@ public class JsCodeArea extends TextArea {
 			glyphPositions.add(x += lastAdv); // add the last one by duplicating the last advance
 		};
 		glyphPositions.add(x + lastAdv); // h
+	}
 
-		// update syntax highlighting
+	public void updateSyntaxHighlighting() {
 		if (syntaxHighlighting) try {
 			var symbolb = new StringBuilder();
 			var pos = 0;
