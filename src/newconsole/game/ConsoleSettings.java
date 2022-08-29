@@ -15,6 +15,14 @@ public class ConsoleSettings {
 				ConsoleVars.console.area.setTabSize(value);
 				return value + "x";
 			});
+
+			root.checkPref("newconsole.syntax-highlighting", true);
+
+			root.checkPref("newconsole.indentation-assistance", true);
+
+			root.checkPref("newconsole.indentation-guides", true);
+
+			root.checkPref("newconsole.insert-paired-chars", true);
 		});
 	}
 
@@ -24,5 +32,21 @@ public class ConsoleSettings {
 
 	public static int tabSize() {
 		return Core.settings.getInt("newconsole.tab-size", 4);
+	}
+
+	public static boolean indentationAssistance() {
+		return Core.settings.getBool("newconsole.indentation-assistance", true);
+	}
+
+	public static boolean indentationGuides() {
+		return Core.settings.getBool("newconsole.indentation-guides", true);
+	}
+
+	public static boolean characterPairs() {
+		return Core.settings.getBool("newconsole.insert-paired-chars", true);
+	}
+
+	public static boolean syntaxHighlighting() {
+		return Core.settings.getBool("newconsole.syntax-highlighting", true);
 	}
 }

@@ -10,6 +10,7 @@ import arc.scene.ui.TextArea;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.graphics.Pal;
+import newconsole.game.ConsoleSettings;
 import java.util.regex.*;
 
 import static newconsole.ui.JsCodeArea.SymbolKind.*;
@@ -142,7 +143,7 @@ public class JsCodeArea extends TextArea {
 
 		// GlyphLayout ignores empty lines, so we replace them with zero-width spaces.
 		// Their positions will be invalid, but we only need glyph positions for line wraps, so it doesn't matter...
-		// Man, i want to laugh as a mad vilian while writing this
+		// Man, I want to laugh as a mad vilian while writing this
 		layout.setText(style.font, displayText.toString().replaceAll("(\n(?=\n)|^\n|\n$)", "\u200b"));	
 
 		glyphPositions.clear();
@@ -165,7 +166,7 @@ public class JsCodeArea extends TextArea {
 	}
 
 	public void updateSyntaxHighlighting() {
-		if (syntaxHighlighting) try {
+		if (syntaxHighlighting && ConsoleSettings.syntaxHighlighting()) try {
 			var symbolb = new StringBuilder();
 			var pos = 0;
 			var posOffset = 0;
@@ -199,7 +200,11 @@ public class JsCodeArea extends TextArea {
 					kind = STRING;
 					var beginChar = c;
 					var prevChar = beginChar;
-					while (++pos < text.length() && ((c = text.charAt(pos)) != beginChar || prevChar == '\\') && c != '\n' && c != '\r') {
+					while (++pos < text.length() && ((c = text.charAt(pos)) != beginChar || prevChar == '\\')) {
+						if (c == '\n' || c == '\r') {
+							pos--;
+							break;
+						}
 						prevChar = prevChar == '\\' ? beginChar : c; // double backward slash is a literal backward slash, not double escape
 						symbolb.append(c);
 					}
@@ -284,7 +289,7 @@ public class JsCodeArea extends TextArea {
 			case '(' -> ')';
 			case '[' -> ']';
 			case '{' -> '}';
-			case '"', '\'' -> c;
+			case '"', '\'', '`' -> c;
 			default -> 0;
 		};
 	}
@@ -332,6 +337,7 @@ public class JsCodeArea extends TextArea {
 		try {
 			var data = style.font.getData();
 			var space = data.getGlyph(' ');
+			var indentGuides = ConsoleSettings.indentationGuides();
 				
 			Draw.color(Pal.lightishGray);
 			Lines.stroke(1f);
@@ -342,35 +348,43 @@ public class JsCodeArea extends TextArea {
 			var textOffX = 0f;
 			var textOffY = 0f;
 			var l = 0; // line index, including wrapped lines
+			var wrapl = 0; // if the current line is wrapped, stores which wrap the current line represents
 			var lastGuide = 0; // last indentation guide level
+
+			// rare case - code starts with exactly 1 newline, the glyph layout and the fixing regex ignore it, everything goes wrong.
+			if (text.startsWith("\n") && !text.startsWith("\n\n")) charPos--;
 
 			for (var line : lines) {
 				var lineLength = line.length() - 1;
 				var wrappedLine = !line.endsWith("\n");
 				
-				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing && !line.isEmpty() && !line.equals("\n")) {
-					// render indentation guides
-					var c = -1;
-					while (++c < line.length() && line.charAt(c) == ' ') {};
+				if (l >= firstLineShowing || l <= firstLineShowing + linesShowing) {
+					if (indentGuides && wrapl == 0) {
+						// render indentation guides
+						var c = -1;
+						while (++c < line.length() && line.charAt(c) == ' ') {}
 
-					if (c >= line.length() - (wrappedLine ? 1 : 0)) {
-						// nothing here, inherit the previous indentation guide level, as that looks better
-						c = lastGuide;
-					} else {
-						lastGuide = c;
-					}
+						if (c >= line.length() - (wrappedLine ? 0 : 1)) {
+							// nothing here, inherit the previous indentation guide level, as that looks better
+							c = lastGuide;
+						} else {
+							lastGuide = c;
+						}
 
-					for (var i = 1; i <= c; i++) {
-						var offX = x + ((i - 1) / 4) * space.width * 4;
-						var offY = y - (l - firstLineShowing) * style.font.getLineHeight() + style.font.getAscent();
-					
-						if (i % 4 == 0) Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
+						for (var i = 1; i <= c; i++) {
+							if (i % 4 != 0) continue;
+
+							var offX = x + ((i - 1 + tabSize - 1) / tabSize) * space.width * tabSize;
+							var offY = y - (l - firstLineShowing) * style.font.getLineHeight() + style.font.getAscent();
+
+							Lines.line(offX, offY, offX, offY - style.font.getLineHeight());
+						}
 					}
 
 					// render the line
 					var begin = Math.min(pos, cacheLength);
 					var end = Math.min(pos + lineLength, cacheLength)
-						+ (l == lines.length - 1 && !line.endsWith("\n") ? 1 : 0); // i just don't care anymore, if it works, i'm fine
+						+ (l == lines.length - 1 && !line.endsWith("\n") ? 1 : 0); // I just don't care anymore, if it works, I'm fine
 
 					if (end > begin) {
 						cache.setPosition(x + textOffX, y + firstLineShowing * style.font.getLineHeight() + textOffY);
@@ -381,8 +395,9 @@ public class JsCodeArea extends TextArea {
 						// if there's no linefeed at the end, the line was wrapped - this needs to be handled manually
 						textOffX = -glyphPositions.items[Math.min(charPos + lineLength, glyphPositions.size - 1)];
 						textOffY -= style.font.getLineHeight();
+						wrapl++;
 					} else {
-						//pos -= posOffset;
+						wrapl = 0;
 						textOffX = 0;
 					}
 				}
@@ -427,16 +442,18 @@ public class JsCodeArea extends TextArea {
 	class AssistingInputListener extends TextAreaListener {
 		@Override
 		public boolean keyTyped(InputEvent event, char character) {
+			var indentAssistance = ConsoleSettings.indentationAssistance();
+			var pairedChars = ConsoleSettings.characterPairs();
+
 			if (character == '\t') {
 				insertAtCursor(tab);
 				return true;
-			} else if (character == '\n') {
+			} else if (indentAssistance && character == '\n') {
 				var oldText = text;
 				var oldCursor = cursor;
 
 				var left = getNotSpace(cursor - 1, true);
 				var right = getNotSpace(cursor, false);
-				//Log.info("left, right: " + (int) left + ", " + (int) right);
 
 				if (super.keyTyped(event, character)) {
 					// determine where the old line begins - lineBreak is invalid at tnis point
@@ -445,7 +462,6 @@ public class JsCodeArea extends TextArea {
 						i--;
 					}
 					if (i < oldText.length() && oldText.charAt(i) == '\n') i++;
-					//Log.info("at char " + i);
 					// determine how many spaces the previous line has had
 					var leadingSpace = new StringBuilder();
 					while (i < oldText.length() && oldText.charAt(i++) == ' ')
@@ -470,13 +486,13 @@ public class JsCodeArea extends TextArea {
 				}
 				return true;
 			} else if (
-				isPairedCharacter(character)
+				pairedChars && isPairedCharacter(character)
 				&& (cursor >= text.length() || Character.isWhitespace(text.charAt(cursor)) || isRightBracket(text.charAt(cursor)))
 				&& super.keyTyped(event, character
 			)) {
 				insertAfterCursor(String.valueOf(getPairedCharacter(character)));
 				return true;
-			} else if (cursor < text.length() && isPairedCharacter(character) && !isLeftBracket(character) && character == text.charAt(cursor)) {
+			} else if (pairedChars && cursor < text.length() && isPairedCharacter(character) && !isLeftBracket(character) && character == text.charAt(cursor)) {
 				cursor++;
 				return true;
 			}

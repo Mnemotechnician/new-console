@@ -11,7 +11,8 @@ author: "Mnemotechnician"
 
 description: '''
 Adds a console ui superior to the built-in one and the ones provided by any other mods.
-User-friendly interface, a good log panel, execution history, monospace font - all that is included in this mod.
+User-friendly interface, an actual code editor with [accent]syntax highlighting[] and indentation guides, assistance and more,
+a good log panel, execution history - all that is included in this mod.
 
 In addiction to the console, this mod offers:
 - An ability to save as many scripts as you want, execute them or copy to the console
@@ -21,7 +22,7 @@ In addiction to the console, this mod offers:
 See README.md for more info.
 '''
 version: 1.8
-subtitle: "Adds a much better console UI."
+subtitle: "Adds a superior console UI."
 minGameVersion: 136
 hidden: true
 

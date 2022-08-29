@@ -17,16 +17,17 @@ Why prefer NewConsole over other console mods or the built-in one? Well, there a
   __not__ provided by any other console mod (as of today), let alone the vanilla console.
 * NC has a multi-line scrollable input field and a scrollable log, which also intercepts all logs
   and reads last_log.txt when the game launches, allowing you to know everything.
-* NC has a script history, which enables you to view the scripts you've ran or edited before,
-  and a menu that enables you to permamently save your scripts and view/edit the saved ones,
+* NC has a script history, which enables you to view the scripts you've run or edited before,
+  and a menu that enables you to permanently save your scripts and view/edit the saved ones,
   meaning it will never leave you worrying that you will lose "that one useful script".
+* NC has many other features, most of which are listed below.
 
 ## Main features
 * A new console ui, consisting of 3 main elements:
     * A scrollable log output on the left, which also includes the scripts you've run and their outputs, and which can be cleared.
-    * An input area on the right, in which you're supposed to enter your code.
+    * A code editor on the right, in which you're supposed to enter your code.
     * An action panel on top of the input area, which lets you do the following:
-        * Execute the inputted code using the "run" button (both the code and the result will appear in the log).
+        * Execute the current code using the "run" button (both the code and the result will appear in the log).
         * Navigate in the console history (see below) using the "prev" and "next" buttons.
 	* Clear the log buffer (if you want to read what's been cleared before, you can execute `backread()`).
         * Access one of the advances features (see below).
@@ -36,7 +37,7 @@ Why prefer NewConsole over other console mods or the built-in one? Well, there a
     * In order to save a script, input it in the console, type its name in the top bar and press "save". If you attempt to override a existing script, a confirmation dialog will be shown.
     * You can execute a saved script by pressing the green triangle button, copy it to the console using the yellow clipboard button, or delete it using the red trash bin button.
 
-* A file browser. Pretty much self-explanatory, you can browse directories, open files (text ones can be copied to the console, images can be viewed, zip files can be browsed like normal directories.
+* A file browser. Pretty much self-explanatory, you can browse directories, open files (text ones can be copied to the console, images can be viewed, zip files can be browsed like normal directories).
     * On android 10+, its functionality is limited due to the limitations of the OS.
 
 * A menu allowing you to execute a script when an event occurs.
