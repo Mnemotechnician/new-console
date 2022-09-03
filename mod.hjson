@@ -21,7 +21,7 @@ In addiction to the console, this mod offers:
 
 See README.md for more info.
 '''
-version: 1.8
+version: 1.8.1
 subtitle: "Adds a superior console UI."
 minGameVersion: 136
 hidden: true
