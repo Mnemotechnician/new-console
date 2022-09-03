@@ -23,7 +23,7 @@ public class FloatingWidget extends Table {
 
 	public FloatingWidget() {
 		dragger = new ImageButton(Icon.move, Styles.defaulti);
-		add(dragger);
+		add(dragger).uniformX().uniformY().fill();
 
 		dragger.addListener(new InputListener() {
 

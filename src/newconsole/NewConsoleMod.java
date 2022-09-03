@@ -68,8 +68,8 @@ public class NewConsoleMod extends Mod {
 
 		ConsoleVars.floatingWidget = new FloatingWidget();
 
-		ConsoleVars.floatingWidget.button(Icon.terminal, Styles.defaulti, ConsoleVars.console::show).get()
-			.setSize(ConsoleVars.floatingWidget.dragger.getWidth(), ConsoleVars.floatingWidget.dragger.getHeight());
+		ConsoleVars.floatingWidget.button(Icon.terminal, Styles.defaulti, ConsoleVars.console::show)
+			.uniformX().uniformY().fill();
 
 		ConsoleVars.group.addChild(ConsoleVars.floatingWidget);
 		Time.run(10, () -> ConsoleVars.floatingWidget.setPosition(ConsoleVars.group.getWidth() / 2, ConsoleVars.group.getHeight() / 1.5f));
