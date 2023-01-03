@@ -5,8 +5,8 @@ or any other mod.
 
 ## V7
 Starting from NC-1.4.1, NewConsole requires mindustry v136 or never to run.
-If you're still on v135.2, you can visit the "releases" page and download a v1.4 or an older version,
-which are compatible with that version.
+If you're still on v135.2, you can visit the "releases" page and download a v1.4 or an older version.
+However, these versions lack many useful features, contain many bugs and just look unpleasant.
 
 This mod __does not__ support v6. v126 is outdated by several years,
 get real!
@@ -16,10 +16,10 @@ Why prefer NewConsole over other console mods or the built-in one? Well, there a
 * NC 1.8+ has syntax highlighting, indentation guides, indentation assistance and other code editor features,
   __not__ provided by any other console mod (as of today), let alone the vanilla console.
 * NC has a multi-line scrollable input field and a scrollable log, which also intercepts all logs
-  and reads last_log.txt when the game launches, allowing you to know everything.
+  and reads last_log.txt when the game launches, allowing you to know everything that gets logged.
 * NC has a script history, which enables you to view the scripts you've run or edited before,
   and a menu that enables you to permanently save your scripts and view/edit the saved ones,
-  meaning it will never leave you worrying that you will lose "that one useful script".
+  meaning that it will never leave you worrying that you will lose "that one useful script".
 * NC has many other features, most of which are listed below.
 
 ## Main features
@@ -29,7 +29,7 @@ Why prefer NewConsole over other console mods or the built-in one? Well, there a
     * An action panel on top of the input area, which lets you do the following:
         * Execute the current code using the "run" button (both the code and the result will appear in the log).
         * Navigate in the console history (see below) using the "prev" and "next" buttons.
-	* Clear the log buffer (if you want to read what's been cleared before, you can execute `backread()`).
+        * Clear the log buffer (if you want to read what's been cleared before, you can execute `backread()`).
         * Access one of the advances features (see below).
 
 ### Advanced features
@@ -59,9 +59,9 @@ You can always press "prev" to return to whatever you've been writing.
 
 # Rewrite ahead
 NewConsole 1.8 will be the last version of NewConsole written in java.
-Later it will be rewritten from scratch in kotlin using mkui and everything will be changed.
+Later it will be rewritten from scratch using kotlin and mkui. Everything will be changed.
 I already have a plan about that, but I'm not sure when I will be able to begin.
-Not telling any dates yet, it will probably happen somewhere in 2023.
+Not telling any dates yet, it will probably happen somewhere in 2023 or 2024.
 
 NeoConsole, or NewConsole 2.0, will include both the old and the new version of the mod,
 allowing you to choose what you want to use, so it will not be a rough change.
