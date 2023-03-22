@@ -4,8 +4,7 @@ import arc.Core;
 import arc.Events;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.WidgetGroup;
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import com.github.mnemotechnician.autoupdater.Updater;
 import mindustry.Vars;
 import mindustry.game.EventType;
@@ -72,7 +71,22 @@ public class NewConsoleMod extends Mod {
 			.uniformX().uniformY().fill();
 
 		ConsoleVars.group.addChild(ConsoleVars.floatingWidget);
-		Time.run(10, () -> ConsoleVars.floatingWidget.setPosition(ConsoleVars.group.getWidth() / 2, ConsoleVars.group.getHeight() / 1.5f));
+		Time.run(10, () -> {
+			// try to restore the position of the button
+			var oldPosition = ConsoleSettings.getLastButtonPosition();
+
+			ConsoleVars.floatingWidget.setPosition(
+				oldPosition.x != -1 ? oldPosition.x : ConsoleVars.group.getWidth() / 2f,
+				oldPosition.y != -1 ? oldPosition.y : ConsoleVars.group.getHeight() / 1.5f
+			);
+		});
+		Timer.schedule(() -> {
+			// save the position of the floating button every 7 seconds
+			ConsoleSettings.setLastButtonPosition(Tmp.v1.set(
+				ConsoleVars.floatingWidget.x,
+				ConsoleVars.floatingWidget.y
+			));
+		}, 2f, 10f);
 
 		ScriptsManager.init();
 		AutorunManager.init();

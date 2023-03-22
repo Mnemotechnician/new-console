@@ -26,10 +26,9 @@ allprojects{
 }
 
 dependencies{
-	compileOnly "com.github.Anuken:MindustryJitpack:171f262a55"
-
-	compileOnly "com.github.Anuken.Arc:arc-core:1477681512"
-	compileOnly "com.github.Anuken.Arc:extensions:1477681512"
+	compileOnly "com.github.Anuken:mindustryjitpack:v141"
+	compileOnly "com.github.Anuken.Arc:arc-core:v141"
+	compileOnly "com.github.Anuken.Arc:extensions:v141"
 
 	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:0.4.1'
 

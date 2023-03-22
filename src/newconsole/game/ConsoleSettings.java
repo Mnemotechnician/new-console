@@ -1,6 +1,8 @@
 package newconsole.game;
 
 import arc.Core;
+import arc.math.geom.*;
+import arc.util.*;
 import mindustry.Vars;
 import newconsole.ConsoleVars;
 
@@ -23,6 +25,8 @@ public class ConsoleSettings {
 			root.checkPref("newconsole.indentation-guides", true);
 
 			root.checkPref("newconsole.insert-paired-chars", true);
+
+			root.checkPref("newconsole.remember-button-position", true);
 		});
 	}
 
@@ -48,5 +52,23 @@ public class ConsoleSettings {
 
 	public static boolean syntaxHighlighting() {
 		return Core.settings.getBool("newconsole.syntax-highlighting", true);
+	}
+
+	// floating button
+	public static boolean rememberButtonPosition() {
+		return Core.settings.getBool("newconsole.remember-button-position", true);
+	}
+
+	public static Vec2 getLastButtonPosition() {
+		var value = Core.settings.getString("newconsole.last-button-position", "0,0").split(",");
+		if (value.length != 2) return Tmp.v1.set(-1, -1);
+
+		float x = Strings.parseFloat(value[0], -1);
+		float y = Strings.parseFloat(value[1], -1);
+		return Tmp.v1.set(x, y);
+	}
+
+	public static void setLastButtonPosition(Vec2 newPosition) {
+		Core.settings.put("newconsole.last-button-position", newPosition.x + "," + newPosition.y);
 	}
 }
