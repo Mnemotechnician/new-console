@@ -1,5 +1,5 @@
 # this is not to be changed until v7 gets released.
-#!VERSION 1.41
+#!VERSION 1.9
 #!REPO "Mnemotechnician/New-console"
 #!BRANCH "master"
 
@@ -21,7 +21,7 @@ In addiction to the console, this mod offers:
 
 See README.md for more info.
 '''
-version: 1.8.1
+version: 1.9
 subtitle: "Adds a superior console UI."
 minGameVersion: 136
 hidden: true
