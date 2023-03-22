@@ -2,6 +2,7 @@ package newconsole;
 
 import arc.Core;
 import arc.Events;
+import arc.math.geom.Vec2;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.*;
@@ -80,13 +81,18 @@ public class NewConsoleMod extends Mod {
 				oldPosition.y != -1 ? oldPosition.y : ConsoleVars.group.getHeight() / 1.5f
 			);
 		});
+		var lastSavedPosition = new Vec2(-1, -1);
 		Timer.schedule(() -> {
-			// save the position of the floating button every 7 seconds
-			ConsoleSettings.setLastButtonPosition(Tmp.v1.set(
+			// Save the position of the floating button, if necessary
+			var newPosition = Tmp.v1.set(
 				ConsoleVars.floatingWidget.x,
 				ConsoleVars.floatingWidget.y
-			));
-		}, 2f, 10f);
+			);
+			if (newPosition.equals(lastSavedPosition)) return;
+
+			lastSavedPosition.set(newPosition);
+			ConsoleSettings.setLastButtonPosition(newPosition);
+		}, 2f, 2f);
 
 		ScriptsManager.init();
 		AutorunManager.init();

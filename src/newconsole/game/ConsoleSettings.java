@@ -60,7 +60,7 @@ public class ConsoleSettings {
 	}
 
 	public static Vec2 getLastButtonPosition() {
-		var value = Core.settings.getString("newconsole.last-button-position", "0,0").split(",");
+		var value = Core.settings.getString("newconsole.last-button-position", "").split(",");
 		if (value.length != 2) return Tmp.v1.set(-1, -1);
 
 		float x = Strings.parseFloat(value[0], -1);
