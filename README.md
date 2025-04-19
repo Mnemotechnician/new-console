@@ -3,6 +3,9 @@ A Mindustry mod adding a new console ui,
 which is superior to that provided by the vanilla game
 or any other mod.
 
+## V8
+See https://github.com/SMOLKEYS/new-console-hardline . The original NewConsole repository is discontinued.
+
 ## V7
 Starting from NC-1.4.1, NewConsole requires mindustry v136 or never to run.
 If you're still on v135.2, you can visit the "releases" page and download a v1.4 or an older version.
@@ -58,10 +61,4 @@ If you press "next" while already being at the newest history entry, your curren
 You can always press "prev" to return to whatever you've been writing.
 
 # Rewrite ahead
-NewConsole 1.8 will be the last version of NewConsole written in java.
-Later it will be rewritten from scratch using kotlin and mkui. Everything will be changed.
-I already have a plan about that, but I'm not sure when I will be able to begin.
-Not telling any dates yet, it will probably happen somewhere in 2023 or 2024.
-
-NeoConsole, or NewConsole 2.0, will include both the old and the new version of the mod,
-allowing you to choose what you want to use, so it will not be a rough change.
+Discontinued.
